@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Token Predictor</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css" />
+<style>
+  :root {
+    --bg:     #000000;
+    --panel:  #0a0a0a;
+    --border: #222222;
+    --blue:   #58C4DD;
+    --yellow: #FFF1B5;
+    --green:  #83C167;
+    --red:    #FC6255;
+    --muted:  #888888;
+    --white:  #FFFFFF;
+    --serif:  'Computer Modern Serif', Georgia, serif;
+    --mono:   'JetBrains Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--serif);
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px;
+    padding: 14px 20px;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .mode-tabs {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .mode-tabs button {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    padding: 0.45rem 1rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+  .mode-tabs button.active { background: var(--blue); color: #000; }
+  .mode-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin: 0;
+    color: var(--blue);
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 16px;
+    min-height: 0;
+  }
+  .text-panel, .bars-panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 18px;
+    overflow: auto;
+  }
+
+  /* TRAINING UI ------------------------------------------------- */
+
+  .train-sentence {
+    font-family: var(--mono);
+    font-size: 1.0rem;
+    line-height: 2.2;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.2rem;
+    word-spacing: 0.15rem;
+  }
+  .train-sentence .tok {
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    margin: 0 0.05rem;
+    transition: all 0.3s ease;
+  }
+  .train-sentence .tok.context  { color: var(--blue); background: rgba(88, 196, 221, 0.1); }
+  .train-sentence .tok.target   { color: var(--yellow); background: rgba(255, 241, 181, 0.15); border: 1px solid rgba(255, 241, 181, 0.4); }
+  .train-sentence .tok.future   { color: #555; }
+  .train-sentence .tok.done     { color: var(--green); }
+
+  .ctx-target {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.3rem 0.8rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+  .ctx-target .k { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ctx-target .v-ctx  { color: var(--blue); }
+  .ctx-target .v-tgt  { color: var(--yellow); }
+
+  .train-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+    padding: 0.7rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+  .train-stats .stat-cell { text-align: left; }
+  .train-stats .stat-k {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .train-stats .stat-v {
+    font-size: 1.2rem;
+    color: var(--blue);
+    font-family: var(--mono);
+  }
+  .train-stats .stat-v.loss { color: var(--yellow); }
+  .train-stats .stat-v.acc  { color: var(--green); }
+
+  .training-signal {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: 2px;
+    border-left: 3px solid var(--muted);
+    background: rgba(136, 136, 136, 0.05);
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  .training-signal.show    { opacity: 1; }
+  .training-signal.wrong   { border-left-color: var(--red); color: var(--red); background: rgba(252, 98, 85, 0.06); }
+  .training-signal.right   { border-left-color: var(--green); color: var(--green); background: rgba(131, 193, 103, 0.06); }
+
+  /* INFERENCE UI ---------------------------------------------- */
+
+  .system-prompt {
+    background: rgba(131, 193, 103, 0.08);
+    border-left: 3px solid var(--green);
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--green);
+    line-height: 1.5;
+    border-radius: 2px;
+  }
+  .system-prompt.hidden { display: none; }
+  .sentence {
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--white);
+    white-space: pre-wrap;
+  }
+  .sentence .user-msg { color: var(--blue); }
+  .sentence .ai-label { color: var(--green); }
+  .sentence .cursor   { color: var(--yellow); animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .toggle {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    user-select: none;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+  }
+  .toggle input { accent-color: var(--blue); margin-right: 0.3rem; }
+
+  /* BARS -------------------------------------------------------- */
+
+  .bars-panel .title {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 22px 110px 1fr 60px;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin: 0.45rem 0;
+  }
+  .bar-row .mark    { text-align: center; font-weight: bold; }
+  .bar-row .word    { color: var(--white); text-align: right; }
+  .bar-row.top .word     { color: var(--yellow); }
+  .bar-row.target .word  { color: var(--yellow); text-decoration: underline; text-underline-offset: 3px; }
+  .bar-row .bar-outer {
+    height: 14px;
+    background: #050505;
+    border: 1px solid #1a1a1a;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-row .bar-inner {
+    height: 100%;
+    background: var(--blue);
+    width: 0;
+    transition: width 0.6s ease-out;
+  }
+  .bar-row.top .bar-inner    { background: var(--yellow); }
+  .bar-row.target .bar-inner { background: var(--yellow); }
+  .bar-row .pct { color: var(--muted); font-size: 0.75rem; text-align: right; }
+
+  /* FOOTER ------------------------------------------------------ */
+
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0 2px;
+  }
+  .footer-left, .footer-right {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: #050505;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.5rem 1rem;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+  }
+  .btn.primary { background: var(--blue); color: #000; }
+  .btn.advance { border-color: var(--green); color: var(--green); }
+  .btn.advance.primary { background: var(--green); color: #000; }
+  .btn:hover   { filter: brightness(1.15); }
+  .btn:disabled {
+    opacity: 0.35; cursor: not-allowed;
+    background: #050505; color: var(--muted); border-color: var(--muted);
+  }
+
+  .speed-group {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .speed-group button {
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    padding: 0.4rem 0.7rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+  .speed-group button.active { background: var(--blue); color: #000; }
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+    <h1>Token predictor</h1>
+    <span class="mode-label" id="mode-label">MODE: TRAINING — learning token by token</span>
+  </div>
+  <div class="mode-tabs">
+    <button id="tab-train"  class="active">TRAINING</button>
+    <button id="tab-infer">INFERENCE</button>
+  </div>
+</header>
+
+<main>
+  <div class="text-panel">
+    <!-- TRAINING UI -->
+    <div id="train-ui">
+      <div class="train-sentence" id="train-sentence"></div>
+
+      <div class="ctx-target">
+        <span class="k">context</span>
+        <span class="v-ctx mono" id="train-context">—</span>
+        <span class="k">target</span>
+        <span class="v-tgt mono" id="train-target">—</span>
+      </div>
+
+      <div class="train-stats">
+        <div class="stat-cell">
+          <div class="stat-k">position</div>
+          <div class="stat-v" id="train-pos">1/8</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-k">epoch</div>
+          <div class="stat-v" id="train-epoch">0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-k">loss</div>
+          <div class="stat-v loss" id="train-loss">—</div>
+        </div>
+      </div>
+
+      <div class="training-signal" id="training-signal"></div>
+    </div>
+
+    <!-- INFERENCE UI -->
+    <div id="infer-ui" style="display:none;">
+      <label class="toggle">
+        <input type="checkbox" id="show-sys" checked/>show system prompt
+      </label>
+      <div class="system-prompt" id="system-prompt">
+        [SYSTEM]: What follows is a conversation between a user and a helpful AI assistant.
+      </div>
+      <div class="sentence" id="infer-sentence"></div>
+    </div>
+  </div>
+
+  <div class="bars-panel">
+    <div class="title">Next-token probability</div>
+    <div id="bars"></div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-left">
+    <button class="btn primary" id="act-primary">Train step →</button>
+    <button class="btn advance" id="act-next" disabled>Next word →</button>
+    <button class="btn" id="act-reset">Reset</button>
+  </div>
+  <div class="footer-right">
+    <span class="mode-label">speed:</span>
+    <div class="speed-group">
+      <button id="spd-manual" class="active">MANUAL</button>
+      <button id="spd-slow">AUTO SLOW</button>
+      <button id="spd-fast">AUTO FAST</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// TRAINING DATA
+// The sentence the model is learning to predict, word by word.
+// Each position: target word + 5 distractors. The model "learns"
+// by having its logit on the target word grow with each epoch.
+// ─────────────────────────────────────────────────────────────
+
+const SENTENCE = ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"];
+
+// Distractors per position (index 1..8 — can't predict position 0).
+// We pick plausible-but-wrong words that would have high prior.
+const DISTRACTORS = {
+  1: ["big",    "slow",   "red",    "lazy",   "tired"],
+  2: ["green",  "small",  "old",    "tall",   "fast"],
+  3: ["cat",    "dog",    "bear",   "bird",   "wolf"],
+  4: ["sat",    "slept",  "ran",    "ate",    "barked"],
+  5: ["under",  "near",   "past",   "around", "beside"],
+  6: ["a",      "one",    "that",   "his",    "our"],
+  7: ["happy",  "big",    "sleepy", "grumpy", "tiny"],
+  8: ["cat",    "bird",   "mouse",  "rabbit", "pig"],
+};
+
+const MAX_EPOCHS = 8;
+
+// Compute candidate probabilities for (position, epoch).
+// Target logit grows linearly with epoch; distractor logits are
+// stable but perturbed per-position for visual variety.
+function getCandidates(pos, epoch) {
+  const target = SENTENCE[pos];
+  const distractors = DISTRACTORS[pos] || [];
+  const all = [{ word: target, isTarget: true }, ...distractors.map(w => ({ word: w, isTarget: false }))];
+
+  const logits = all.map((c, i) => {
+    if (c.isTarget) {
+      // starts at -2.0, reaches +4.4 at epoch 8
+      return -2.0 + 0.8 * epoch;
+    }
+    // Deterministic perturbation so distractors have different heights
+    const h = Math.sin((pos + 1) * 1.7 + i * 2.3) * 0.55;
+    return 0.6 - (i - 1) * 0.12 + h;
+  });
+
+  // Softmax
+  const max = Math.max(...logits);
+  const exps = logits.map(l => Math.exp(l - max));
+  const sum = exps.reduce((a, b) => a + b, 0);
+  return all.map((c, i) => ({ ...c, p: exps[i] / sum }));
+}
+
+function targetLoss(cands) {
+  const t = cands.find(c => c.isTarget);
+  return -Math.log(Math.max(t.p, 1e-9));
+}
+
+function topCandidate(cands) {
+  return cands.slice().sort((a, b) => b.p - a.p)[0];
+}
+
+// ─────────── INFERENCE DATA (unchanged — scripted tokens) ───────────
+
+const INFER_PROMPT = "What are some promising areas in synthetic biology?";
+const INFER_STEPS = [
+  { candidates: [
+    { word: 'There',   p: 0.45 }, { word: 'Some',    p: 0.22 }, { word: 'The',     p: 0.18 },
+    { word: 'A',       p: 0.07 }, { word: 'Several', p: 0.05 }, { word: 'Many',    p: 0.03 },
+  ]},
+  { candidates: [
+    { word: 'are',  p: 0.71 }, { word: 'is',   p: 0.12 }, { word: 'were', p: 0.08 },
+    { word: 'have', p: 0.05 }, { word: 'exist',p: 0.03 }, { word: "'s",   p: 0.01 },
+  ]},
+  { candidates: [
+    { word: 'several',  p: 0.38 }, { word: 'many',     p: 0.27 },
+    { word: 'a',        p: 0.16 }, { word: 'exciting', p: 0.09 },
+    { word: 'promising',p: 0.07 }, { word: 'genuine',  p: 0.03 },
+  ]},
+  { candidates: [
+    { word: 'promising',p: 0.41 }, { word: 'exciting', p: 0.25 },
+    { word: 'active',   p: 0.14 }, { word: 'compelling',p: 0.09 },
+    { word: 'emerging', p: 0.08 }, { word: 'important',p: 0.03 },
+  ]},
+  { candidates: [
+    { word: 'areas',       p: 0.63 }, { word: 'directions',p: 0.15 },
+    { word: 'applications',p: 0.10 }, { word: 'domains',   p: 0.06 },
+    { word: 'frontiers',   p: 0.04 }, { word: 'fields',    p: 0.02 },
+  ]},
+  { candidates: [
+    { word: ',',    p: 0.47 }, { word: 'in',    p: 0.33 }, { word: 'of',   p: 0.09 },
+    { word: 'that',  p: 0.06 }, { word: 'for',  p: 0.03 }, { word: 'to',    p: 0.02 },
+  ]},
+  { candidates: [
+    { word: 'including',p: 0.38 }, { word: 'notably',   p: 0.22 },
+    { word: 'such',     p: 0.17 }, { word: 'for',       p: 0.12 },
+    { word: 'ranging',  p: 0.08 }, { word: 'from',      p: 0.03 },
+  ]},
+  { candidates: [
+    { word: 'gene',      p: 0.28 }, { word: 'protein',   p: 0.21 },
+    { word: 'cell',      p: 0.18 }, { word: 'CRISPR',    p: 0.14 },
+    { word: 'metabolic', p: 0.11 }, { word: 'synthetic', p: 0.08 },
+  ]},
+  { candidates: [
+    { word: 'editing',   p: 0.52 }, { word: 'therapy',   p: 0.20 },
+    { word: 'design',    p: 0.14 }, { word: 'circuits',  p: 0.08 },
+    { word: 'engineering',p: 0.04 }, { word: 'discovery',p: 0.02 },
+  ]},
+  { candidates: [
+    { word: ',',    p: 0.56 }, { word: 'and',  p: 0.33 }, { word: '.',    p: 0.06 },
+    { word: ';',    p: 0.02 }, { word: ':',    p: 0.02 }, { word: '—',    p: 0.01 },
+  ]},
+  { candidates: [
+    { word: 'protein',  p: 0.31 }, { word: 'metabolic',p: 0.24 },
+    { word: 'cell',     p: 0.18 }, { word: 'synthetic',p: 0.13 },
+    { word: 'genome',   p: 0.09 }, { word: 'directed', p: 0.05 },
+  ]},
+  { candidates: [
+    { word: 'design',    p: 0.46 }, { word: 'engineering',p: 0.28 },
+    { word: 'discovery', p: 0.12 }, { word: 'folding',   p: 0.08 },
+    { word: 'synthesis', p: 0.04 }, { word: 'language',  p: 0.02 },
+  ]},
+  { candidates: [
+    { word: ',',    p: 0.51 }, { word: 'and',  p: 0.36 }, { word: '.',    p: 0.08 },
+    { word: ';',    p: 0.03 }, { word: 'as',   p: 0.01 }, { word: 'with', p: 0.01 },
+  ]},
+  { candidates: [
+    { word: 'and',    p: 0.58 }, { word: 'plus',   p: 0.14 },
+    { word: 'along',  p: 0.12 }, { word: 'as',     p: 0.09 },
+    { word: 'with',   p: 0.05 }, { word: 'while',  p: 0.02 },
+  ]},
+  { candidates: [
+    { word: 'AI-driven', p: 0.34 }, { word: 'directed',  p: 0.24 },
+    { word: 'in',        p: 0.16 }, { word: 'novel',     p: 0.12 },
+    { word: 'the',       p: 0.09 }, { word: 'rational',  p: 0.05 },
+  ]},
+  { candidates: [
+    { word: 'protein',   p: 0.38 }, { word: 'drug',      p: 0.26 },
+    { word: 'genome',    p: 0.17 }, { word: 'biomolecule',p: 0.10 },
+    { word: 'enzyme',    p: 0.06 }, { word: 'material',  p: 0.03 },
+  ]},
+  { candidates: [
+    { word: 'discovery', p: 0.48 }, { word: 'design',    p: 0.31 },
+    { word: 'engineering',p: 0.12 }, { word: 'development',p: 0.05 },
+    { word: 'screening', p: 0.03 }, { word: 'optimization',p: 0.01 },
+  ]},
+  { candidates: [
+    { word: '.',    p: 0.62 }, { word: ',',    p: 0.22 }, { word: ';',    p: 0.08 },
+    { word: 'more', p: 0.05 }, { word: 'or',   p: 0.02 }, { word: 'and',  p: 0.01 },
+  ]},
+];
+
+// ─────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────
+
+let mode = 'train';           // 'train' | 'infer'
+let tPos = 1;                 // training position (1..8)
+let tEpoch = 0;               // current epoch for this position
+let tLearnedFlags = Array(SENTENCE.length).fill(false);  // which positions are done
+let inferStep = 0;
+let inferTokens = [];
+let speed = 'manual';
+let autoTimer = null;
+
+const LEARNED_THRESHOLD = 0.6;  // target prob >= 0.6 counts as "learned"
+
+// ─────────── DOM ───────────
+const $ = id => document.getElementById(id);
+const modeLabel = $('mode-label');
+const tabTrain  = $('tab-train');
+const tabInfer  = $('tab-infer');
+const trainUI   = $('train-ui');
+const inferUI   = $('infer-ui');
+const sentenceEl   = $('train-sentence');
+const contextEl    = $('train-context');
+const targetEl     = $('train-target');
+const posEl        = $('train-pos');
+const epochEl      = $('train-epoch');
+const lossEl       = $('train-loss');
+const signalEl     = $('training-signal');
+const inferSentence= $('infer-sentence');
+const showSys      = $('show-sys');
+const systemPrompt = $('system-prompt');
+const bars         = $('bars');
+const btnPrimary   = $('act-primary');
+const btnNext      = $('act-next');
+const btnReset     = $('act-reset');
+const spdBtns = { manual: $('spd-manual'), slow: $('spd-slow'), fast: $('spd-fast') };
+
+// ─────────── Rendering ───────────
+
+function escapeHTML(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderSentence() {
+  sentenceEl.innerHTML = SENTENCE.map((w, i) => {
+    let cls = 'tok';
+    if (i < tPos) {
+      cls += tLearnedFlags[i] ? ' done' : ' context';
+    } else if (i === tPos) {
+      cls += ' target';
+    } else {
+      cls += ' future';
+    }
+    return `<span class="${cls}">${escapeHTML(w)}</span>`;
+  }).join(' ');
+}
+
+function renderBars(cands, showTargetMarker) {
+  const ranked = [...cands].sort((a, b) => b.p - a.p);
+  bars.innerHTML = '';
+  ranked.forEach((c, i) => {
+    const classes = ['bar-row'];
+    if (i === 0) classes.push('top');
+    if (c.isTarget) classes.push('target');
+    const row = document.createElement('div');
+    row.className = classes.join(' ');
+    let mark = '';
+    if (showTargetMarker && c.isTarget) {
+      mark = i === 0 ? '<span style="color:var(--green);">✓</span>' : '<span style="color:var(--red);">✗</span>';
+    }
+    row.innerHTML = `
+      <div class="mark">${mark}</div>
+      <div class="word">${escapeHTML(c.word)}</div>
+      <div class="bar-outer"><div class="bar-inner" style="width:0%"></div></div>
+      <div class="pct">${(c.p * 100).toFixed(1)}%</div>
+    `;
+    bars.appendChild(row);
+  });
+  requestAnimationFrame(() => {
+    bars.querySelectorAll('.bar-row').forEach((row, i) => {
+      const p = ranked[i].p;
+      row.querySelector('.bar-inner').style.width = (p * 100).toFixed(1) + '%';
+    });
+  });
+}
+
+function renderTrain() {
+  if (tPos >= SENTENCE.length) {
+    // fully learned
+    sentenceEl.innerHTML = SENTENCE.map(w =>
+      `<span class="tok done">${escapeHTML(w)}</span>`
+    ).join(' ');
+    contextEl.textContent = SENTENCE.slice(0, -1).join(' ');
+    targetEl.textContent  = '(sentence complete)';
+    posEl.textContent  = `${SENTENCE.length - 1}/${SENTENCE.length - 1}`;
+    epochEl.textContent= '—';
+    lossEl.textContent = '—';
+    bars.innerHTML = '<div style="color:var(--muted); font-family:var(--mono); font-size:0.8rem; font-style:italic; padding:1rem 0;">Training complete — every word learned.</div>';
+    signalEl.className = 'training-signal right show';
+    signalEl.innerHTML = 'Sentence learned &mdash; the model now predicts every position correctly.';
+    btnPrimary.disabled = true;
+    btnNext.disabled = true;
+    return;
+  }
+
+  renderSentence();
+  contextEl.textContent = SENTENCE.slice(0, tPos).join(' ');
+  targetEl.textContent  = SENTENCE[tPos];
+  posEl.textContent     = `${tPos}/${SENTENCE.length - 1}`;
+  epochEl.textContent   = tEpoch;
+
+  const cands = getCandidates(tPos, tEpoch);
+  const loss = targetLoss(cands);
+  lossEl.textContent = loss.toFixed(2);
+
+  const showMarker = tEpoch > 0;
+  renderBars(cands, showMarker);
+
+  const top = topCandidate(cands);
+  const tgt = cands.find(c => c.isTarget);
+
+  if (tEpoch === 0) {
+    signalEl.className = 'training-signal';
+    signalEl.textContent = '';
+  } else if (top.isTarget && tgt.p >= LEARNED_THRESHOLD) {
+    signalEl.className = 'training-signal right show';
+    signalEl.innerHTML = `<b>✓ learned</b> &mdash; target "${escapeHTML(SENTENCE[tPos])}" is now the top prediction (p = ${(tgt.p*100).toFixed(0)}%).`;
+    tLearnedFlags[tPos] = true;
+  } else {
+    signalEl.className = 'training-signal wrong show';
+    signalEl.innerHTML = `<b>✗ wrong</b> &mdash; predicted "${escapeHTML(top.word)}", expected "${escapeHTML(SENTENCE[tPos])}". <span style="color:var(--muted)">backprop: push weights toward target.</span>`;
+  }
+
+  // Button states
+  btnPrimary.disabled = tEpoch >= MAX_EPOCHS;
+  btnPrimary.textContent = tEpoch >= MAX_EPOCHS ? 'max epochs reached' : 'Train step →';
+  btnNext.disabled = !(tLearnedFlags[tPos] || tEpoch >= MAX_EPOCHS);
+  btnNext.classList.toggle('primary', tLearnedFlags[tPos]);
+  btnPrimary.classList.toggle('primary', !tLearnedFlags[tPos] && tEpoch < MAX_EPOCHS);
+}
+
+function renderInfer() {
+  const header = `<span class="user-msg">User:</span> ${escapeHTML(INFER_PROMPT)}\n\n<span class="ai-label">AI:</span> `;
+  const gen = inferTokens.join(' ').replace(/\s([,.;:])/g, '$1');
+  const more = inferStep < INFER_STEPS.length;
+  inferSentence.innerHTML = header
+    + `<span class="generated">${escapeHTML(gen)}</span>`
+    + (more ? ' <span class="cursor">_</span>' : '');
+  if (more) {
+    renderBars(INFER_STEPS[inferStep].candidates, false);
+    btnPrimary.disabled = false;
+    btnPrimary.textContent = 'Generate next token →';
+    btnPrimary.classList.add('primary');
+    btnNext.disabled = true;
+    btnNext.style.display = 'none';
+  } else {
+    bars.innerHTML = '<div style="color:var(--muted); font-family:var(--mono); font-size:0.8rem; font-style:italic; padding:1rem 0;">(end of response)</div>';
+    btnPrimary.disabled = true;
+    btnPrimary.textContent = 'Done — reset to try again';
+  }
+}
+
+// ─────────── Actions ───────────
+
+function doPrimary() {
+  if (mode === 'train') {
+    if (tPos >= SENTENCE.length) return;
+    if (tEpoch >= MAX_EPOCHS) return;
+    tEpoch += 1;
+    renderTrain();
+    // auto-stop auto-loop if learned
+    if (tLearnedFlags[tPos]) stopAutoIfTrainLearned();
+  } else {
+    if (inferStep >= INFER_STEPS.length) return;
+    const top = [...INFER_STEPS[inferStep].candidates].sort((a, b) => b.p - a.p)[0];
+    inferTokens.push(top.word);
+    inferStep += 1;
+    renderInfer();
+  }
+}
+
+function doNext() {
+  if (mode !== 'train') return;
+  if (tPos >= SENTENCE.length) return;
+  tPos += 1;
+  tEpoch = 0;
+  renderTrain();
+}
+
+function doReset() {
+  stopAuto();
+  setSpeed('manual');
+  if (mode === 'train') {
+    tPos = 1;
+    tEpoch = 0;
+    tLearnedFlags = Array(SENTENCE.length).fill(false);
+    btnNext.style.display = '';
+    renderTrain();
+  } else {
+    inferStep = 0;
+    inferTokens = [];
+    renderInfer();
+  }
+}
+
+function switchMode(m) {
+  if (m === mode) return;
+  mode = m;
+  stopAuto();
+  setSpeed('manual');
+  if (m === 'train') {
+    tabTrain.classList.add('active'); tabInfer.classList.remove('active');
+    modeLabel.textContent = 'MODE: TRAINING — learning token by token';
+    trainUI.style.display = '';
+    inferUI.style.display = 'none';
+    btnNext.style.display = '';
+    renderTrain();
+  } else {
+    tabInfer.classList.add('active'); tabTrain.classList.remove('active');
+    modeLabel.textContent = 'MODE: INFERENCE — generating response';
+    trainUI.style.display = 'none';
+    inferUI.style.display = '';
+    btnNext.style.display = 'none';
+    renderInfer();
+  }
+}
+
+// ─────────── Auto-advance ───────────
+function setSpeed(s) {
+  speed = s;
+  for (const k in spdBtns) spdBtns[k].classList.toggle('active', k === s);
+  stopAuto();
+  if (s === 'manual') return;
+  const delay = s === 'slow' ? 1200 : 400;
+  autoTimer = setInterval(() => {
+    if (mode === 'train') {
+      if (tPos >= SENTENCE.length) { stopAuto(); setSpeed('manual'); return; }
+      if (tLearnedFlags[tPos] || tEpoch >= MAX_EPOCHS) {
+        // move to next word automatically
+        doNext();
+      } else {
+        doPrimary();
+      }
+    } else {
+      if (inferStep >= INFER_STEPS.length) { stopAuto(); setSpeed('manual'); return; }
+      doPrimary();
+    }
+  }, delay);
+}
+
+function stopAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+function stopAutoIfTrainLearned() { /* continue running until sentence done */ }
+
+// ─────────── Wire up ───────────
+tabTrain.addEventListener('click', () => switchMode('train'));
+tabInfer.addEventListener('click', () => switchMode('infer'));
+btnPrimary.addEventListener('click', doPrimary);
+btnNext.addEventListener('click', doNext);
+btnReset.addEventListener('click', doReset);
+showSys.addEventListener('change', (e) => {
+  systemPrompt.classList.toggle('hidden', !e.target.checked);
+});
+spdBtns.manual.addEventListener('click', () => setSpeed('manual'));
+spdBtns.slow.addEventListener('click',   () => setSpeed('slow'));
+spdBtns.fast.addEventListener('click',   () => setSpeed('fast'));
+
+// init
+renderTrain();
+</script>
+</body>
+</html>

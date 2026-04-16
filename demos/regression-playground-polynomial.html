@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Regression Playground</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css" />
+<style>
+  :root {
+    --bg:     #000000;
+    --panel:  #0a0a0a;
+    --border: #222222;
+    --blue:   #58C4DD;
+    --yellow: #FFF1B5;
+    --green:  #83C167;
+    --red:    #FC6255;
+    --muted:  #888888;
+    --white:  #FFFFFF;
+    --serif:  'Computer Modern Serif', Georgia, serif;
+    --mono:   'JetBrains Mono', Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--serif);
+    height: 100%;
+    overflow: hidden;
+  }
+  body {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    grid-template-rows: auto 1fr;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: var(--blue);
+    font-weight: 400;
+  }
+  .subhead {
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  /* LEFT: plot */
+  .plot-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px;
+    position: relative;
+  }
+  #plot { display: block; width: 100%; height: 100%; }
+  .badge {
+    position: absolute;
+    top: 16px; left: 18px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 0.6rem;
+    border-radius: 2px;
+    border: 1px solid;
+    transition: opacity 0.3s;
+  }
+  .badge.under   { color: var(--yellow); border-color: var(--yellow); }
+  .badge.good    { color: var(--green);  border-color: var(--green); }
+  .badge.over    { color: var(--red);    border-color: var(--red); }
+
+  /* RIGHT: controls */
+  .controls {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-family: var(--serif);
+    overflow: auto;
+  }
+  .ctrl label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .ctrl .val {
+    font-family: var(--mono);
+    font-size: 1.15rem;
+    color: var(--blue);
+    margin-left: 0.5rem;
+  }
+  .ctrl input[type=range] {
+    width: 100%;
+    accent-color: var(--blue);
+  }
+  .row { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+  .error-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0.3rem 0.8rem;
+    font-family: var(--mono);
+    font-size: 0.95rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .error-grid .k { color: var(--muted); font-size: 0.8rem; }
+  .error-grid .v-train { color: var(--blue);  text-align: right; }
+  .error-grid .v-test  { color: var(--yellow); text-align: right; }
+
+  .mini-plot-wrap {
+    background: #050505;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 6px;
+  }
+  .mini-plot-wrap .title {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  #mini { width: 100%; height: 120px; display: block; }
+
+  .legend {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .legend .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .btn {
+    background: #0a0a0a;
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+  .btn:hover { background: var(--blue); color: #000; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Polynomial regression</h1>
+  <span class="subhead">play with complexity &amp; data</span>
+</header>
+
+<div class="plot-wrap">
+  <svg id="plot" viewBox="0 0 760 540" preserveAspectRatio="xMidYMid meet"></svg>
+  <div class="badge" id="badge">—</div>
+</div>
+
+<div class="controls">
+  <div class="ctrl">
+    <div class="row">
+      <label>Polynomial degree</label>
+      <span class="val" id="deg-val">1</span>
+    </div>
+    <input type="range" id="deg" min="1" max="9" step="1" value="1"/>
+  </div>
+
+  <div class="ctrl">
+    <div class="row">
+      <label>Training-set size</label>
+      <span class="val" id="n-val">30</span>
+    </div>
+    <input type="range" id="n" min="10" max="200" step="5" value="30"/>
+  </div>
+
+  <div class="error-grid">
+    <span class="k">train error</span>
+    <span class="v-train" id="err-train">—</span>
+    <span class="k">test error</span>
+    <span class="v-test" id="err-test">—</span>
+  </div>
+
+  <div class="mini-plot-wrap">
+    <div class="title">error vs. degree</div>
+    <svg id="mini" viewBox="0 0 320 120" preserveAspectRatio="none"></svg>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot" style="background:#58C4DD"></span>train point</span>
+    <span><span class="dot" style="background:#83C167; border:1px solid #83C167; background:transparent"></span>test point</span>
+    <span><span class="dot" style="background:#FFF1B5"></span>fit</span>
+    <span><span class="dot" style="background:#fff; opacity:0.4"></span>true curve</span>
+  </div>
+
+  <button class="btn" id="resample">resample data</button>
+</div>
+
+<script>
+// ──────────── seeded RNG ────────────
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function gauss(rng) {
+  const u1 = Math.max(rng(), 1e-12), u2 = rng();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+// True degree-3 polynomial (normalised roughly to y in [0,100] over x in [0,10])
+function trueCurve(x) {
+  // y = 0.8*x^3 - 10*x^2 + 30*x + 15 — gentle cubic
+  return 0.8 * x**3 - 10 * x**2 + 30 * x + 15;
+}
+const NOISE = 8;
+const X_MIN = 0, X_MAX = 10;
+const Y_MIN = -15, Y_MAX = 110;
+
+let seed = 1;
+let allPoints = [];
+
+function generate(n, sd) {
+  const rng = mulberry32(sd);
+  const pts = [];
+  // generate more than n so we can later trim deterministically
+  const N = Math.max(n, 200);
+  for (let i = 0; i < N; i++) {
+    const x = X_MIN + (X_MAX - X_MIN) * rng();
+    const y = trueCurve(x) + NOISE * gauss(rng);
+    pts.push({ x, y });
+  }
+  // Shuffle deterministically using a second rng, then 80/20 split
+  const rng2 = mulberry32(sd + 101);
+  for (let i = pts.length - 1; i > 0; i--) {
+    const j = Math.floor(rng2() * (i + 1));
+    [pts[i], pts[j]] = [pts[j], pts[i]];
+  }
+  return pts;
+}
+
+function split(pts, n) {
+  const head = pts.slice(0, n);
+  const nTrain = Math.max(4, Math.floor(head.length * 0.8));
+  return { train: head.slice(0, nTrain), test: head.slice(nTrain) };
+}
+
+// ──────────── Polynomial least squares ────────────
+// Solve (X^T X) β = X^T y using Gaussian elimination on the (d+1) × (d+1) system.
+function fitPoly(pts, degree) {
+  const d = degree + 1;
+  const A = Array.from({length: d}, () => new Array(d).fill(0));
+  const b = new Array(d).fill(0);
+  for (const {x, y} of pts) {
+    const xs = new Array(2*d - 1);
+    xs[0] = 1;
+    for (let k = 1; k < xs.length; k++) xs[k] = xs[k-1] * x;
+    for (let i = 0; i < d; i++) {
+      for (let j = 0; j < d; j++) A[i][j] += xs[i + j];
+      b[i] += xs[i] * y;
+    }
+  }
+  // Ridge regularisation for numerical stability (tiny)
+  for (let i = 0; i < d; i++) A[i][i] += 1e-8;
+
+  // Gauss–Jordan
+  const M = A.map((row, i) => row.concat([b[i]]));
+  for (let i = 0; i < d; i++) {
+    // pivot
+    let piv = i;
+    for (let k = i + 1; k < d; k++) if (Math.abs(M[k][i]) > Math.abs(M[piv][i])) piv = k;
+    [M[i], M[piv]] = [M[piv], M[i]];
+    const p = M[i][i];
+    if (Math.abs(p) < 1e-14) return new Array(d).fill(0);
+    for (let j = i; j <= d; j++) M[i][j] /= p;
+    for (let k = 0; k < d; k++) if (k !== i) {
+      const f = M[k][i];
+      for (let j = i; j <= d; j++) M[k][j] -= f * M[i][j];
+    }
+  }
+  return M.map(row => row[d]);
+}
+
+function evalPoly(coefs, x) {
+  let y = 0, xp = 1;
+  for (let i = 0; i < coefs.length; i++) { y += coefs[i] * xp; xp *= x; }
+  return y;
+}
+function mse(coefs, pts) {
+  if (pts.length === 0) return 0;
+  let s = 0;
+  for (const p of pts) {
+    const r = p.y - evalPoly(coefs, p.x);
+    s += r * r;
+  }
+  return s / pts.length;
+}
+
+// ──────────── SVG plot ────────────
+const plot = document.getElementById('plot');
+const PW = 760, PH = 540;
+const PAD_L = 50, PAD_R = 20, PAD_T = 20, PAD_B = 40;
+
+function toSvgX(x) {
+  return PAD_L + ((x - X_MIN) / (X_MAX - X_MIN)) * (PW - PAD_L - PAD_R);
+}
+function toSvgY(y) {
+  return PH - PAD_B - ((y - Y_MIN) / (Y_MAX - Y_MIN)) * (PH - PAD_T - PAD_B);
+}
+function clearSvg(el) { while (el.firstChild) el.removeChild(el.firstChild); }
+function el(tag, attrs) {
+  const n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  return n;
+}
+
+function drawPlot(train, test, coefs) {
+  clearSvg(plot);
+
+  // gridlines
+  for (let gx = 0; gx <= 10; gx += 2) {
+    plot.appendChild(el('line', {
+      x1: toSvgX(gx), x2: toSvgX(gx),
+      y1: PAD_T, y2: PH - PAD_B, stroke: '#141414'
+    }));
+  }
+  for (let gy = 0; gy <= 100; gy += 25) {
+    plot.appendChild(el('line', {
+      x1: PAD_L, x2: PW - PAD_R,
+      y1: toSvgY(gy), y2: toSvgY(gy), stroke: '#141414'
+    }));
+  }
+
+  // axes
+  plot.appendChild(el('line', { x1: PAD_L, x2: PW - PAD_R, y1: PH - PAD_B, y2: PH - PAD_B, stroke: '#444' }));
+  plot.appendChild(el('line', { x1: PAD_L, x2: PAD_L, y1: PAD_T, y2: PH - PAD_B, stroke: '#444' }));
+
+  // axis labels
+  const xLab = el('text', { x: PW/2, y: PH - 8, fill: '#888', 'text-anchor': 'middle', 'font-family': 'JetBrains Mono, monospace', 'font-size': '11' });
+  xLab.textContent = 'feature';
+  plot.appendChild(xLab);
+  const yLab = el('text', { x: 14, y: PH/2, fill: '#888', 'text-anchor': 'middle',
+                             'font-family': 'JetBrains Mono, monospace', 'font-size': '11',
+                             transform: `rotate(-90, 14, ${PH/2})` });
+  yLab.textContent = 'outcome';
+  plot.appendChild(yLab);
+
+  // true curve (faint white)
+  const tp = [];
+  for (let i = 0; i <= 200; i++) {
+    const x = X_MIN + (i/200) * (X_MAX - X_MIN);
+    tp.push(`${toSvgX(x).toFixed(2)},${toSvgY(trueCurve(x)).toFixed(2)}`);
+  }
+  plot.appendChild(el('polyline', {
+    points: tp.join(' '),
+    fill: 'none', stroke: '#ffffff', 'stroke-opacity': '0.35',
+    'stroke-width': '1.5', 'stroke-dasharray': '4,3'
+  }));
+
+  // fitted curve
+  const fp = [];
+  for (let i = 0; i <= 300; i++) {
+    const x = X_MIN + (i/300) * (X_MAX - X_MIN);
+    const y = evalPoly(coefs, x);
+    fp.push(`${toSvgX(x).toFixed(2)},${toSvgY(y).toFixed(2)}`);
+  }
+  plot.appendChild(el('polyline', {
+    points: fp.join(' '),
+    fill: 'none', stroke: '#FFF1B5', 'stroke-width': '2.5'
+  }));
+
+  // train points: filled blue
+  for (const p of train) {
+    plot.appendChild(el('circle', {
+      cx: toSvgX(p.x), cy: toSvgY(p.y), r: 3.5, fill: '#58C4DD'
+    }));
+  }
+  // test points: hollow green
+  for (const p of test) {
+    plot.appendChild(el('circle', {
+      cx: toSvgX(p.x), cy: toSvgY(p.y), r: 4,
+      fill: 'none', stroke: '#83C167', 'stroke-width': '1.5'
+    }));
+  }
+}
+
+// ──────────── mini error plot ────────────
+const mini = document.getElementById('mini');
+function drawMini(errByDeg, currentDeg) {
+  clearSvg(mini);
+  const W = 320, H = 120;
+  const PAD = 18;
+  const maxErr = Math.max(...errByDeg.flat().filter(v => isFinite(v)), 10);
+  const logMax = Math.log10(maxErr + 1);
+  const toX = d => PAD + ((d - 1) / 8) * (W - 2*PAD);
+  const toY = v => H - PAD - (Math.log10(Math.max(v, 0.01) + 1) / logMax) * (H - 2*PAD);
+
+  // axes
+  mini.appendChild(el('line', { x1: PAD, x2: W-PAD, y1: H-PAD, y2: H-PAD, stroke: '#333' }));
+
+  // train line (blue)
+  let pts = errByDeg.map((e, i) => `${toX(i+1).toFixed(1)},${toY(e[0]).toFixed(1)}`).join(' ');
+  mini.appendChild(el('polyline', { points: pts, fill: 'none', stroke: '#58C4DD', 'stroke-width': 1.8 }));
+  // test line (yellow)
+  pts = errByDeg.map((e, i) => `${toX(i+1).toFixed(1)},${toY(e[1]).toFixed(1)}`).join(' ');
+  mini.appendChild(el('polyline', { points: pts, fill: 'none', stroke: '#FFF1B5', 'stroke-width': 1.8 }));
+
+  // current-degree marker
+  const x = toX(currentDeg);
+  mini.appendChild(el('line', { x1: x, x2: x, y1: PAD, y2: H-PAD, stroke: '#888', 'stroke-dasharray': '3,3' }));
+
+  // axis labels
+  for (let d = 1; d <= 9; d += 2) {
+    const t = el('text', { x: toX(d), y: H - 4, fill: '#666', 'text-anchor':'middle',
+                           'font-family':'JetBrains Mono,monospace', 'font-size':'9' });
+    t.textContent = d; mini.appendChild(t);
+  }
+  const legT = el('text', { x: PAD, y: 12, fill: '#58C4DD', 'font-family':'JetBrains Mono,monospace', 'font-size':'9' });
+  legT.textContent = 'train';
+  const legE = el('text', { x: PAD + 40, y: 12, fill: '#FFF1B5', 'font-family':'JetBrains Mono,monospace', 'font-size':'9' });
+  legE.textContent = 'test';
+  mini.appendChild(legT); mini.appendChild(legE);
+}
+
+// ──────────── update pipeline ────────────
+const degEl   = document.getElementById('deg');
+const nEl     = document.getElementById('n');
+const degVal  = document.getElementById('deg-val');
+const nVal    = document.getElementById('n-val');
+const eTrain  = document.getElementById('err-train');
+const eTest   = document.getElementById('err-test');
+const badge   = document.getElementById('badge');
+const btn     = document.getElementById('resample');
+
+function update() {
+  const degree = parseInt(degEl.value, 10);
+  const n = parseInt(nEl.value, 10);
+  degVal.textContent = degree;
+  nVal.textContent = n;
+
+  const pts = allPoints.length ? allPoints : (allPoints = generate(200, seed));
+  const { train, test } = split(pts, n);
+
+  const coefs = fitPoly(train, degree);
+  const mTrain = mse(coefs, train);
+  const mTest  = mse(coefs, test);
+
+  drawPlot(train, test, coefs);
+
+  eTrain.textContent = mTrain.toFixed(2);
+  eTest.textContent  = mTest.toFixed(2);
+
+  // Full error-vs-degree sweep for the mini plot (using current train/test split)
+  const byDeg = [];
+  for (let d = 1; d <= 9; d++) {
+    const c = fitPoly(train, d);
+    byDeg.push([mse(c, train), mse(c, test)]);
+  }
+  drawMini(byDeg, degree);
+
+  // badge
+  badge.classList.remove('under', 'good', 'over');
+  if (degree <= 1) { badge.classList.add('under'); badge.textContent = 'UNDERFITTING — too simple'; }
+  else if (degree >= 2 && degree <= 4) { badge.classList.add('good'); badge.textContent = 'GOOD FIT'; }
+  else if (degree >= 7) { badge.classList.add('over'); badge.textContent = 'OVERFITTING — memorising, not learning'; }
+  else { badge.textContent = ''; badge.style.borderColor = 'transparent'; }
+}
+
+degEl.addEventListener('input', update);
+nEl.addEventListener('input', update);
+btn.addEventListener('click', () => {
+  seed++;
+  allPoints = generate(200, seed);
+  update();
+});
+
+update();
+</script>
+</body>
+</html>

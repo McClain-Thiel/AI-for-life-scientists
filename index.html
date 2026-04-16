@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro to AI for Scientists</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/black.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+  <!-- Computer Modern (LaTeX / Manim) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/dreampulse/computer-modern-web-font@master/fonts.css" />
+  <!-- JetBrains Mono -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.20/index.css" />
+  <!-- KaTeX -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+  <!-- Code highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/monokai.css" />
+
+  <link rel="stylesheet" href="assets/custom.css" />
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═════════ ACT 1 — THE FOG ═════════ -->
+
+      <!-- SLIDE 0 · Title -->
+      <section data-background-color="#000000">
+        <div class="title-dots"></div>
+        <div style="position:relative; z-index:1;">
+          <h1 style="font-size:4.5rem; color:var(--blue); margin-bottom:1rem;">Intro to AI for Scientists</h1>
+          <p class="fragment" style="font-size:1.6rem; color:var(--white); font-style:italic;">Nucleate UK</p>
+          <p class="fragment" style="margin-top:3rem; color:var(--muted); font-size:0.95rem; font-family:var(--mono);">
+            McClain Thiel &nbsp;·&nbsp; Encode Fellow &nbsp;·&nbsp; UCL Barnes Lab
+          </p>
+        </div>
+        <aside class="notes">
+          Welcome. This talk is about giving you a mental model for what AI actually is — not the hype,
+          not the buzzwords, the actual mechanism. By the end you should be able to walk into any AI
+          pitch and ask three questions that will tell you more than the demo will. Let's start.
+        </aside>
+      </section>
+
+      <!-- SLIDE 1 · Self intro -->
+      <section data-center="false" style="padding-top:4rem;">
+        <h2 class="left-align">A bit about me</h2>
+        <ul class="left-align" style="list-style:none; padding-left:0;">
+          <li class="fragment fade-in-then-semi-out" style="margin:1rem 0;">
+            <span class="c-blue mono">●</span>&nbsp;&nbsp;UC Berkeley — Data Science
+          </li>
+          <li class="fragment fade-in-then-semi-out" style="margin:1rem 0;">
+            <span class="c-blue mono">●</span>&nbsp;&nbsp;Tempus AI — clinical genomics
+          </li>
+          <li class="fragment fade-in-then-semi-out" style="margin:1rem 0;">
+            <span class="c-blue mono">●</span>&nbsp;&nbsp;Snorkel AI — the <em>"labels are expensive"</em> problem
+          </li>
+          <li class="fragment fade-in-then-semi-out" style="margin:1rem 0;">
+            <span class="c-blue mono">●</span>&nbsp;&nbsp;WealthHawk — founded, built, acquired
+          </li>
+          <li class="fragment" style="margin:1rem 0;">
+            <span class="c-blue mono">●</span>&nbsp;&nbsp;Encode Fellow + PhD @ UCL — AI-driven DNA design
+          </li>
+        </ul>
+        <aside class="notes">
+          I've been on all sides of this. Tempus showed me what a real data moat looks like — matched
+          clinical and genomic records at scale. Snorkel was literally built around the insight that
+          labeled data is the bottleneck — that's going to be a theme today. WealthHawk was a startup,
+          so I know what it's like to pitch "AI-powered" things. And now I'm in the lab actually
+          building models. So I have opinions.
+        </aside>
+      </section>
+
+      <!-- SLIDE 3 · Hype wall -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2 style="margin-bottom:1rem;">The Hype Wall</h2>
+        <div class="hype-wall">
+          <div class="hype-tile" style="top:20px;  left:30px;  transform:rotate(-4deg); animation-delay:0.1s;">
+            Startup raises $40M for <strong class="c-blue-b">AI-powered</strong> drug discovery
+          </div>
+          <div class="hype-tile" style="top:40px;  left:320px; transform:rotate(2deg);  animation-delay:0.2s;">
+            Legacy CRM now <strong class="c-blue-b">AI-powered</strong>
+          </div>
+          <div class="hype-tile" style="top:10px;  left:640px; transform:rotate(5deg);  animation-delay:0.3s;">
+            AI will replace radiologists by 2025
+          </div>
+          <div class="hype-tile" style="top:70px;  left:920px; transform:rotate(-2deg); animation-delay:0.4s;">
+            $2B fund launches for <strong class="c-blue-b">generative biology</strong>
+          </div>
+          <div class="hype-tile" style="top:140px; left:150px; transform:rotate(3deg);  animation-delay:0.5s;">
+            Big Pharma deploys <strong class="c-blue-b">AI</strong> across R&amp;D
+          </div>
+          <div class="hype-tile" style="top:160px; left:500px; transform:rotate(-6deg); animation-delay:0.6s;">
+            "We're an <strong class="c-blue-b">AI-first</strong> diagnostics company"
+          </div>
+          <div class="hype-tile" style="top:180px; left:830px; transform:rotate(4deg);  animation-delay:0.7s;">
+            Startup uses <strong class="c-blue-b">AI</strong> to fold proteins (again)
+          </div>
+          <div class="hype-tile" style="top:260px; left:40px;  transform:rotate(-3deg); animation-delay:0.8s;">
+            <strong class="c-blue-b">AI agent</strong> automates wet-lab scheduling
+          </div>
+          <div class="hype-tile" style="top:290px; left:360px; transform:rotate(6deg);  animation-delay:0.9s;">
+            New <strong class="c-blue-b">foundation model</strong> for the cell
+          </div>
+          <div class="hype-tile" style="top:280px; left:700px; transform:rotate(-5deg); animation-delay:1.0s;">
+            Series A: <strong class="c-blue-b">AI-native</strong> biotech out of stealth
+          </div>
+          <div class="hype-tile" style="top:380px; left:200px; transform:rotate(2deg);  animation-delay:1.1s;">
+            "Our <strong class="c-blue-b">AI</strong> learns from every experiment"
+          </div>
+          <div class="hype-tile" style="top:400px; left:560px; transform:rotate(-4deg); animation-delay:1.2s;">
+            <strong class="c-blue-b">LLM</strong> for molecule generation
+          </div>
+          <div class="hype-tile" style="top:420px; left:880px; transform:rotate(3deg);  animation-delay:1.3s;">
+            <strong class="c-blue-b">Agentic</strong> drug discovery platform
+          </div>
+        </div>
+        <p class="hype-footnote">The word "AI" appears in ~75% of Series A pitches.</p>
+        <aside class="notes">
+          Every one of these headlines is technically true and almost completely uninformative.
+          "AI-powered" tells you nothing about what algorithm is running, what data it was trained on,
+          or whether the AI is actually doing anything proprietary. It's become a marketing adjective.
+          Our job today is to get under it.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4 · Nested circles (all bottoms tangent, labels stacked in caps) -->
+      <section data-center="false" style="padding-top:1rem;">
+        <h2 style="margin-bottom:0.5rem;">Clearing the Fog</h2>
+        <svg class="nested-circles" viewBox="0 0 1200 620" preserveAspectRatio="xMidYMid meet">
+
+          <!-- All bottom arcs tangent at y = 580; centers shift up by radius. -->
+
+          <!-- AI: r=270, cy=310, top=40 -->
+          <g class="fragment">
+            <circle cx="600" cy="310" r="270" stroke="#1C758A" stroke-width="2" pathLength="1"/>
+            <text class="label-main" x="600" y="110" fill="#1C758A" text-anchor="middle" font-size="32">AI</text>
+          </g>
+
+          <!-- ML: r=200, cy=380, top=180 -->
+          <g class="fragment">
+            <circle cx="600" cy="380" r="200" stroke="#29ABCA" stroke-width="2.2" pathLength="1"/>
+            <text class="label-main" x="600" y="248" fill="#29ABCA" text-anchor="middle" font-size="24">Machine Learning</text>
+          </g>
+
+          <!-- DL: r=130, cy=450, top=320 -->
+          <g class="fragment">
+            <circle cx="600" cy="450" r="130" stroke="#58C4DD" stroke-width="2.4" pathLength="1"/>
+            <text class="label-main" x="600" y="383" fill="#58C4DD" text-anchor="middle" font-size="19">Deep Learning</text>
+          </g>
+
+          <!-- LLMs: r=65, cy=515, top=450 -->
+          <g class="fragment">
+            <circle cx="600" cy="515" r="65" stroke="#9CDCEB" stroke-width="2.6" pathLength="1"/>
+            <text class="label-main" x="600" y="500" fill="#9CDCEB" text-anchor="middle" font-size="15">LLMs</text>
+          </g>
+        </svg>
+        <aside class="notes">
+          AI is the big ring — the word that goes in the pitch deck. A marketing umbrella.
+          Machine Learning is the actual thing — a class of algorithms that learn patterns from data.
+          Deep Learning is a subset of ML that uses neural networks. LLMs — ChatGPT, Claude — are a
+          small subset of deep learning. Most of the time when someone says "AI" they're gesturing
+          vaguely at this whole picture.
+        </aside>
+      </section>
+
+      <!-- ═════════ ACT 2 — THE MECHANISM ═════════ -->
+
+      <!-- SLIDE 6 · ML tasks overview -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2>What can ML actually do?</h2>
+        <div class="three-col tasks-row" id="ml-tasks-row" style="margin-top:1.5rem;">
+          <div class="card fragment" data-card="sup">
+            <div class="card-label c-blue">SUPERVISED</div>
+            <h3 class="c-blue">Labeled examples</h3>
+            <p>Learn a mapping from input to known output.</p>
+            <div class="card-example">
+              tumor image &nbsp;→&nbsp; malignant / benign
+            </div>
+          </div>
+          <div class="card purple fragment" data-card="unsup">
+            <div class="card-label c-purple">UNSUPERVISED</div>
+            <h3 class="c-purple">Structure without labels</h3>
+            <p>Find patterns, clusters, or low-dimensional structure.</p>
+            <div class="card-example">
+              patient records &nbsp;→&nbsp; patient clusters
+            </div>
+          </div>
+          <div class="card muted fragment" data-card="semi">
+            <div class="card-label c-muted">SEMI-SUPERVISED</div>
+            <h3 class="c-muted">A bit of both</h3>
+            <p>Label some examples, infer the rest.</p>
+            <div class="card-example">
+              useful when labeling is expensive
+            </div>
+          </div>
+        </div>
+        <!-- invisible fragment that triggers the "focus supervised" state -->
+        <div class="fragment" data-action="focus-sup" style="display:none;"></div>
+        <aside class="notes">
+          Three flavors. Supervised is what you'll see in most commercial AI — examples of inputs
+          and right answers; the model learns the mapping. Unsupervised is useful for exploration —
+          finding patterns you didn't know to look for. Semi-supervised bridges the two. We'll
+          spend most of our time on supervised because it's where the majority of valuable AI
+          products live. Reinforcement learning exists too — AlphaGo, robotics — but it's less
+          common in biotech applications and out of scope today.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7 · Input → Output with concrete examples -->
+      <section data-center="false" style="padding-top:2rem;">
+        <div class="io-flow">
+          <!-- INPUT column -->
+          <div class="io-side">
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <!-- cat silhouette -->
+                <polygon points="18,22 22,12 26,20" fill="#58C4DD" opacity="0.7"/>
+                <polygon points="34,20 38,12 42,22" fill="#58C4DD" opacity="0.7"/>
+                <circle cx="30" cy="34" r="11" fill="#58C4DD" opacity="0.3"/>
+                <circle cx="26" cy="32" r="1.5" fill="#58C4DD"/>
+                <circle cx="34" cy="32" r="1.5" fill="#58C4DD"/>
+                <path d="M 27 38 Q 30 41 33 38" stroke="#58C4DD" fill="none" stroke-width="1.2"/>
+              </svg>
+              <span>image of a cat</span>
+            </div>
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="18" x2="50" y2="18" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="26" x2="42" y2="26" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="34" x2="48" y2="34" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="42" x2="38" y2="42" stroke="#58C4DD" stroke-width="1.2"/>
+              </svg>
+              <span>"This movie was great"</span>
+            </div>
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <text x="30" y="22" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">size=1200</text>
+                <text x="30" y="34" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">beds=3</text>
+                <text x="30" y="46" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">yr=1995</text>
+              </svg>
+              <span>house features</span>
+            </div>
+            <div class="io-colabel">INPUT</div>
+          </div>
+
+          <div class="io-arrow">→</div>
+
+          <!-- MODEL -->
+          <div class="io-modelbox">
+            <div class="mono" style="font-size:0.7rem; letter-spacing:0.12em; color:var(--muted);">LEARNED</div>
+            <div style="margin-top:0.3rem;">MODEL</div>
+          </div>
+
+          <div class="io-arrow">→</div>
+
+          <!-- OUTPUT column -->
+          <div class="io-side">
+            <div class="io-example output">
+              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
+              <span class="c-green">"cat" &nbsp;<span class="c-muted">(92%)</span></span>
+            </div>
+            <div class="io-example output">
+              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
+              <span class="c-green">positive sentiment</span>
+            </div>
+            <div class="io-example output yellow">
+              <span class="mono c-muted" style="font-size:0.65rem;">regression</span>
+              <span class="c-yellow">$420,000</span>
+            </div>
+            <div class="io-colabel">OUTPUT</div>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="font-size:1.8rem; margin-top:2.2rem; line-height:1.4;">
+          That's it. Everything else is a creative application of this.
+        </p>
+        <aside class="notes">
+          I want this to stick. Every ML model you will ever encounter is doing one thing: mapping
+          an input to an output. The training process is how it learns that mapping from examples.
+          The architecture is just the function that does the mapping. Classification and regression
+          are the two main output types — predicting a category vs. predicting a number.
+          Hold this mental model. We'll keep coming back to it.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8 · DEMO 1 — Regression playground -->
+      <section class="demo-slide"
+               data-background-iframe="demos/regression-playground.html"
+               data-background-interactive>
+        <aside class="notes">
+          Walk through live. Degree 1 — the line doesn't fit. Underfitting. Degree 3 — curve tracks
+          data, test error is low. Generalization. Degree 8 — wild oscillation, train error near
+          zero, test error explodes. Overfitting.
+          Now crank training size up while staying at high degree — watch test error come down. More
+          data gives a complex model enough examples to generalize.
+          First red flag in a pitch: "we trained on 500 examples." Five hundred examples of what?
+        </aside>
+      </section>
+
+      <!-- SLIDE 9 · Lesson from the demo -->
+      <section data-center="false" style="padding-top:3rem;">
+        <h2>What the demo shows</h2>
+        <div class="left-align" style="margin-top:2rem;">
+          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
+            A model that fits training data perfectly is not a good model.
+            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ <em>overfitting</em></span>
+          </p>
+          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
+            More data almost always helps.
+            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ this is the business insight</span>
+          </p>
+          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
+            Model complexity must match the task.
+            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ this is what ML engineers actually do</span>
+          </p>
+        </div>
+        <aside class="notes">
+          The regression demo isn't just about math — it's about the business of AI. When a startup
+          says "our model is 99% accurate on our test set," first question: what did you train on,
+          and is your test set from the same distribution as the real world? Overfitting to a
+          curated dataset is one of the most common ways AI products fail in deployment.
+        </aside>
+      </section>
+
+      <!-- SLIDE 10 · Creative applications -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2>Same idea. Different framing.</h2>
+        <div class="three-col" style="margin-top:1.5rem;">
+          <div class="card fragment">
+            <div class="card-label c-blue">SUPERVISED LEARNING</div>
+            <p class="mono c-muted" style="font-size:0.8rem;">input</p>
+            <p class="mono c-blue" style="font-size:0.85rem;">house features (size, location, age)</p>
+            <p class="c-muted mono" style="text-align:center; margin:0.5rem 0;">↓</p>
+            <p class="mono c-muted" style="font-size:0.8rem;">output</p>
+            <p class="mono c-yellow" style="font-size:0.85rem;">price = $420,000</p>
+          </div>
+
+          <div class="card yellow fragment">
+            <div class="card-label c-yellow">LARGE LANGUAGE MODEL</div>
+            <p class="mono c-muted" style="font-size:0.8rem;">input</p>
+            <p class="mono c-blue" style="font-size:0.85rem;">"The patient presented with"</p>
+            <p class="c-muted mono" style="text-align:center; margin:0.5rem 0;">↓</p>
+            <p class="mono c-muted" style="font-size:0.8rem;">output</p>
+            <p class="mono c-yellow" style="font-size:0.85rem;">P(next word | context)</p>
+          </div>
+
+          <div class="card green fragment">
+            <div class="card-label c-green">ALPHAFOLD</div>
+            <p class="mono c-muted" style="font-size:0.8rem;">input</p>
+            <p class="mono c-blue" style="font-size:0.85rem;">MKTAYIAKQRQIS...</p>
+            <p class="c-muted mono" style="text-align:center; margin:0.5rem 0;">↓</p>
+            <p class="mono c-muted" style="font-size:0.8rem;">output</p>
+            <p class="mono c-yellow" style="font-size:0.85rem;">3D atomic coordinates</p>
+          </div>
+        </div>
+
+        <aside class="notes">
+          None of these are fundamentally different algorithms. They're all supervised learning —
+          input, output, train on examples. AlphaFold is arguably the most impressive scientific AI
+          of the decade. What DeepMind did was realize that protein structure prediction could be
+          framed as: given this sequence, predict these coordinates. Then they got the data (PDB)
+          and the compute. The algorithm is almost secondary.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11 · How an LLM actually works -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2 style="margin-bottom:1.5rem;">How an LLM actually works</h2>
+
+        <!-- Input prompt -->
+        <div class="llm-input mono">
+          "the quick brown fox <span class="c-yellow">_____</span>"
+        </div>
+
+        <!-- Conditional probability notation -->
+        <div class="llm-cond c-yellow">
+          <span style="color:var(--white);">P</span>(<span class="c-yellow">next word</span> | <span class="c-blue">"the quick brown fox"</span>)
+        </div>
+
+        <!-- Probability bars -->
+        <div class="prob-bars fragment" style="max-width:640px; margin:0 auto;">
+          <div class="prob-row top" style="--p: 0.72;">
+            <span class="word c-yellow">jumps</span>
+            <span class="bar"></span>
+            <span class="pct">72%</span>
+          </div>
+          <div class="prob-row" style="--p: 0.16;">
+            <span class="word">leaps</span>
+            <span class="bar"></span>
+            <span class="pct">16%</span>
+          </div>
+          <div class="prob-row" style="--p: 0.06;">
+            <span class="word">runs</span>
+            <span class="bar"></span>
+            <span class="pct">6%</span>
+          </div>
+          <div class="prob-row" style="--p: 0.04;">
+            <span class="word">hops</span>
+            <span class="bar"></span>
+            <span class="pct">4%</span>
+          </div>
+          <div class="prob-row" style="--p: 0.02;">
+            <span class="word">is</span>
+            <span class="bar"></span>
+            <span class="pct">2%</span>
+          </div>
+        </div>
+
+        <p class="fragment c-muted" style="margin-top:1.4rem; font-size:0.95rem; font-style:italic;">
+          input: all previous tokens &nbsp;&nbsp;→&nbsp;&nbsp; output: probability over next token
+        </p>
+
+        <aside class="notes">
+          An LLM does exactly this, repeated thousands of times per response. It takes all the text
+          so far and produces a probability distribution over every possible next word. It samples
+          from that distribution. Then it does it again with the new token appended. That's the
+          whole mechanism. The "chatbot" behaviour is just a thin system prompt on top of this.
+        </aside>
+      </section>
+
+      <!-- SLIDE 12 · DEMO 2 — Token predictor -->
+      <section class="demo-slide"
+               data-background-iframe="demos/token-predictor.html"
+               data-background-interactive>
+        <aside class="notes">
+          [Training Mode] This is what training looks like. The model sees text with the last word
+          removed, predicts, we check, we nudge parameters. Billions of times, hundreds of billions
+          of words → GPT.
+          [Inference Mode] This is what happens when you use ChatGPT. System prompt is invisible to
+          you but the model sees it. You type. The model just keeps completing the document. It
+          doesn't "know" it's a chatbot. [Hide system prompt] Now it's just text completion. That's
+          all it ever was.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13 · AlphaFold (input → model → 3D viewer) -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>AlphaFold</h2>
+
+        <div class="af-flow">
+          <!-- INPUT -->
+          <div class="af-col">
+            <pre class="aa-seq">MQIFVKTLTGKTITLEVEPSDT
+IENVKAKIQDKEGIPPDQQRLI
+FAGKQLEDGRTLSDYNIQKEST
+LHLVLRLRGG</pre>
+            <div class="af-label">
+              <span class="c-muted">INPUT</span><br>
+              amino acid sequence<br>
+              <span class="c-muted" style="font-size:0.65rem;">ubiquitin · 76 aa</span>
+            </div>
+          </div>
+
+          <div class="af-arrow">→</div>
+
+          <!-- MODEL -->
+          <div class="af-modelbox">
+            <div class="mono" style="font-size:0.7rem; letter-spacing:0.15em; color:var(--muted);">ALPHAFOLD</div>
+            <div style="margin-top:0.4rem; font-size:1.2rem;">MODEL</div>
+          </div>
+
+          <div class="af-arrow">→</div>
+
+          <!-- OUTPUT -->
+          <div class="af-col">
+            <div id="af-viewer"
+                 data-pdb="1UBQ"
+                 style="width:340px; height:340px; margin:0 auto;
+                        position:relative; background:#000;
+                        border:1px solid #222; border-radius:4px;"></div>
+            <div class="af-label">
+              <span class="c-muted">OUTPUT</span><br>
+              3D atomic coordinates<br>
+              <span class="c-muted" style="font-size:0.65rem;">PDB 1UBQ</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          AlphaFold is the clearest proof that the input→output framing is not trivial. Biologists
+          spent 50 years on the protein folding problem. DeepMind solved it — not with a
+          revolutionary new algorithm — but by framing it as supervised learning, gathering every
+          known structure in the PDB, and training a very large model. The output is just
+          coordinates. The insight was realizing you could frame it this way.
+          Nobel Prize in Chemistry, 2024 (Hassabis, Jumper, Baker).
+          To swap the protein, change the data-pdb attribute on #af-viewer to any RCSB 4-letter code.
+        </aside>
+      </section>
+
+      <!-- ═════════ ACT 3 — HOW DOES IT WORK ═════════ -->
+
+      <!-- SLIDE · Three ingredients -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>Three ingredients</h2>
+
+        <div class="ingredients" id="ingredients-row">
+          <div class="ingredient" id="ing-alg">
+            <span class="ing-word">ALGORITHM</span>
+            <span class="ing-note fragment" data-fragment-index="1">commoditizing — Llama, Mistral, open source</span>
+          </div>
+          <div class="ingredient" id="ing-cmp">
+            <span class="ing-word">COMPUTE</span>
+            <span class="ing-note fragment" data-fragment-index="2">commoditizing — AWS, GCP, Azure</span>
+          </div>
+          <div class="ingredient data" id="ing-dat">
+            <span class="ing-word">DATA</span>
+            <span class="ing-note fragment" data-fragment-index="3">the only durable moat</span>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" data-fragment-index="4"
+           style="margin-top:2rem; font-size:1.3rem; font-style:italic;">
+          The algorithm is public. The compute is rented. The data is yours.
+        </p>
+
+        <!-- strikethrough triggers bound to fragments above via JS below -->
+        <aside class="notes">
+          Five years ago, a novel algorithm was a real moat. Today Meta releases Llama, Mistral
+          releases Mixtral, Google releases Gemma — all open source, all state-of-the-art. Compute
+          is a commodity you rent by the hour. What you cannot rent, cannot download, cannot
+          replicate overnight — is proprietary, labeled, domain-specific data. That's Tempus. That's
+          why they're worth $10B. Not the algorithm. Ten years of matched clinical + genomic records.
+        </aside>
+      </section>
+
+      <!-- SLIDE · What goes into each box (callback to Input→Output) -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>What goes into each box</h2>
+
+        <div class="flow-diagram" style="margin-top:1.5rem;">
+          <div class="flow-box">INPUT</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box yellow">MODEL</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box green">OUTPUT</div>
+        </div>
+
+        <div class="three-col box-callback" style="margin-top:1.5rem;">
+          <div class="fragment">
+            <div class="card-label c-blue">COLLECT + LABEL</div>
+            <p>Gather examples. Pay someone &mdash; or something &mdash; to say what's what.</p>
+          </div>
+          <div class="fragment">
+            <div class="card-label c-yellow">ALGORITHM + COMPUTE + TRAIN</div>
+            <p>Pick a model. Minimize loss on the labeled data.</p>
+          </div>
+          <div class="fragment">
+            <div class="card-label c-green">EVALUATE</div>
+            <p>How well does it work on data it hasn't seen?</p>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:2rem; font-style:italic;">
+          Same three boxes. This is the entire machine-learning lifecycle.
+        </p>
+
+        <aside class="notes">
+          Quick callback. We saw the INPUT → MODEL → OUTPUT diagram back in Act 2. Now fill in what
+          each box actually involves. The work is almost entirely in box 1 (data) and box 3 (eval).
+          The algorithm box — the thing everyone pitches — is often the smallest problem.
+          Bridge into the demo: let's watch this happen end-to-end.
+        </aside>
+      </section>
+
+      <!-- SLIDE · GlowFish Inc demo -->
+      <section class="demo-slide"
+               data-background-iframe="demos/glowfish.html"
+               data-background-interactive>
+        <aside class="notes">
+          Walk through the 9 scenes of Gerald's story. Emphasize: data collection is the
+          hardest part. Three models, accuracy improving. The deploy scene sets up the
+          distribution-shift twist on the next slide.
+        </aside>
+      </section>
+
+      <!-- SLIDE · What happens when the world changes -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>What happens when the world changes?</h2>
+
+        <p class="c-yellow" style="font-size:1.35rem; margin-top:1.2rem; font-style:italic; line-height:1.5;">
+          Gerald's model learned <span style="color:var(--white);">GlowFish's</span> fish.<br>
+          Not <span style="color:var(--white);">all</span> fish.
+        </p>
+
+        <svg class="shift-viz fragment" viewBox="0 0 1000 240" style="width:100%; max-width:960px; margin:1.2rem auto 0; display:block;">
+          <!-- belt -->
+          <rect x="30" y="130" width="940" height="50" fill="#111" stroke="#333"/>
+          <circle cx="70"  cy="155" r="30" fill="#1a1a1a" stroke="#555"/>
+          <circle cx="930" cy="155" r="30" fill="#1a1a1a" stroke="#555"/>
+
+          <!-- training fish (yellow / large) -->
+          <g transform="translate(160, 155)">
+            <ellipse cx="0" cy="0" rx="30" ry="14" fill="#FFF1B5" opacity="0.9"/>
+            <polygon points="-28,-8 -40,0 -28,8" fill="#FFF1B5" opacity="0.9"/>
+            <circle cx="18" cy="-3" r="2" fill="#000"/>
+          </g>
+          <g transform="translate(270, 155)">
+            <ellipse cx="0" cy="0" rx="30" ry="14" fill="#FFF1B5" opacity="0.9"/>
+            <polygon points="-28,-8 -40,0 -28,8" fill="#FFF1B5" opacity="0.9"/>
+            <circle cx="18" cy="-3" r="2" fill="#000"/>
+          </g>
+          <text x="215" y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">training: GlowFish supplier</text>
+
+          <!-- new-supplier fish (orange / smaller) -->
+          <g transform="translate(580, 155)">
+            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
+            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
+            <circle cx="13" cy="-2" r="2" fill="#000"/>
+          </g>
+          <g transform="translate(670, 155)">
+            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
+            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
+            <circle cx="13" cy="-2" r="2" fill="#000"/>
+          </g>
+          <g transform="translate(760, 155)">
+            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
+            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
+            <circle cx="13" cy="-2" r="2" fill="#000"/>
+          </g>
+          <text x="670" y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">deployment: new supplier</text>
+
+          <!-- divider -->
+          <line x1="450" y1="60" x2="450" y2="230" stroke="#333" stroke-dasharray="5,5"/>
+        </svg>
+
+        <div class="fragment acc-drop">
+          <div>
+            <div class="c-muted mono" style="font-size:0.7rem; letter-spacing:0.1em;">TEST ACC.</div>
+            <div class="c-green mono" style="font-size:1.8rem;">97%</div>
+          </div>
+          <div class="c-red" style="font-size:1.8rem;">&rarr;</div>
+          <div>
+            <div class="c-muted mono" style="font-size:0.7rem; letter-spacing:0.1em;">PRODUCTION</div>
+            <div class="c-red mono" style="font-size:1.8rem;">68%</div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          Gerald shipped the model. A month later his supplier changes. Fish look a bit smaller
+          and more orange under the new lighting. To a human they're obviously the same kind of
+          thing — to the model they're a new distribution. Accuracy drops from 97% to 68%. This
+          is distribution shift.
+        </aside>
+      </section>
+
+      <!-- SLIDE · In vs Out of distribution -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>In vs. out of distribution</h2>
+
+        <svg class="dist-viz" viewBox="0 0 900 240" style="width:100%; max-width:900px; margin:1.2rem auto 0; display:block;">
+          <line x1="50" y1="200" x2="850" y2="200" stroke="#444" stroke-width="1"/>
+          <!-- training curve -->
+          <path d="M 100 200 Q 150 200 180 180 Q 230 120 280 60 Q 330 120 380 180 Q 410 200 460 200"
+                fill="#58C4DD" fill-opacity="0.2" stroke="#58C4DD" stroke-width="2"/>
+          <text x="280" y="225" fill="#58C4DD" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">training distribution</text>
+
+          <!-- deployment curve -->
+          <path d="M 500 200 Q 550 200 580 180 Q 630 140 680 90 Q 730 140 780 180 Q 810 200 850 200"
+                fill="#FC6255" fill-opacity="0.2" stroke="#FC6255" stroke-width="2"/>
+          <text x="680" y="225" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">deployment distribution</text>
+
+          <text x="470" y="80" fill="#888" font-family="Georgia, serif" font-style="italic" font-size="14" text-anchor="middle">shift</text>
+        </svg>
+
+        <div class="left-align dist-examples">
+          <p class="fragment">
+            <span class="ex-k">DERMATOLOGY AI</span>
+            trained on light skin &nbsp;&rarr;&nbsp;
+            <span class="c-red">&minus;15% accuracy on dark skin</span>
+          </p>
+          <p class="fragment">
+            <span class="ex-k">SEPSIS MODEL</span>
+            AUC 0.83 at Hospital&nbsp;A &nbsp;&rarr;&nbsp;
+            <span class="c-red">0.63 at Hospital&nbsp;B</span>
+          </p>
+          <p class="fragment">
+            <span class="ex-k">RARE DISEASE</span>
+            10k common cases in training &nbsp;&rarr;&nbsp;
+            <span class="c-red">near-random on 200 rare cases</span>
+          </p>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.1rem; font-style:italic;">
+          The model doesn't know it's out of distribution. That's the dangerous part.
+        </p>
+
+        <aside class="notes">
+          Three clinical examples. Dermatology models fail on dark skin because training sets
+          were overwhelmingly light-skinned. Sepsis models lose 20 points of AUC moving between
+          hospitals. Rare diseases are out-of-distribution by definition. The dangerous part
+          is the model's confidence doesn't drop — it still outputs "97% malignant." You only
+          find out in deployment.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Where AI wins / struggles -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>Where AI wins. Where it doesn't.</h2>
+
+        <div class="two-col" style="margin-top:1.3rem; gap:2rem; align-items:stretch;">
+          <div class="card green" style="padding:1.1rem 1.4rem;">
+            <div class="card-label c-green">GOOD AT</div>
+            <ul class="struggle-list">
+              <li>Consistent, repeatable patterns</li>
+              <li>Large labeled datasets</li>
+              <li>Clear input / output framing</li>
+              <li>Measurable, objective outcomes</li>
+              <li>High-volume decisions</li>
+            </ul>
+            <div class="card-example">
+              pathology imaging &middot; drug toxicity &middot; protein structure
+            </div>
+          </div>
+
+          <div class="card red" style="padding:1.1rem 1.4rem;">
+            <div class="card-label c-red">STRUGGLES WITH</div>
+            <ul class="struggle-list">
+              <li>Distribution shift</li>
+              <li>Tiny datasets</li>
+              <li>Novel biology with no prior data</li>
+              <li>Causal reasoning</li>
+              <li>High-stakes, irreversible decisions</li>
+            </ul>
+            <div class="card-example">
+              rare diseases &middot; first-in-class mechanisms &middot; individual patient outcomes
+            </div>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.05rem; font-style:italic;">
+          If a startup can't tell you what they trained on, they're probably in the right column.
+        </p>
+
+        <aside class="notes">
+          Useful heuristic. AI is uncannily good at tasks with clean labels and massive training
+          sets. It falls over on tasks that require reasoning about things it hasn't seen.
+          Biotech has lots of both kinds of problems — and the valuable thing as an investor is
+          being able to tell which side a given problem lives on.
+        </aside>
+      </section>
+
+      <!-- ═════════ ACT 4 — THE BUSINESS OF AI ═════════ -->
+
+      <!-- SLIDE · Who actually makes money (value chain) -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>Who actually makes money?</h2>
+
+        <div class="value-chain">
+          <div class="vc-node fragment">
+            <div class="vc-layer">HARDWARE</div>
+            <div class="vc-company c-green">NVIDIA</div>
+            <div class="vc-moat">scarcity</div>
+            <div class="vc-def">★★★★★</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-node fragment">
+            <div class="vc-layer">COMPUTE</div>
+            <div class="vc-company c-blue">AWS / GCP / Azure</div>
+            <div class="vc-moat">capex</div>
+            <div class="vc-def">★★★★</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-node fragment">
+            <div class="vc-layer">FOUNDATION</div>
+            <div class="vc-company c-blue">OpenAI · Anthropic</div>
+            <div class="vc-moat">talent + capex</div>
+            <div class="vc-def">★★★</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-node highlight fragment">
+            <div class="vc-layer">DOMAIN BUILDER</div>
+            <div class="vc-company c-yellow">Tempus · Recursion</div>
+            <div class="vc-moat">data</div>
+            <div class="vc-def">★★★★</div>
+          </div>
+          <div class="vc-arrow">→</div>
+          <div class="vc-node fragment">
+            <div class="vc-layer">WRAPPER</div>
+            <div class="vc-company c-muted">"AI-powered X"</div>
+            <div class="vc-moat">product</div>
+            <div class="vc-def">★</div>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:1.8rem; font-size:1.2rem; font-style:italic;">
+          Scarcity accretes value.
+        </p>
+        <p class="fragment c-muted" style="margin-top:0.3rem; font-size:0.9rem;">
+          Hardware is scarce. Data is scarce. Algorithms are not. Wrappers have SaaS economics.
+        </p>
+
+        <aside class="notes">
+          The AI value chain. Left to right: hardware (near-monopoly), compute (oligopoly),
+          foundation models (funded), domain builders (real moats possible), wrappers (commodity).
+          Value accretes where scarcity is. NVIDIA's moat is hardware — nobody else makes H100s.
+          Domain builders' moat is data. Algorithms commoditise. Wrappers are SaaS with AI marketing.
+          Callback to the outer ring of the AI circle — "marketing umbrella"? That's mostly wrappers.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Builder / User / Foundation spectrum -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2>Which ring are they <em>in</em>?</h2>
+        <div class="spectrum-bar"></div>
+        <div class="spectrum">
+          <div class="spectrum-pos fragment">
+            <div class="spec-label">FOUNDATION</div>
+            <h3 class="c-blue">Train from scratch</h3>
+            <div class="companies">OpenAI · Anthropic · DeepMind</div>
+            <p>Internet-scale pre-training. Capex at nation-state scale.</p>
+            <div class="money">$10B+ to compete.</div>
+          </div>
+          <div class="spectrum-pos highlight fragment">
+            <div class="spec-label">DOMAIN BUILDER</div>
+            <h3 class="c-yellow">Fine-tune + proprietary data</h3>
+            <div class="companies">Tempus · Recursion · Isomorphic</div>
+            <p>Model on top of private, labeled domain data. Thesis turns on the data.</p>
+            <div class="money">Defensible <em>if</em> the data is real.</div>
+          </div>
+          <div class="spectrum-pos fragment">
+            <div class="spec-label">WRAPPER / AGENT</div>
+            <h3 class="c-muted">Prompt engineering + API</h3>
+            <div class="companies">"AI-powered X"</div>
+            <p>No training. No proprietary data. A product on someone else's model.</p>
+            <div class="money">SaaS economics, not AI economics.</div>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:1.2rem; font-size:1.05rem; font-style:italic;">
+          Most interesting biotech AI lives in the middle.
+        </p>
+        <p class="fragment c-muted" style="margin-top:0.3rem; font-size:0.9rem; font-style:italic;">
+          Which ring are they claiming to be in? Which ring are they <em>actually</em> in?
+        </p>
+
+        <aside class="notes">
+          Before you evaluate anything else, figure out where they sit. Foundation is mostly out
+          of scope for early stage. Wrappers are fine businesses but they're SaaS — no data moat,
+          the model doesn't get better as they grow, anyone can replicate them in a weekend.
+          The middle is where you want to spend your time.
+        </aside>
+      </section>
+
+      <!-- SLIDE · What makes a data moat -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>What makes a <em>real</em> data moat</h2>
+
+        <div class="moat-grid">
+          <div class="card fragment">
+            <div class="card-label c-blue">EXCLUSIVE ACCESS</div>
+            <p>Clinical partnerships, proprietary instruments. Data you only see if you own the pipeline.</p>
+          </div>
+          <div class="card yellow fragment">
+            <div class="card-label c-yellow">COST TO GENERATE</div>
+            <p>Wet-lab experiments, rare patient cohorts. Data that takes real money and real time.</p>
+          </div>
+          <div class="card green fragment">
+            <div class="card-label c-green">NETWORK FLYWHEEL</div>
+            <p>More users → more labels → better model → more users. Usage itself generates training data.</p>
+          </div>
+          <div class="card red fragment">
+            <div class="card-label c-red">REGULATORY / PERMISSIONED</div>
+            <p>Can't scrape. Can't replicate. Access governed by contracts or regulation.</p>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.15rem; font-style:italic;">
+          The question isn't "do they have data?" &mdash; it's "can anyone else get this data?"
+        </p>
+
+        <aside class="notes">
+          "Data is a moat" is lazy shorthand. Actual moat comes from one of these four mechanisms.
+          Ask which one they're claiming. If the answer doesn't map to any of these, their
+          "data moat" is fake — just a dataset someone else can replicate in a weekend.
+        </aside>
+      </section>
+
+      <!-- ═════════ ACT 5 — THE LENS ═════════ -->
+
+      <!-- SLIDE · Two questions -->
+      <section data-background-color="#000000">
+        <div style="text-align:left; max-width:1000px; margin:0 auto;">
+          <p class="c-blue fragment" style="font-size:2.2rem; line-height:1.4; margin-bottom:1rem;">
+            1. Are you <em>building</em> a model, or <em>calling</em> an API?
+          </p>
+          <hr style="border:none; border-top:1px solid #222; margin:2rem 0;"/>
+          <p class="c-yellow fragment" style="font-size:2.2rem; line-height:1.4;">
+            2. What does your training data look like?
+          </p>
+          <p class="fragment c-muted" style="margin-top:2rem; font-size:1rem; font-style:italic;">
+            If they can't answer either clearly &mdash; you know where they sit.
+          </p>
+        </div>
+        <aside class="notes">
+          These two questions short-circuit hours of confused conversation. "Building a model"
+          means training infrastructure, labeled data, evaluation framework, ML engineer on the
+          team. "Calling an API" means they have a product, maybe a good one, but no AI moat.
+          Neither is bad — but they're priced differently and they scale differently.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Red flags -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2 class="c-red">Red flags</h2>
+        <table class="flag-table red">
+          <thead>
+            <tr><th>What they say</th><th>What it means</th></tr>
+          </thead>
+          <tbody>
+            <tr class="fragment"><td>"We use AI / we're AI-powered"</td><td>Almost certainly a wrapper.</td></tr>
+            <tr class="fragment"><td>"We fine-tuned GPT on our data"</td><td>Fine-tuning ≠ moat unless the data is irreplaceable.</td></tr>
+            <tr class="fragment"><td>"Our AI learns over time"</td><td>From what? What are the labels? What's the loop?</td></tr>
+            <tr class="fragment"><td>"We'll use public / scraped data"</td><td>Anyone can do this. No moat.</td></tr>
+            <tr class="fragment"><td>"Can't state input and output clearly"</td><td>They don't have a real ML problem yet.</td></tr>
+            <tr class="fragment"><td>"99% accuracy on our test set"</td><td>What test set? Same distribution as production?</td></tr>
+            <tr class="fragment"><td>"Works great &mdash; in our demo environment"</td><td>Distribution shift in waiting. Ask Gerald.</td></tr>
+            <tr class="fragment"><td>"No ML engineer on the team"</td><td>If the algorithm is the product, who's building it?</td></tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          The "99% accuracy" line deserves time — test-set leakage and distribution shift are
+          the two most common failure modes. A model trained on clean lab data that fails in
+          messy clinical deployment is one of the most common biotech AI disasters.
+          The "works great in our demo" row is the direct callback to Gerald's fish.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Green flags -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2 class="c-green">Green flags</h2>
+        <table class="flag-table green">
+          <thead>
+            <tr><th>What they say</th><th>What it means</th></tr>
+          </thead>
+          <tbody>
+            <tr class="fragment"><td>"Can state input and output precisely"</td><td>They have a model, not a vibe.</td></tr>
+            <tr class="fragment"><td>"We have exclusive access to X data"</td><td>Real moat &mdash; especially clinical, lab, genomic.</td></tr>
+            <tr class="fragment"><td>"More users → more labels → better model"</td><td>Network effect built into the ML itself.</td></tr>
+            <tr class="fragment"><td>"We built the dataset ourselves"</td><td>Hard to replicate &mdash; wet lab or clinical partnerships.</td></tr>
+            <tr class="fragment"><td>"We beat [baseline] by X% on [benchmark]"</td><td>Scientific rigor. Reproducible.</td></tr>
+            <tr class="fragment"><td>"We know where the model fails"</td><td>They've actually evaluated it.</td></tr>
+            <tr class="fragment"><td>"Domain expert + ML cofounder"</td><td>Label quality requires domain knowledge.</td></tr>
+          </tbody>
+        </table>
+        <aside class="notes">
+          "We built the dataset" is the green flag I weight most heavily in biotech. Wet-lab
+          experiments to generate training data are expensive, slow, hard to replicate.
+          A company systematically generating labeled biological data for two years has a
+          structural moat. The algorithm almost doesn't matter.
+        </aside>
+      </section>
+
+      <!-- SLIDE · The mental model (annotated callback) -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2>The mental model</h2>
+
+        <div class="flow-diagram" style="margin-top:1.2rem;">
+          <div class="flow-box">INPUT</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box yellow">MODEL</div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box green">OUTPUT</div>
+        </div>
+
+        <div class="three-col mental-annotations fragment" style="margin-top:1rem;">
+          <div>
+            <p class="c-blue">what's the data?<br>is it labeled?<br>can anyone else get it?</p>
+          </div>
+          <div>
+            <p class="c-yellow">which ring?<br>builder or wrapper?</p>
+          </div>
+          <div>
+            <p class="c-green">what's the eval metric?<br>does it match the real task?</p>
+          </div>
+        </div>
+
+        <ol class="left-align mental-questions" style="max-width:800px; margin:1.5rem auto 0;">
+          <li class="fragment c-blue">1. What is the <em>input</em>?</li>
+          <li class="fragment c-blue">2. What is the <em>output</em>?</li>
+          <li class="fragment c-yellow">3. Where does the <em>training data</em> come from?</li>
+        </ol>
+
+        <p class="fragment" style="margin-top:1.2rem; font-size:1.05rem; color:var(--white);">
+          These three questions will tell you more than any demo.
+        </p>
+        <p class="fragment c-muted" style="margin-top:0.2rem; font-size:0.85rem; font-style:italic;">
+          …we say, at the end of a demo-heavy talk.
+        </p>
+
+        <aside class="notes">
+          Whole talk in one slide. AI is pattern matching. The pattern is a mapping from input to
+          output. The quality of that mapping depends almost entirely on the quantity and quality
+          of labeled training data. Ask these three questions in order. If answers are concrete,
+          specific, and honest about limitations — that's a team that knows what they're
+          building. If the answers are vague, or they jump straight to the demo — be skeptical.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Q&A — Gerald waves -->
+      <section data-background-color="#000000">
+        <h1 style="font-size:4rem; margin-bottom:1rem;">Questions?</h1>
+
+        <!-- Gerald waving -->
+        <svg class="gerald-wave" viewBox="0 0 160 180" style="width:160px; height:180px; display:block; margin:1.5rem auto;">
+          <!-- head -->
+          <circle cx="80" cy="40" r="20" fill="#f4c2a1" stroke="#333" stroke-width="1.2"/>
+          <!-- hat brim -->
+          <rect x="58" y="22" width="44" height="4" fill="#29ABCA" rx="1"/>
+          <!-- hat top -->
+          <rect x="64" y="12" width="32" height="12" fill="#29ABCA" rx="2"/>
+          <!-- eyes -->
+          <circle cx="73" cy="38" r="1.6" fill="#222"/>
+          <circle cx="87" cy="38" r="1.6" fill="#222"/>
+          <!-- smile -->
+          <path d="M 72 46 Q 80 52 88 46" stroke="#222" fill="none" stroke-width="1.4"/>
+          <!-- body -->
+          <rect x="62" y="60" width="36" height="50" fill="#58C4DD" rx="3"/>
+          <!-- apron pocket stripe -->
+          <rect x="62" y="82" width="36" height="2" fill="#29ABCA"/>
+          <!-- left arm (down) -->
+          <line x1="62" y1="70" x2="50" y2="108" stroke="#f4c2a1" stroke-width="6" stroke-linecap="round"/>
+          <!-- right arm (waving up) -->
+          <line x1="98" y1="70" x2="120" y2="30" stroke="#f4c2a1" stroke-width="6" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate"
+                              values="-10 98 70; 10 98 70; -10 98 70"
+                              dur="1.2s" repeatCount="indefinite"/>
+          </line>
+          <!-- right hand -->
+          <circle cx="120" cy="30" r="5" fill="#f4c2a1">
+            <animateTransform attributeName="transform" type="rotate"
+                              values="-10 98 70; 10 98 70; -10 98 70"
+                              dur="1.2s" repeatCount="indefinite"/>
+          </circle>
+          <!-- legs -->
+          <line x1="73" y1="110" x2="71" y2="152" stroke="#333" stroke-width="7" stroke-linecap="round"/>
+          <line x1="87" y1="110" x2="89" y2="152" stroke="#333" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+
+        <p class="subtitle" style="margin-top:0.5rem;">
+          Or: try the three questions on the last AI pitch you saw.
+        </p>
+        <p class="c-muted mono" style="margin-top:2.5rem; font-size:0.85rem;">
+          McClain Thiel &nbsp;·&nbsp; UCL Barnes Lab
+        </p>
+
+        <aside class="notes">
+          Gerald says thanks. Optional workshop: give the audience 2–3 anonymized pitch
+          descriptions. Pairs. Identify builder vs wrapper. Ask the three questions.
+          5 minutes, high engagement.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- reveal.js core + plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/highlight/highlight.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js/plugin/notes/notes.js"></script>
+
+  <!-- 3Dmol (for AlphaFold slide) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.4.0/3Dmol-min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      transition: 'fade',
+      transitionSpeed: 'slow',
+      backgroundTransition: 'fade',
+      controls: true,
+      progress: true,
+      center: true,
+      width: 1280,
+      height: 720,
+      plugins: [ RevealHighlight, RevealNotes ],
+    });
+
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$',  right: '$',  display: false },
+      ]
+    });
+  </script>
+
+  <!-- ─── Neural-network layer generator (Slide 17) ─── -->
+  <script>
+    (function () {
+      const layers = [
+        { x: 80,  n: 6,  yTop: 80, yBot: 320 },
+        { x: 300, n: 8,  yTop: 60, yBot: 340 },
+        { x: 500, n: 8,  yTop: 60, yBot: 340 },
+        { x: 700, n: 6,  yTop: 80, yBot: 320 },
+        { x: 920, n: 3,  yTop: 140, yBot: 260 },
+      ];
+      const nodeGroup = document.getElementById('nn-nodes');
+      const lineGroup = document.getElementById('nn-lines');
+      if (!nodeGroup || !lineGroup) return;
+
+      const coords = layers.map(L => {
+        const ys = [];
+        for (let i = 0; i < L.n; i++) {
+          const t = L.n === 1 ? 0.5 : i / (L.n - 1);
+          ys.push(L.yTop + t * (L.yBot - L.yTop));
+        }
+        return ys.map(y => ({ x: L.x, y }));
+      });
+
+      // Lines first (so nodes draw on top)
+      for (let l = 0; l < coords.length - 1; l++) {
+        for (const a of coords[l]) {
+          for (const b of coords[l+1]) {
+            const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
+            ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
+            lineGroup.appendChild(ln);
+          }
+        }
+      }
+      // Nodes
+      for (const layer of coords) {
+        for (const p of layer) {
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 7);
+          nodeGroup.appendChild(c);
+        }
+      }
+    })();
+  </script>
+
+  <!-- ─── AlphaFold 3Dmol viewer ─── -->
+  <script>
+    (function () {
+      let afViewer = null;
+      let afPending = false;
+
+      function initAF() {
+        const container = document.getElementById('af-viewer');
+        if (!container) return;
+        if (typeof $3Dmol === 'undefined') {
+          if (!afPending) {
+            afPending = true;
+            setTimeout(() => { afPending = false; initAF(); }, 200);
+          }
+          return;
+        }
+        if (afViewer) {
+          afViewer.resize();
+          afViewer.render();
+          return;
+        }
+        const pdb = container.dataset.pdb || '1UBQ';
+        afViewer = $3Dmol.createViewer(container, {
+          backgroundColor: '#000000',
+          antialias: true,
+        });
+        $3Dmol.download('pdb:' + pdb, afViewer,
+          { multimodel: false, noComputeSecondaryStructure: false },
+          function () {
+            afViewer.setStyle({}, { cartoon: { color: 'spectrum', thickness: 0.5 } });
+            afViewer.zoomTo();
+            afViewer.zoom(1.15);
+            afViewer.spin('y', 0.6);
+            afViewer.render();
+          }
+        );
+      }
+
+      function maybeInit() {
+        const cur = window.Reveal && Reveal.getCurrentSlide && Reveal.getCurrentSlide();
+        if (cur && cur.querySelector('#af-viewer')) initAF();
+      }
+
+      if (window.Reveal) {
+        Reveal.on('ready', maybeInit);
+        Reveal.on('slidechanged', maybeInit);
+      } else {
+        document.addEventListener('DOMContentLoaded', maybeInit);
+      }
+    })();
+  </script>
+
+  <!-- ─── Three-ingredients strikethrough (Slide 15) ─── -->
+  <script>
+    (function () {
+      if (!window.Reveal) return;
+      Reveal.on('fragmentshown', function (e) {
+        const f = e.fragment;
+        if (!f) return;
+
+        // Three ingredients — strike on fragment show
+        const ingredient = f.closest('.ingredient');
+        if (ingredient && !ingredient.classList.contains('data')) {
+          ingredient.classList.add('strike');
+        }
+
+        // ML tasks — focus supervised, fly off the other two
+        if (f.dataset && f.dataset.action === 'focus-sup') {
+          const row = document.getElementById('ml-tasks-row');
+          if (row) row.classList.add('focus-mode');
+        }
+      });
+      Reveal.on('fragmenthidden', function (e) {
+        const f = e.fragment;
+        if (!f) return;
+
+        const ingredient = f.closest('.ingredient');
+        if (ingredient) ingredient.classList.remove('strike');
+
+        if (f.dataset && f.dataset.action === 'focus-sup') {
+          const row = document.getElementById('ml-tasks-row');
+          if (row) row.classList.remove('focus-mode');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

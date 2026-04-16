@@ -1,0 +1,855 @@
+/* ──────────────────────────────────────────────────────────────
+   Nucleate AI Talk — theme
+   Authentic Manim / 3B1B aesthetic.
+   Colors sourced from manim.constants.
+   ────────────────────────────────────────────────────────────── */
+
+:root {
+  --background:    #000000;
+  --surface:       #0a0a0a;
+  --surface-2:     #111111;
+  --border:        #222222;
+  --blue:          #58C4DD;
+  --blue-d:        #29ABCA;
+  --blue-e:        #1C758A;
+  --blue-b:        #9CDCEB;
+  --teal:          #5CD0B3;
+  --green:         #83C167;
+  --yellow:        #FFF1B5;
+  --yellow-bright: #FFFF00;
+  --gold:          #F0AC5F;
+  --red:           #FC6255;
+  --maroon:        #C55F73;
+  --purple:        #9A72AC;
+  --white:         #FFFFFF;
+  --muted:         #888888;
+  --mono:          'JetBrains Mono', Menlo, monospace;
+  --serif:         'Computer Modern Serif', 'Latin Modern Roman', Georgia, serif;
+}
+
+/* ─── Base ─── */
+html, body { background-color: var(--background); }
+
+.reveal {
+  background-color: var(--background);
+  font-family: var(--serif);
+  color: var(--white);
+  font-weight: 400;
+}
+
+.reveal .slide-background.present { background-color: var(--background); }
+
+.reveal h1, .reveal h2, .reveal h3 {
+  color: var(--blue);
+  font-family: var(--serif);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.reveal h1 { font-size: 2.8rem; }
+.reveal h2 { font-size: 2.0rem; margin-bottom: 1.2rem; }
+.reveal h3 { font-size: 1.3rem; }
+
+.reveal p, .reveal li {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  color: var(--white);
+}
+
+.reveal em       { color: var(--yellow); font-style: italic; }
+.reveal strong   { color: var(--blue-b); font-weight: 400; }
+.reveal .subtitle { color: var(--muted); font-size: 1.15rem; font-style: italic; }
+
+/* ─── Color utilities ─── */
+.c-blue   { color: var(--blue); }
+.c-blue-b { color: var(--blue-b); }
+.c-yellow { color: var(--yellow); }
+.c-green  { color: var(--green); }
+.c-teal   { color: var(--teal); }
+.c-red    { color: var(--red); }
+.c-purple { color: var(--purple); }
+.c-muted  { color: var(--muted); }
+.c-white  { color: var(--white); }
+
+.mono     { font-family: var(--mono); }
+
+/* ─── Math ─── */
+.katex-display {
+  color: var(--yellow);
+  margin: 1.6rem 0;
+  font-size: 1.35rem;
+}
+.katex-display .katex { color: var(--yellow); }
+
+/* ─── Fragments: simple fades only ─── */
+.reveal .fragment { transition: opacity 0.5s ease; }
+.reveal .fragment.visible     { opacity: 1; transform: none; }
+.reveal .fragment:not(.visible){ opacity: 0; transform: none; }
+
+/* ─── Progress / controls ─── */
+.reveal .progress { color: var(--blue); height: 3px; }
+.reveal .controls { color: var(--blue); }
+.reveal .slide-number {
+  color: var(--muted);
+  background: transparent;
+  font-family: var(--mono);
+}
+
+/* ─── Code ─── */
+.reveal pre { width: 90%; box-shadow: none; }
+.reveal pre code {
+  background: #050505;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  padding: 1rem;
+  max-height: 500px;
+  line-height: 1.5;
+}
+
+/* ─── Links ─── */
+.reveal a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(88,196,221,0.4);
+}
+.reveal a:hover { color: var(--yellow); border-bottom-color: var(--yellow); }
+
+/* ─── Layouts ─── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  text-align: left;
+}
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.2rem;
+  text-align: left;
+}
+.left-align { text-align: left; }
+
+/* ─── Cards (ML tasks, creative applications) ─── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--blue);
+  padding: 1.2rem;
+  border-radius: 4px;
+  text-align: left;
+  height: 100%;
+}
+.card.yellow { border-left-color: var(--yellow); }
+.card.green  { border-left-color: var(--green); }
+.card.red    { border-left-color: var(--red); }
+.card.purple { border-left-color: var(--purple); }
+.card.muted  { border-left-color: var(--muted); }
+
+.card .card-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  text-transform: uppercase;
+}
+.card h3 { margin-top: 0; margin-bottom: 0.6rem; font-size: 1.15rem; }
+.card p  { font-size: 0.9rem; margin: 0.4rem 0; line-height: 1.5; }
+.card .card-example {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--border);
+}
+
+/* ─── Slide 6 · tasks row fly-off ─── */
+.tasks-row .card {
+  transition: transform 0.75s cubic-bezier(.5,.1,.3,1), opacity 0.6s ease, border-color 0.4s ease;
+  will-change: transform, opacity;
+}
+.tasks-row.focus-mode .card[data-card="unsup"],
+.tasks-row.focus-mode .card[data-card="semi"] {
+  transform: translateX(260%);
+  opacity: 0;
+  pointer-events: none;
+}
+.tasks-row.focus-mode .card[data-card="sup"] {
+  transform: translateX(calc(100% + 1.2rem)) scale(1.12);
+  border-left-color: var(--yellow);
+  box-shadow: 0 0 40px rgba(255, 241, 181, 0.2);
+}
+
+/* ─── Slide 7 · INPUT → MODEL → OUTPUT with examples ─── */
+.io-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin: 0.5rem 0 1.5rem;
+}
+.io-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  min-width: 240px;
+  max-width: 280px;
+}
+.io-example {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  padding: 0.55rem 0.8rem;
+  border-radius: 3px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--white);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 52px;
+}
+.io-example.output        { border-left-color: var(--green); flex-direction: column; align-items: flex-start; gap: 0.1rem; min-height: 52px; padding: 0.55rem 0.8rem; }
+.io-example.output.yellow { border-left-color: var(--yellow); }
+.io-thumb { width: 44px; height: 44px; flex-shrink: 0; }
+.io-colabel {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 0.4rem;
+}
+.io-arrow {
+  font-size: 2rem;
+  color: var(--blue);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+.io-modelbox {
+  background: var(--surface);
+  border: 2px solid var(--yellow);
+  color: var(--yellow);
+  padding: 1.6rem 1.4rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ─── Slide 11 · LLM conditional probability ─── */
+.llm-input {
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--blue);
+  margin-bottom: 1.3rem;
+}
+.llm-cond {
+  text-align: center;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--yellow);
+  margin-bottom: 1.5rem;
+}
+.llm-cond .c-blue, .llm-cond .c-yellow { font-style: italic; }
+
+/* ─── Flow boxes (INPUT → MODEL → OUTPUT) ─── */
+.flow-diagram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+.flow-box {
+  background: var(--surface);
+  border: 2px solid var(--blue);
+  color: var(--blue);
+  padding: 1rem 1.6rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-align: center;
+  min-width: 140px;
+}
+.flow-box.yellow { border-color: var(--yellow); color: var(--yellow); }
+.flow-box.green  { border-color: var(--green);  color: var(--green); }
+.flow-box.muted  { border-color: var(--muted);  color: var(--muted); }
+.flow-arrow {
+  font-size: 2rem;
+  color: var(--blue);
+  font-family: var(--mono);
+}
+.flow-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+/* ─── Hype wall (Slide 3) ─── */
+.hype-wall {
+  position: relative;
+  width: 100%;
+  height: 540px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.hype-tile {
+  position: absolute;
+  background: var(--surface-2);
+  border: 1px solid #2a2a2a;
+  color: #666;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  font-family: var(--serif);
+  width: 230px;
+  opacity: 0;
+  animation: hype-in 0.5s ease forwards;
+}
+@keyframes hype-in { to { opacity: 0.7; } }
+.hype-footnote {
+  color: var(--yellow);
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.6rem;
+}
+
+/* ─── Nested circles (Slide 4) ─── */
+.nested-circles {
+  width: 100%;
+  height: 620px;
+  display: block;
+}
+.nested-circles circle {
+  fill: none;
+  stroke-linecap: round;
+  pathLength: 1;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.0s ease-out;
+}
+.nested-circles .fragment.visible circle { stroke-dashoffset: 0; }
+.nested-circles .label-main {
+  font-family: var(--serif);
+  font-size: 22px;
+  fill: var(--white);
+}
+.nested-circles .label-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  fill: var(--muted);
+}
+
+/* ─── Dialogue panel (Slide 11) ─── */
+.dialogue {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  line-height: 1.7;
+  text-align: left;
+  white-space: pre-line;
+  color: var(--white);
+}
+.dialogue .sys { color: var(--green); }
+.dialogue .cursor { color: var(--yellow); animation: blink 1s steps(2) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ─── Probability bars ─── */
+.prob-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: var(--mono);
+  text-align: left;
+}
+.prob-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+.prob-row .word  { color: var(--white); }
+.prob-row .pct   { color: var(--muted); text-align: right; }
+.prob-row .bar   {
+  height: 14px;
+  background: var(--blue);
+  border-radius: 2px;
+  transform-origin: left;
+  transform: scaleX(var(--p, 0));
+  transition: transform 0.6s ease-out;
+}
+.prob-row.top .bar { background: var(--yellow); }
+.reveal .fragment.visible .prob-row .bar { transform: scaleX(var(--p, 0)); }
+
+/* ─── Three ingredients (Slide 15) ─── */
+.ingredients {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+.ingredient {
+  background: var(--surface);
+  border: 2px solid var(--blue);
+  padding: 1.2rem 2rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  position: relative;
+  min-width: 180px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.ingredient.data {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  transform: scale(1.08);
+  box-shadow: 0 0 40px rgba(255, 241, 181, 0.2);
+}
+.ingredient .ing-note {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0;
+  margin-top: 0.5rem;
+  min-height: 1em;
+}
+.ingredient.strike .ing-word { position: relative; }
+.ingredient.strike .ing-word::after {
+  content: '';
+  position: absolute;
+  left: -4px; right: -4px; top: 50%;
+  height: 2px;
+  background: var(--red);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: strike 0.4s ease-out forwards;
+}
+@keyframes strike { to { transform: scaleX(1); } }
+
+/* ─── Flag tables (Slides 23 / 24) ─── */
+.flag-table {
+  width: 92%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  text-align: left;
+}
+.flag-table thead th {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+.flag-table tbody tr { border-bottom: 1px solid #161616; }
+.flag-table td {
+  padding: 0.7rem 1rem;
+  vertical-align: top;
+  font-size: 0.92rem;
+}
+.flag-table td:first-child { color: var(--white);  width: 48%; }
+.flag-table td:last-child  { color: var(--muted); font-style: italic; }
+
+.flag-table.red   thead th:first-child { color: var(--red); }
+.flag-table.green thead th:first-child { color: var(--green); }
+
+/* ─── Spectrum (Slide 21) ─── */
+.spectrum-bar {
+  height: 6px;
+  background: linear-gradient(90deg, var(--blue-e) 0%, var(--yellow) 50%, var(--muted) 100%);
+  border-radius: 3px;
+  margin: 0 0 1.5rem;
+}
+.spectrum {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  gap: 1rem;
+}
+.spectrum-pos {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 1rem 1.2rem;
+  border-radius: 4px;
+  text-align: left;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.spectrum-pos.highlight {
+  border-color: var(--yellow);
+  box-shadow: 0 0 30px rgba(255, 241, 181, 0.2);
+}
+.spectrum-pos .spec-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+.spectrum-pos h3 { font-size: 1.0rem; margin: 0 0 0.4rem; }
+.spectrum-pos .companies {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--blue-b);
+  margin-bottom: 0.6rem;
+}
+.spectrum-pos .money {
+  font-style: italic;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+/* ─── Neural net (Slide 17) ─── */
+.nn-diagram { width: 100%; height: 380px; display: block; }
+.nn-diagram circle { fill: var(--surface-2); stroke: var(--blue); stroke-width: 1.5; }
+.nn-diagram line   { stroke: var(--blue); stroke-opacity: 0.15; }
+.nn-diagram .layer-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: var(--muted);
+  text-anchor: middle;
+}
+.nn-diagram .layer-concept {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  fill: var(--yellow);
+  text-anchor: middle;
+}
+
+/* ─── Flywheel (Slide 16) ─── */
+.flywheel { width: 100%; height: 440px; display: block; }
+.flywheel .fw-node {
+  fill: var(--surface);
+  stroke: var(--blue);
+  stroke-width: 2;
+}
+.flywheel .fw-node.green  { stroke: var(--green); }
+.flywheel .fw-node.yellow { stroke: var(--yellow); }
+.flywheel .fw-label {
+  font-family: var(--mono);
+  font-size: 14px;
+  fill: var(--white);
+  text-anchor: middle;
+  letter-spacing: 0.05em;
+}
+.flywheel .fw-arrow { fill: none; stroke: var(--blue-d); stroke-width: 2.5; }
+.flywheel .fw-arrow.hot { stroke: var(--yellow); stroke-width: 4; }
+
+/* ─── Key insight (Slide 5) ─── */
+.key-insight {
+  text-align: left;
+  font-size: 3.2rem;
+  line-height: 1.3;
+  font-family: var(--serif);
+}
+.key-insight .line1 { color: var(--yellow); }
+.key-insight .line2 { color: var(--blue); }
+
+/* ─── Big question (Slide 2) ─── */
+.big-question {
+  font-size: 2.4rem;
+  line-height: 1.4;
+  color: var(--white);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ─── Title slide ─── */
+.title-dots {
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(88,196,221,0.15) 1px, transparent 1.5px),
+    radial-gradient(circle at 80% 70%, rgba(88,196,221,0.12) 1px, transparent 1.5px),
+    radial-gradient(circle at 40% 80%, rgba(88,196,221,0.10) 1px, transparent 1.5px),
+    radial-gradient(circle at 60% 30%, rgba(88,196,221,0.14) 1px, transparent 1.5px);
+  background-size: 300px 300px, 250px 250px, 400px 400px, 350px 350px;
+  animation: drift 40s linear infinite;
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes drift {
+  from { background-position: 0 0, 0 0, 0 0, 0 0; }
+  to   { background-position: 300px 300px, -250px 250px, 400px -400px, -350px 350px; }
+}
+
+/* ─── Demo iframe slide ─── */
+.reveal section.demo-slide {
+  padding: 0;
+}
+
+/* ─── Section break ─── */
+.section-break h2 {
+  font-size: 2.4rem;
+  color: var(--white);
+  font-style: italic;
+}
+.section-break .divider {
+  width: 240px;
+  height: 1px;
+  background: var(--muted);
+  margin: 1.5rem auto;
+  opacity: 0.4;
+}
+
+/* ─── AlphaFold slide ─── */
+.aa-seq {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--blue);
+  text-align: left;
+  white-space: pre;
+  margin: 0;
+}
+.af-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+.af-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+.af-arrow {
+  font-size: 2.2rem;
+  color: var(--blue);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+.af-modelbox {
+  background: var(--surface);
+  border: 2px solid var(--yellow);
+  color: var(--yellow);
+  padding: 1.6rem 1.6rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+  text-align: center;
+  flex-shrink: 0;
+}
+.af-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--white);
+  text-transform: uppercase;
+  text-align: center;
+  margin-top: 0.9rem;
+  line-height: 1.6;
+}
+.af-label .c-muted { letter-spacing: 0.18em; }
+
+/* ─── "What goes into each box" callback ─── */
+.box-callback {
+  max-width: 1050px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  gap: 1.8rem;
+}
+.box-callback > div { padding: 0.4rem; }
+.box-callback p { font-size: 0.95rem; margin-top: 0.3rem; }
+.box-callback .card-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.4rem;
+}
+
+/* ─── World-changes slide ─── */
+.acc-drop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+.acc-drop > div:first-child,
+.acc-drop > div:last-child { text-align: center; }
+
+/* ─── Distribution examples ─── */
+.dist-examples {
+  max-width: 900px;
+  margin: 1.5rem auto 0;
+}
+.dist-examples p {
+  margin: 0.65rem 0;
+  font-size: 1rem;
+  color: var(--white);
+}
+.dist-examples .ex-k {
+  display: inline-block;
+  min-width: 180px;
+  color: var(--yellow);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-right: 0.4rem;
+}
+
+/* ─── Good-vs-struggles lists ─── */
+.struggle-list {
+  padding-left: 1.2rem;
+  margin: 0.4rem 0 0.8rem;
+  list-style: none;
+}
+.struggle-list li {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0.1rem 0;
+  position: relative;
+  padding-left: 0.8rem;
+}
+.struggle-list li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--muted);
+}
+
+/* ─── Value chain (Who makes money) ─── */
+.value-chain {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+.vc-node {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.8rem 0.6rem;
+  min-width: 150px;
+  text-align: center;
+  font-family: var(--mono);
+  transition: transform 0.3s, border-color 0.3s;
+}
+.vc-node.highlight {
+  border-color: var(--yellow);
+  box-shadow: 0 0 24px rgba(255, 241, 181, 0.2);
+  transform: scale(1.05);
+}
+.vc-node .vc-layer {
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.vc-node .vc-company {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.3;
+}
+.vc-node .vc-moat {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.vc-node .vc-def {
+  font-size: 0.75rem;
+  color: var(--yellow);
+  letter-spacing: 0.1em;
+}
+.vc-arrow {
+  display: flex;
+  align-items: center;
+  font-size: 1.4rem;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+/* ─── Moat grid (defensibility) ─── */
+.moat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.moat-grid .card { padding: 1rem 1.2rem; }
+.moat-grid .card p { font-size: 0.9rem; line-height: 1.5; margin: 0.3rem 0 0; }
+
+/* ─── Mental model annotated ─── */
+.mental-annotations {
+  max-width: 1050px;
+  margin: 1rem auto 0;
+  gap: 1.8rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+.mental-annotations p { font-size: 0.9rem; line-height: 1.5; font-style: italic; }
+
+.mental-questions {
+  list-style: none;
+  padding-left: 0;
+}
+.mental-questions li {
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
+}
+.mental-questions li:last-child { font-size: 1.5rem; }
+
+/* ─── Gerald wave Q&A ─── */
+.gerald-wave {
+  filter: drop-shadow(0 0 30px rgba(88, 196, 221, 0.15));
+}
+
+/* ─── Scatter clusters (Slide 19) ─── */
+.embedding-svg { width: 100%; height: 360px; }
+.embedding-svg circle { opacity: 0.85; }
+
+/* ─── Discovery columns (Slide 20) ─── */
+.discovery-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem;
+  text-align: center;
+}
+.discovery-col svg { width: 100%; height: 180px; }
+.discovery-col .dc-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-top: 0.5rem;
+  text-transform: uppercase;
+}
