@@ -193,7 +193,15 @@
 <!-- ============= SVG SYMBOL LIBRARY (hidden) ============= -->
 <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
   <defs>
-    <!-- glowing fish -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         FISH SYMBOLS
+         To use PNGs instead:
+           1. Save your images as demos/fish-glow.png and demos/fish-grey.png
+           2. Comment out the SVG symbols below
+           3. Un-comment the <symbol> blocks marked "PNG VARIANT"
+         ═══════════════════════════════════════════════════════════════ -->
+
+    <!-- glowing fish · SVG (default) -->
     <radialGradient id="glow-rad" cx="50%" cy="50%" r="50%">
       <stop offset="0%"  stop-color="#FFFF00" stop-opacity="0.35"/>
       <stop offset="60%" stop-color="#FFFF00" stop-opacity="0.1"/>
@@ -207,13 +215,24 @@
       <circle cx="18" cy="-3" r="1.5" fill="#222"/>
     </symbol>
 
-    <!-- grey fish -->
+    <!-- grey fish · SVG (default) -->
     <symbol id="fish-grey" viewBox="-40 -20 80 40">
       <path d="M -20 0 Q -10 -12 15 -10 Q 25 -6 25 0 Q 25 6 15 10 Q -10 12 -20 0 Z"
             fill="#555555" stroke="#777" stroke-width="1"/>
       <path d="M -20 0 L -30 -7 L -30 7 Z" fill="#555555"/>
       <circle cx="18" cy="-3" r="1.5" fill="#000"/>
     </symbol>
+
+    <!-- ╭─────────────── PNG VARIANT · uncomment to enable ───────────────╮
+    <symbol id="fish-glow" viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
+      <image href="fish-glow.png" x="0" y="0" width="80" height="40"
+             preserveAspectRatio="xMidYMid meet"/>
+    </symbol>
+    <symbol id="fish-grey" viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
+      <image href="fish-grey.png" x="0" y="0" width="80" height="40"
+             preserveAspectRatio="xMidYMid meet"/>
+    </symbol>
+    ╰──────────────────────────────────────────────────────────────────╯ -->
 
     <!-- Gerald -->
     <symbol id="gerald" viewBox="0 0 120 180">

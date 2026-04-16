@@ -556,10 +556,6 @@ LHLVLRLRGG</pre>
           </div>
         </div>
 
-        <p class="fragment c-yellow" style="margin-top:2rem; font-style:italic;">
-          Same three boxes. This is the entire machine-learning lifecycle.
-        </p>
-
         <aside class="notes">
           Quick callback. We saw the INPUT → MODEL → OUTPUT diagram back in Act 2. Now fill in what
           each box actually involves. The work is almost entirely in box 1 (data) and box 3 (eval).
@@ -583,12 +579,7 @@ LHLVLRLRGG</pre>
       <section data-center="false" style="padding-top:2rem;">
         <h2>What happens when the world changes?</h2>
 
-        <p class="c-yellow" style="font-size:1.35rem; margin-top:1.2rem; font-style:italic; line-height:1.5;">
-          Gerald's model learned <span style="color:var(--white);">GlowFish's</span> fish.<br>
-          Not <span style="color:var(--white);">all</span> fish.
-        </p>
-
-        <svg class="shift-viz fragment" viewBox="0 0 1000 240" style="width:100%; max-width:960px; margin:1.2rem auto 0; display:block;">
+        <svg class="shift-viz" viewBox="0 0 1000 240" style="width:100%; max-width:960px; margin:1.5rem auto 0; display:block;">
           <!-- belt -->
           <rect x="30" y="130" width="940" height="50" fill="#111" stroke="#333"/>
           <circle cx="70"  cy="155" r="30" fill="#1a1a1a" stroke="#555"/>
@@ -655,17 +646,13 @@ LHLVLRLRGG</pre>
 
         <svg class="dist-viz" viewBox="0 0 900 240" style="width:100%; max-width:900px; margin:1.2rem auto 0; display:block;">
           <line x1="50" y1="200" x2="850" y2="200" stroke="#444" stroke-width="1"/>
-          <!-- training curve -->
-          <path d="M 100 200 Q 150 200 180 180 Q 230 120 280 60 Q 330 120 380 180 Q 410 200 460 200"
-                fill="#58C4DD" fill-opacity="0.2" stroke="#58C4DD" stroke-width="2"/>
-          <text x="280" y="225" fill="#58C4DD" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">training distribution</text>
 
-          <!-- deployment curve -->
-          <path d="M 500 200 Q 550 200 580 180 Q 630 140 680 90 Q 730 140 780 180 Q 810 200 850 200"
-                fill="#FC6255" fill-opacity="0.2" stroke="#FC6255" stroke-width="2"/>
-          <text x="680" y="225" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">deployment distribution</text>
+          <!-- Normal PDFs generated at page load (two bell curves that mostly overlap) -->
+          <path id="dist-train"  fill="#58C4DD" fill-opacity="0.25" stroke="#58C4DD" stroke-width="2"/>
+          <path id="dist-deploy" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="2"/>
 
-          <text x="470" y="80" fill="#888" font-family="Georgia, serif" font-style="italic" font-size="14" text-anchor="middle">shift</text>
+          <text x="340" y="225" fill="#58C4DD" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">training</text>
+          <text x="560" y="225" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">deployment</text>
         </svg>
 
         <div class="left-align dist-examples">
@@ -685,10 +672,6 @@ LHLVLRLRGG</pre>
             <span class="c-red">near-random on 200 rare cases</span>
           </p>
         </div>
-
-        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.1rem; font-style:italic;">
-          The model doesn't know it's out of distribution. That's the dangerous part.
-        </p>
 
         <aside class="notes">
           Three clinical examples. Dermatology models fail on dark skin because training sets
@@ -733,10 +716,6 @@ LHLVLRLRGG</pre>
           </div>
         </div>
 
-        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.05rem; font-style:italic;">
-          If a startup can't tell you what they trained on, they're probably in the right column.
-        </p>
-
         <aside class="notes">
           Useful heuristic. AI is uncannily good at tasks with clean labels and massive training
           sets. It falls over on tasks that require reasoning about things it hasn't seen.
@@ -747,53 +726,37 @@ LHLVLRLRGG</pre>
 
       <!-- ═════════ ACT 4 — THE BUSINESS OF AI ═════════ -->
 
-      <!-- SLIDE · Who actually makes money (value chain) -->
-      <section data-center="false" style="padding-top:2rem;">
+      <!-- SLIDE · Who actually makes money (pyramid, NVIDIA at bottom) -->
+      <section data-center="false" style="padding-top:1.5rem;">
         <h2>Who actually makes money?</h2>
 
-        <div class="value-chain">
-          <div class="vc-node fragment">
-            <div class="vc-layer">HARDWARE</div>
-            <div class="vc-company c-green">NVIDIA</div>
-            <div class="vc-moat">scarcity</div>
-            <div class="vc-def">★★★★★</div>
+        <div class="pyramid">
+          <div class="py-row w5 fragment">
+            <span class="py-layer">WRAPPER</span>
+            <span class="py-company c-muted">"AI-powered X"</span>
+            <span class="py-def">★</span>
           </div>
-          <div class="vc-arrow">→</div>
-          <div class="vc-node fragment">
-            <div class="vc-layer">COMPUTE</div>
-            <div class="vc-company c-blue">AWS / GCP / Azure</div>
-            <div class="vc-moat">capex</div>
-            <div class="vc-def">★★★★</div>
+          <div class="py-row w4 fragment">
+            <span class="py-layer">DOMAIN BUILDER</span>
+            <span class="py-company c-yellow">Tempus · Recursion</span>
+            <span class="py-def">★★★★</span>
           </div>
-          <div class="vc-arrow">→</div>
-          <div class="vc-node fragment">
-            <div class="vc-layer">FOUNDATION</div>
-            <div class="vc-company c-blue">OpenAI · Anthropic</div>
-            <div class="vc-moat">talent + capex</div>
-            <div class="vc-def">★★★</div>
+          <div class="py-row w3 fragment">
+            <span class="py-layer">FOUNDATION</span>
+            <span class="py-company c-blue">OpenAI · Anthropic</span>
+            <span class="py-def">★★★</span>
           </div>
-          <div class="vc-arrow">→</div>
-          <div class="vc-node highlight fragment">
-            <div class="vc-layer">DOMAIN BUILDER</div>
-            <div class="vc-company c-yellow">Tempus · Recursion</div>
-            <div class="vc-moat">data</div>
-            <div class="vc-def">★★★★</div>
+          <div class="py-row w2 fragment">
+            <span class="py-layer">COMPUTE</span>
+            <span class="py-company c-blue">AWS · GCP · Azure</span>
+            <span class="py-def">★★★★</span>
           </div>
-          <div class="vc-arrow">→</div>
-          <div class="vc-node fragment">
-            <div class="vc-layer">WRAPPER</div>
-            <div class="vc-company c-muted">"AI-powered X"</div>
-            <div class="vc-moat">product</div>
-            <div class="vc-def">★</div>
+          <div class="py-row w1 fragment">
+            <span class="py-layer">HARDWARE</span>
+            <span class="py-company c-green">NVIDIA</span>
+            <span class="py-def">★★★★★</span>
           </div>
         </div>
-
-        <p class="fragment c-yellow" style="margin-top:1.8rem; font-size:1.2rem; font-style:italic;">
-          Scarcity accretes value.
-        </p>
-        <p class="fragment c-muted" style="margin-top:0.3rem; font-size:0.9rem;">
-          Hardware is scarce. Data is scarce. Algorithms are not. Wrappers have SaaS economics.
-        </p>
 
         <aside class="notes">
           The AI value chain. Left to right: hardware (near-monopoly), compute (oligopoly),
@@ -832,13 +795,6 @@ LHLVLRLRGG</pre>
           </div>
         </div>
 
-        <p class="fragment c-yellow" style="margin-top:1.2rem; font-size:1.05rem; font-style:italic;">
-          Most interesting biotech AI lives in the middle.
-        </p>
-        <p class="fragment c-muted" style="margin-top:0.3rem; font-size:0.9rem; font-style:italic;">
-          Which ring are they claiming to be in? Which ring are they <em>actually</em> in?
-        </p>
-
         <aside class="notes">
           Before you evaluate anything else, figure out where they sit. Foundation is mostly out
           of scope for early stage. Wrappers are fine businesses but they're SaaS — no data moat,
@@ -870,10 +826,6 @@ LHLVLRLRGG</pre>
           </div>
         </div>
 
-        <p class="fragment c-yellow" style="margin-top:1.5rem; font-size:1.15rem; font-style:italic;">
-          The question isn't "do they have data?" &mdash; it's "can anyone else get this data?"
-        </p>
-
         <aside class="notes">
           "Data is a moat" is lazy shorthand. Actual moat comes from one of these four mechanisms.
           Ask which one they're claiming. If the answer doesn't map to any of these, their
@@ -892,9 +844,6 @@ LHLVLRLRGG</pre>
           <hr style="border:none; border-top:1px solid #222; margin:2rem 0;"/>
           <p class="c-yellow fragment" style="font-size:2.2rem; line-height:1.4;">
             2. What does your training data look like?
-          </p>
-          <p class="fragment c-muted" style="margin-top:2rem; font-size:1rem; font-style:italic;">
-            If they can't answer either clearly &mdash; you know where they sit.
           </p>
         </div>
         <aside class="notes">
@@ -985,13 +934,6 @@ LHLVLRLRGG</pre>
           <li class="fragment c-blue">2. What is the <em>output</em>?</li>
           <li class="fragment c-yellow">3. Where does the <em>training data</em> come from?</li>
         </ol>
-
-        <p class="fragment" style="margin-top:1.2rem; font-size:1.05rem; color:var(--white);">
-          These three questions will tell you more than any demo.
-        </p>
-        <p class="fragment c-muted" style="margin-top:0.2rem; font-size:0.85rem; font-style:italic;">
-          …we say, at the end of a demo-heavy talk.
-        </p>
 
         <aside class="notes">
           Whole talk in one slide. AI is pattern matching. The pattern is a mapping from input to
@@ -1134,6 +1076,42 @@ LHLVLRLRGG</pre>
           c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 7);
           nodeGroup.appendChild(c);
         }
+      }
+    })();
+  </script>
+
+  <!-- ─── Distribution bell curves (In vs Out of Distribution slide) ─── -->
+  <script>
+    (function () {
+      function buildCurves() {
+        const train  = document.getElementById('dist-train');
+        const deploy = document.getElementById('dist-deploy');
+        if (!train || !deploy) return;
+        const X0 = 50, X1 = 850;            // x-range in SVG coords
+        const Y_BASE = 200;                  // baseline y
+        const PEAK = 140;                    // peak height in SVG units
+        // Domain [-4, 4] mapped to [X0, X1]
+        const mapX = u => X0 + ((u + 4) / 8) * (X1 - X0);
+        // PDF scaled so peak of σ=1 is 1
+        const pdf = (u, mu, sig) => Math.exp(-0.5 * ((u - mu) / sig) ** 2);
+
+        function path(mu, sig) {
+          const pts = [];
+          for (let i = 0; i <= 240; i++) {
+            const u = -4 + (i / 240) * 8;
+            const y = Y_BASE - PEAK * pdf(u, mu, sig);
+            pts.push(mapX(u).toFixed(2) + ',' + y.toFixed(2));
+          }
+          return 'M ' + X0 + ' ' + Y_BASE + ' L ' + pts.join(' L ') + ' L ' + X1 + ' ' + Y_BASE + ' Z';
+        }
+
+        train.setAttribute('d',  path(-0.55, 1.25));
+        deploy.setAttribute('d', path( 0.55, 1.25));
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', buildCurves);
+      } else {
+        buildCurves();
       }
     })();
   </script>
