@@ -210,19 +210,21 @@
   </div>
 
   <div class="btn-row" style="margin-top:0.6rem;">
-    <button class="btn ood" id="toggle-ood">show out-of-distribution samples</button>
+    <button class="btn ood" id="toggle-ood">show test-time samples</button>
   </div>
 
-  <div class="note" id="ood-note" style="display:none; color:var(--red);">
-    These test points are drawn from a <em>different</em> distribution.
-    The model has never seen anything like them.
+  <div class="note" id="ood-note" style="display:none;">
+    <span style="color:var(--green);">Green</span> test points sit under the learned curve &mdash;
+    the model handles them. <span style="color:var(--red);">Red</span> ones are out of
+    distribution: far from anything it saw in training.
   </div>
 
   <div class="legend">
     <span><span class="dot" style="background:#58C4DD"></span>training sample</span>
     <span><span class="sw" style="background:#FFF1B5"></span>true P(x)</span>
-    <span><span class="sw" style="background:#83C167"></span>learned</span>
-    <span><span class="dot" style="background:#FC6255"></span>OOD point</span>
+    <span><span class="sw" style="background:#83C167"></span>learned fit</span>
+    <span><span class="dot" style="background:#83C167"></span>in-dist. test</span>
+    <span><span class="dot" style="background:#FC6255"></span>OOD test</span>
   </div>
 </div>
 
@@ -241,19 +243,24 @@ function gauss(rng) {
   return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
 }
 
-// true distribution: N(0, 1)
+// true (training) distribution: N(0, 1)
 const MU = 0, SIGMA = 1;
-// ood distribution: N(2.8, 1.2)
-const OOD_MU = 2.8, OOD_SIGMA = 1.2;
+// test set: mostly in-distribution, a small fraction pulled from a shifted one
+const TEST_IN_N    = 40;   // drawn from the true P(x)  (green)
+const TEST_OOD_N   = 8;    // drawn from a far-right shifted P(x)  (red)
+const OOD_MU = 3.6, OOD_SIGMA = 0.35;
 
 const POOL_N = 500;
 const trainPool = [];
-const oodPool = [];
+const testInPool = [];
+const testOODPool = [];
 (function seedPool() {
   const r1 = mulberry32(7);
   const r2 = mulberry32(91);
-  for (let i = 0; i < POOL_N; i++) trainPool.push(MU + SIGMA * gauss(r1));
-  for (let i = 0; i < 50;     i++) oodPool.push(OOD_MU + OOD_SIGMA * gauss(r2));
+  const r3 = mulberry32(313);
+  for (let i = 0; i < POOL_N;     i++) trainPool .push(MU + SIGMA * gauss(r1));
+  for (let i = 0; i < TEST_IN_N;  i++) testInPool.push(MU + SIGMA * gauss(r2));
+  for (let i = 0; i < TEST_OOD_N; i++) testOODPool.push(OOD_MU + OOD_SIGMA * gauss(r3));
 })();
 
 // ─────────── Plot ───────────
@@ -371,30 +378,34 @@ function draw(n, showOOD) {
     }));
   }
 
-  // OOD points (red dots, plotted at a dedicated strip above the histogram)
+  // Test samples as a rug plot directly on the x-axis
   if (showOOD) {
-    const yStrip = toSvgY(Y_MAX) + 4;
-    plot.appendChild(el('text', {
-      x: PW - PAD_R, y: yStrip - 8,
-      fill: '#FC6255', 'text-anchor': 'end',
-      'font-family': 'JetBrains Mono, monospace', 'font-size': 10
-    })).textContent = 'test samples (deployment)';
+    const yAxis = toSvgY(0);
 
-    for (const v of oodPool.slice(0, 50)) {
+    plot.appendChild(el('text', {
+      x: PW - PAD_R, y: yAxis + 40,
+      fill: '#888', 'text-anchor': 'end',
+      'font-family': 'JetBrains Mono, monospace', 'font-size': 10
+    })).textContent = 'test samples';
+
+    // in-distribution test (green, low jitter on the axis)
+    for (const v of testInPool) {
       plot.appendChild(el('circle', {
-        cx: toSvgX(v), cy: yStrip + 10,
-        r: 3.2, fill: '#FC6255', 'fill-opacity': 0.85
+        cx: toSvgX(v),
+        cy: yAxis + 3 + (Math.abs(v) * 0.8) % 5,  // small deterministic jitter
+        r: 3, fill: '#83C167', 'fill-opacity': 0.9,
+        stroke: '#050505', 'stroke-width': 0.5
       }));
     }
-
-    // shaded OOD region (low density under truth P)
-    plot.appendChild(el('rect', {
-      x: toSvgX(OOD_MU - 2 * OOD_SIGMA),
-      y: yStrip,
-      width: toSvgX(OOD_MU + 2 * OOD_SIGMA) - toSvgX(OOD_MU - 2 * OOD_SIGMA),
-      height: 24,
-      fill: '#FC6255', 'fill-opacity': 0.08, stroke: '#FC6255', 'stroke-opacity': 0.3, 'stroke-dasharray': '3,2'
-    }));
+    // out-of-distribution test (red, far to the right)
+    for (const v of testOODPool) {
+      plot.appendChild(el('circle', {
+        cx: toSvgX(v),
+        cy: yAxis + 3 + (Math.abs(v) * 0.8) % 5,
+        r: 3.5, fill: '#FC6255', 'fill-opacity': 0.95,
+        stroke: '#050505', 'stroke-width': 0.5
+      }));
+    }
   }
 
   // axis label
@@ -443,9 +454,9 @@ function setN(n) {
 function toggleOOD() {
   ood = !ood;
   oodBtn.classList.toggle('active', ood);
-  oodBtn.textContent = ood ? 'hide out-of-distribution samples' : 'show out-of-distribution samples';
+  oodBtn.textContent = ood ? 'hide test-time samples' : 'show test-time samples';
   oodNote.style.display = ood ? '' : 'none';
-  phase.textContent = ood ? 'PHASE 2 · DEPLOYMENT (OOD)' : 'PHASE 1 · TRAINING';
+  phase.textContent = ood ? 'PHASE 2 · DEPLOYMENT' : 'PHASE 1 · TRAINING';
   phase.classList.toggle('ood', ood);
   draw(parseInt(nEl.value, 10), ood);
 }

@@ -355,61 +355,56 @@
     </div>
   </section>
 
-  <!-- SCENE 3 · Gerald manually labels -->
+  <!-- SCENE 3 · Gerald shoots photos with his camera -->
   <section class="scene" data-scene="3">
     <svg viewBox="0 0 1000 440">
-      <!-- Gerald on left, reaching toward fish -->
-      <use href="#gerald" x="40" y="150" width="120" height="180"/>
+      <!-- Gerald on left -->
+      <use href="#gerald" x="20" y="130" width="140" height="200"/>
 
-      <!-- clipboard in Gerald's hand -->
-      <g transform="translate(150, 220)">
-        <rect x="0" y="0" width="42" height="52" rx="2" fill="#0a0a0a" stroke="#F0AC5F" stroke-width="1.4"/>
-        <rect x="14" y="-4" width="14" height="4" rx="1" fill="#F0AC5F"/>
-        <line x1="5"  y1="10" x2="37" y2="10" stroke="#888" stroke-width="0.8"/>
-        <line x1="5"  y1="18" x2="37" y2="18" stroke="#888" stroke-width="0.8"/>
-        <line x1="5"  y1="26" x2="37" y2="26" stroke="#888" stroke-width="0.8"/>
-        <line x1="5"  y1="34" x2="37" y2="34" stroke="#888" stroke-width="0.8"/>
-        <line x1="5"  y1="42" x2="37" y2="42" stroke="#888" stroke-width="0.8"/>
+      <!-- Camera in Gerald's hands.
+           Drop a camera.png into assets/ and this <image> will use it.
+           The SVG fallback below keeps the scene functional in the meantime. -->
+      <g transform="translate(135, 205)">
+        <image href="../assets/camera.png" x="0" y="0" width="100" height="75"
+               preserveAspectRatio="xMidYMid meet"/>
       </g>
 
-      <!-- Inspection table (a simple grey slab) -->
-      <rect x="240" y="260" width="700" height="12" fill="#222" stroke="#444"/>
-      <rect x="240" y="272" width="700" height="40" fill="#111" stroke="#333"/>
+      <!-- Flash burst from camera → fish -->
+      <g stroke="#FFF1B5" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.65" fill="none">
+        <line x1="240" y1="240" x2="360" y2="290"/>
+        <line x1="240" y1="240" x2="520" y2="290"/>
+        <line x1="240" y1="240" x2="680" y2="290"/>
+        <line x1="240" y1="240" x2="840" y2="290"/>
+      </g>
+      <text x="245" y="230" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="11">CLICK</text>
 
-      <!-- 5 fish on the table, with floating labels Gerald is writing -->
-      <g transform="translate(260, 240)">
-        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
-        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
-      </g>
-      <g transform="translate(400, 240)">
-        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
-        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
-      </g>
-      <g transform="translate(540, 240)">
-        <use href="#fish-grey" x="0" y="0" width="120" height="60"/>
-        <text x="60" y="-8" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">DEFECT ✗</text>
-      </g>
-      <g transform="translate(680, 240)">
-        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
-        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
-      </g>
-      <g transform="translate(820, 240)">
-        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
-        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
-      </g>
+      <!-- Belt with fish passing under the camera -->
+      <svg x="320" y="295" width="640" height="50" viewBox="0 0 900 50" preserveAspectRatio="none">
+        <use href="#belt"/>
+      </svg>
 
-      <!-- arrow from Gerald to the first fish -->
-      <path d="M 200 240 Q 230 220 260 260" stroke="#F0AC5F" fill="none" stroke-width="1.5" stroke-dasharray="4,3"/>
+      <!-- Fish on belt with floating labels -->
+      <use href="#fish-glow" x="340" y="290" width="80" height="40"/>
+      <text x="380" y="358" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">GLOW ✓</text>
+
+      <use href="#fish-glow" x="490" y="290" width="80" height="40"/>
+      <text x="530" y="358" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">GLOW ✓</text>
+
+      <use href="#fish-grey" x="640" y="290" width="80" height="40"/>
+      <text x="680" y="358" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">DEFECT ✗</text>
+
+      <use href="#fish-glow" x="790" y="290" width="80" height="40"/>
+      <text x="830" y="358" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">GLOW ✓</text>
 
       <!-- counter -->
-      <g transform="translate(720, 80)">
+      <g transform="translate(720, 60)">
         <rect x="0" y="0" width="230" height="60" rx="3" fill="#0a0a0a" stroke="#58C4DD"/>
-        <text x="115" y="22" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">LABELED BY HAND</text>
+        <text x="115" y="22" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">LABELED EXAMPLES</text>
         <text x="115" y="48" fill="#58C4DD" font-family="JetBrains Mono, monospace" font-size="22" text-anchor="middle">1,000</text>
       </g>
     </svg>
     <div class="caption">
-      Gerald labels every fish by hand. Slow, tedious, necessary.<br>
+      Gerald takes a photo of every fish and labels it by hand.<br>
       <span class="sub">Somebody has to decide what "GLOW" means in the first place.</span>
     </div>
   </section>
@@ -752,8 +747,7 @@
       </g>
     </svg>
     <div class="caption">
-      <span class="ok">Shipped.</span> GlowFish Inc is running smoothly.<br>
-      <span class="sub">…right?</span>
+      <span class="ok">Shipped.</span> GlowFish Inc is running smoothly.
     </div>
   </section>
 

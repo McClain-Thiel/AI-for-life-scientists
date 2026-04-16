@@ -715,14 +715,14 @@ LHLVLRLRGG</pre>
         <h2>Who actually makes money?</h2>
 
         <div class="pyramid">
-          <div class="py-row w5 fragment">
-            <span class="py-layer">WRAPPER</span>
-            <span class="py-company c-muted">"AI-powered X"</span>
-            <span class="py-def">★</span>
+          <div class="py-row w1 fragment">
+            <span class="py-layer">HARDWARE</span>
+            <span class="py-company c-green">NVIDIA</span>
+            <span class="py-def">★★★★★</span>
           </div>
-          <div class="py-row w4 fragment">
-            <span class="py-layer">DOMAIN BUILDER</span>
-            <span class="py-company c-yellow">Tempus · Recursion</span>
+          <div class="py-row w2 fragment">
+            <span class="py-layer">COMPUTE</span>
+            <span class="py-company c-blue">AWS · GCP · Azure</span>
             <span class="py-def">★★★★</span>
           </div>
           <div class="py-row w3 fragment">
@@ -730,15 +730,15 @@ LHLVLRLRGG</pre>
             <span class="py-company c-blue">OpenAI · Anthropic</span>
             <span class="py-def">★★★</span>
           </div>
-          <div class="py-row w2 fragment">
-            <span class="py-layer">COMPUTE</span>
-            <span class="py-company c-blue">AWS · GCP · Azure</span>
+          <div class="py-row w4 fragment">
+            <span class="py-layer">DOMAIN BUILDER</span>
+            <span class="py-company c-yellow">Tempus · Recursion</span>
             <span class="py-def">★★★★</span>
           </div>
-          <div class="py-row w1 fragment">
-            <span class="py-layer">HARDWARE</span>
-            <span class="py-company c-green">NVIDIA</span>
-            <span class="py-def">★★★★★</span>
+          <div class="py-row w5 fragment">
+            <span class="py-layer">WRAPPER</span>
+            <span class="py-company c-muted">"AI-powered X"</span>
+            <span class="py-def">★</span>
           </div>
         </div>
 
@@ -838,93 +838,70 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · Red flags -->
-      <section data-center="false" style="padding-top:1.5rem;">
-        <h2 class="c-red">Red flags</h2>
-        <table class="flag-table red">
-          <thead>
-            <tr><th>What they say</th><th>What it means</th></tr>
-          </thead>
-          <tbody>
-            <tr class="fragment"><td>"We use AI / we're AI-powered"</td><td>Almost certainly a wrapper.</td></tr>
-            <tr class="fragment"><td>"We fine-tuned GPT on our data"</td><td>Fine-tuning ≠ moat unless the data is irreplaceable.</td></tr>
-            <tr class="fragment"><td>"Our AI learns over time"</td><td>From what? What are the labels? What's the loop?</td></tr>
-            <tr class="fragment"><td>"We'll use public / scraped data"</td><td>Anyone can do this. No moat.</td></tr>
-            <tr class="fragment"><td>"Can't state input and output clearly"</td><td>They don't have a real ML problem yet.</td></tr>
-            <tr class="fragment"><td>"99% accuracy on our test set"</td><td>What test set? Same distribution as production?</td></tr>
-            <tr class="fragment"><td>"Works great &mdash; in our demo environment"</td><td>Distribution shift in waiting. Ask Gerald.</td></tr>
-            <tr class="fragment"><td>"No ML engineer on the team"</td><td>If the algorithm is the product, who's building it?</td></tr>
-          </tbody>
-        </table>
-        <aside class="notes">
-          The "99% accuracy" line deserves time — test-set leakage and distribution shift are
-          the two most common failure modes. A model trained on clean lab data that fails in
-          messy clinical deployment is one of the most common biotech AI disasters.
-          The "works great in our demo" row is the direct callback to Gerald's fish.
-        </aside>
-      </section>
-
-      <!-- SLIDE · Green flags -->
-      <section data-center="false" style="padding-top:1.5rem;">
-        <h2 class="c-green">Green flags</h2>
-        <table class="flag-table green">
-          <thead>
-            <tr><th>What they say</th><th>What it means</th></tr>
-          </thead>
-          <tbody>
-            <tr class="fragment"><td>"Can state input and output precisely"</td><td>They have a model, not a vibe.</td></tr>
-            <tr class="fragment"><td>"We have exclusive access to X data"</td><td>Real moat &mdash; especially clinical, lab, genomic.</td></tr>
-            <tr class="fragment"><td>"More users → more labels → better model"</td><td>Network effect built into the ML itself.</td></tr>
-            <tr class="fragment"><td>"We built the dataset ourselves"</td><td>Hard to replicate &mdash; wet lab or clinical partnerships.</td></tr>
-            <tr class="fragment"><td>"We beat [baseline] by X% on [benchmark]"</td><td>Scientific rigor. Reproducible.</td></tr>
-            <tr class="fragment"><td>"We know where the model fails"</td><td>They've actually evaluated it.</td></tr>
-            <tr class="fragment"><td>"Domain expert + ML cofounder"</td><td>Label quality requires domain knowledge.</td></tr>
-          </tbody>
-        </table>
-        <aside class="notes">
-          "We built the dataset" is the green flag I weight most heavily in biotech. Wet-lab
-          experiments to generate training data are expensive, slow, hard to replicate.
-          A company systematically generating labeled biological data for two years has a
-          structural moat. The algorithm almost doesn't matter.
-        </aside>
-      </section>
-
-      <!-- SLIDE · The mental model (annotated callback) -->
+      <!-- SLIDE · The mental model (risk / reward scatter) -->
       <section data-center="false" style="padding-top:1.5rem;">
         <h2>The mental model</h2>
 
-        <div class="flow-diagram" style="margin-top:1.2rem;">
-          <div class="flow-box">INPUT</div>
-          <div class="flow-arrow">→</div>
-          <div class="flow-box yellow">MODEL</div>
-          <div class="flow-arrow">→</div>
-          <div class="flow-box green">OUTPUT</div>
-        </div>
+        <svg class="risk-reward" viewBox="0 0 900 480" style="width:100%; max-width:900px; display:block; margin:1rem auto 0;">
+          <!-- plot frame -->
+          <rect x="80" y="40" width="760" height="380" fill="none" stroke="#222"/>
 
-        <div class="three-col mental-annotations fragment" style="margin-top:1rem;">
-          <div>
-            <p class="c-blue">what's the data?<br>is it labeled?<br>can anyone else get it?</p>
-          </div>
-          <div>
-            <p class="c-yellow">which ring?<br>builder or wrapper?</p>
-          </div>
-          <div>
-            <p class="c-green">what's the eval metric?<br>does it match the real task?</p>
-          </div>
-        </div>
+          <!-- quadrant dividers -->
+          <line x1="460" y1="40"  x2="460" y2="420" stroke="#1a1a1a" stroke-dasharray="3,4"/>
+          <line x1="80"  y1="230" x2="840" y2="230" stroke="#1a1a1a" stroke-dasharray="3,4"/>
 
-        <ol class="left-align mental-questions" style="max-width:800px; margin:1.5rem auto 0;">
-          <li class="fragment c-blue">1. What is the <em>input</em>?</li>
-          <li class="fragment c-blue">2. What is the <em>output</em>?</li>
-          <li class="fragment c-yellow">3. Where does the <em>training data</em> come from?</li>
-        </ol>
+          <!-- subtle quadrant labels -->
+          <text x="100" y="60"  fill="#333" font-family="JetBrains Mono, monospace" font-size="10">LOW RISK · HIGH REWARD</text>
+          <text x="820" y="60"  fill="#333" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HIGH RISK · HIGH REWARD</text>
+          <text x="100" y="410" fill="#333" font-family="JetBrains Mono, monospace" font-size="10">LOW RISK · LOW REWARD</text>
+          <text x="820" y="410" fill="#333" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HIGH RISK · LOW REWARD</text>
+
+          <!-- axes -->
+          <line x1="80" y1="420" x2="840" y2="420" stroke="#555" stroke-width="1.5"/>
+          <line x1="80" y1="420" x2="80"  y2="40"  stroke="#555" stroke-width="1.5"/>
+
+          <!-- axis labels -->
+          <text x="460" y="455" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">RISK &nbsp;→</text>
+          <text x="40"  y="230" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 230)">REWARD &nbsp;→</text>
+
+          <!-- Placeholder points (revealed as fragments) -->
+          <g class="fragment rr-point">
+            <circle cx="200" cy="140" r="8" fill="#83C167"/>
+            <text x="215" y="144" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example A</text>
+            <text x="215" y="160" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">low risk · high reward · the sweet spot</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="680" cy="120" r="8" fill="#58C4DD"/>
+            <text x="695" y="124" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Example B</text>
+            <text x="695" y="140" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">high risk · high reward</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="680" cy="340" r="8" fill="#FC6255"/>
+            <text x="695" y="344" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Example C</text>
+            <text x="695" y="360" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">high risk · low reward · the trap</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="230" cy="360" r="8" fill="#9A72AC"/>
+            <text x="245" y="364" fill="#9A72AC" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example D</text>
+            <text x="245" y="380" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">low risk · low reward</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="440" cy="240" r="8" fill="#FFF1B5"/>
+            <text x="455" y="244" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example E</text>
+            <text x="455" y="260" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">middle of the road</text>
+          </g>
+        </svg>
 
         <aside class="notes">
-          Whole talk in one slide. AI is pattern matching. The pattern is a mapping from input to
-          output. The quality of that mapping depends almost entirely on the quantity and quality
-          of labeled training data. Ask these three questions in order. If answers are concrete,
-          specific, and honest about limitations — that's a team that knows what they're
-          building. If the answers are vague, or they jump straight to the demo — be skeptical.
+          Risk-reward canvas for evaluating AI/biotech investments. Placeholders for now — will
+          add specific examples (companies, technologies, approaches) that illustrate each
+          quadrant. The top-left is the holy grail: low risk, high reward. The bottom-right is
+          the trap — high risk, low reward. Most AI "wrappers" live there. Real domain builders
+          with proprietary data tend to live top-left.
         </aside>
       </section>
 

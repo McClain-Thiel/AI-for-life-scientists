@@ -780,10 +780,10 @@ html, body { background-color: var(--background); }
   color: var(--muted);
 }
 
-/* ─── Pyramid (Who makes money) · NVIDIA at bottom ─── */
+/* ─── Pyramid (Who makes money) · NVIDIA at bottom, reveal bottom-up ─── */
 .pyramid {
   display: flex;
-  flex-direction: column;       /* first child → top */
+  flex-direction: column-reverse;  /* first DOM child → BOTTOM, fragments reveal bottom-up */
   align-items: center;
   gap: 10px;
   margin-top: 1.5rem;
