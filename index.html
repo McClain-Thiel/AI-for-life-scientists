@@ -575,68 +575,52 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · What happens when the world changes -->
-      <section data-center="false" style="padding-top:2rem;">
-        <h2>What happens when the world changes?</h2>
+      <!-- SLIDE · When doesn't ML work? (the IID assumption) -->
+      <section data-center="false" style="padding-top:3rem;">
+        <h2>When doesn't ML work?</h2>
 
-        <svg class="shift-viz" viewBox="0 0 1000 240" style="width:100%; max-width:960px; margin:1.5rem auto 0; display:block;">
-          <!-- belt -->
-          <rect x="30" y="130" width="940" height="50" fill="#111" stroke="#333"/>
-          <circle cx="70"  cy="155" r="30" fill="#1a1a1a" stroke="#555"/>
-          <circle cx="930" cy="155" r="30" fill="#1a1a1a" stroke="#555"/>
+        <p style="margin-top:1.5rem; font-size:1.15rem; text-align:center; color:var(--white);">
+          Every ML method rests on one assumption.
+        </p>
 
-          <!-- training fish (yellow / large) -->
-          <g transform="translate(160, 155)">
-            <ellipse cx="0" cy="0" rx="30" ry="14" fill="#FFF1B5" opacity="0.9"/>
-            <polygon points="-28,-8 -40,0 -28,8" fill="#FFF1B5" opacity="0.9"/>
-            <circle cx="18" cy="-3" r="2" fill="#000"/>
-          </g>
-          <g transform="translate(270, 155)">
-            <ellipse cx="0" cy="0" rx="30" ry="14" fill="#FFF1B5" opacity="0.9"/>
-            <polygon points="-28,-8 -40,0 -28,8" fill="#FFF1B5" opacity="0.9"/>
-            <circle cx="18" cy="-3" r="2" fill="#000"/>
-          </g>
-          <text x="215" y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">training: GlowFish supplier</text>
-
-          <!-- new-supplier fish (orange / smaller) -->
-          <g transform="translate(580, 155)">
-            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
-            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
-            <circle cx="13" cy="-2" r="2" fill="#000"/>
-          </g>
-          <g transform="translate(670, 155)">
-            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
-            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
-            <circle cx="13" cy="-2" r="2" fill="#000"/>
-          </g>
-          <g transform="translate(760, 155)">
-            <ellipse cx="0" cy="0" rx="22" ry="10" fill="#F0AC5F" opacity="0.85"/>
-            <polygon points="-20,-5 -30,0 -20,5" fill="#F0AC5F"/>
-            <circle cx="13" cy="-2" r="2" fill="#000"/>
-          </g>
-          <text x="670" y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">deployment: new supplier</text>
-
-          <!-- divider -->
-          <line x1="450" y1="60" x2="450" y2="230" stroke="#333" stroke-dasharray="5,5"/>
-        </svg>
-
-        <div class="fragment acc-drop">
-          <div>
-            <div class="c-muted mono" style="font-size:0.7rem; letter-spacing:0.1em;">TEST ACC.</div>
-            <div class="c-green mono" style="font-size:1.8rem;">97%</div>
+        <div class="iid-block fragment">
+          <div class="iid-row">
+            <span class="iid-k">training</span>
+            <span class="iid-eq">$(X,\,Y) \sim$</span>
+            <span class="iid-p c-yellow">$\;P$</span>
           </div>
-          <div class="c-red" style="font-size:1.8rem;">&rarr;</div>
-          <div>
-            <div class="c-muted mono" style="font-size:0.7rem; letter-spacing:0.1em;">PRODUCTION</div>
-            <div class="c-red mono" style="font-size:1.8rem;">68%</div>
+          <div class="iid-row">
+            <span class="iid-k">test</span>
+            <span class="iid-eq">$(X,\,Y) \sim$</span>
+            <span class="iid-p c-yellow">$\;P$</span>
+          </div>
+          <div class="iid-caption">
+            the <em>same</em> P &nbsp;·&nbsp; independent and identically distributed
           </div>
         </div>
 
         <aside class="notes">
-          Gerald shipped the model. A month later his supplier changes. Fish look a bit smaller
-          and more orange under the new lighting. To a human they're obviously the same kind of
-          thing — to the model they're a new distribution. Accuracy drops from 97% to 68%. This
-          is distribution shift.
+          Core ML assumption: train and test are drawn iid from the same distribution P.
+          Everything — loss minimization, generalization bounds, benchmarks — rests on this.
+          The counterfactual is equally true: when the test distribution shifts away from P,
+          all bets are off. There's no theorem, no SLA, no confidence interval that survives.
+          That's when ML stops working.
+          Bridge into demo: let's watch what "learning a distribution" even looks like, then
+          what happens when we see a point that doesn't belong.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Distribution-learning demo -->
+      <section class="demo-slide"
+               data-background-iframe="demos/distribution-learning.html"
+               data-background-interactive>
+        <aside class="notes">
+          Phase 1 (training): slide N from 0 upward. With 1 sample the histogram is a single
+          spike. With 10 it's noisy. With 100 it converges to the true N(0,1) PDF (yellow dashed).
+          The green curve is the Gaussian fit — the "model". As N grows the fit locks onto truth.
+          Phase 2 (OOD): click "show out-of-distribution samples." Red dots appear near x=2.8 —
+          drawn from a different distribution. The model was never shown anything in that region.
+          Its predictions there are nonsense — but the model itself is not aware of that.
         </aside>
       </section>
 

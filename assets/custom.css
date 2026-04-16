@@ -700,6 +700,46 @@ html, body { background-color: var(--background); }
 .acc-drop > div:first-child,
 .acc-drop > div:last-child { text-align: center; }
 
+/* ─── IID assumption block (When doesn't ML work) ─── */
+.iid-block {
+  margin: 2rem auto 0;
+  max-width: 560px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--yellow);
+  border-radius: 4px;
+  padding: 1.4rem 2rem;
+}
+.iid-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  font-size: 1.4rem;
+  margin: 0.4rem 0;
+}
+.iid-row .iid-k {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: uppercase;
+  text-align: right;
+}
+.iid-row .iid-eq { color: var(--white); }
+.iid-row .iid-p  { font-size: 1.4rem; }
+.iid-caption {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed var(--border);
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.95rem;
+  text-align: center;
+}
+.iid-caption em { color: var(--yellow); }
+
 /* ─── Distribution examples ─── */
 .dist-examples {
   max-width: 900px;
@@ -740,10 +780,10 @@ html, body { background-color: var(--background); }
   color: var(--muted);
 }
 
-/* ─── Pyramid (Who makes money) ─── */
+/* ─── Pyramid (Who makes money) · NVIDIA at bottom ─── */
 .pyramid {
   display: flex;
-  flex-direction: column-reverse;   /* first child → bottom */
+  flex-direction: column;       /* first child → top */
   align-items: center;
   gap: 10px;
   margin-top: 1.5rem;

@@ -53,13 +53,6 @@
     color: var(--muted);
     text-transform: uppercase;
   }
-  .scene-title {
-    font-family: var(--serif);
-    font-size: 1.5rem;
-    color: var(--blue);
-    flex: 1;
-    text-align: center;
-  }
   .brand {
     font-family: var(--mono);
     font-size: 0.7rem;
@@ -186,7 +179,6 @@
 
 <header>
   <div class="brand">GLOW<span class="c-yellow">FISH</span> INC. · a story about ML</div>
-  <div class="scene-title" id="scene-title">Meet Gerald</div>
   <div class="scene-counter" id="scene-counter">1 / 9</div>
 </header>
 
@@ -194,45 +186,52 @@
 <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
   <defs>
     <!-- ═══════════════════════════════════════════════════════════════
-         FISH SYMBOLS
-         To use PNGs instead:
-           1. Save your images as demos/fish-glow.png and demos/fish-grey.png
-           2. Comment out the SVG symbols below
-           3. Un-comment the <symbol> blocks marked "PNG VARIANT"
+         FISH SYMBOLS  (zebrafish PNG with per-state filters)
+         Base image:  ../assets/zebrafish.png
+         - fish-glow  → yellow glow aura (filter fx-glow)
+         - fish-grey  → desaturated, dimmed (filter fx-defect)
          ═══════════════════════════════════════════════════════════════ -->
 
-    <!-- glowing fish · SVG (default) -->
-    <radialGradient id="glow-rad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%"  stop-color="#FFFF00" stop-opacity="0.35"/>
-      <stop offset="60%" stop-color="#FFFF00" stop-opacity="0.1"/>
-      <stop offset="100%" stop-color="#FFFF00" stop-opacity="0"/>
-    </radialGradient>
-    <symbol id="fish-glow" viewBox="-40 -20 80 40">
-      <ellipse cx="0" cy="0" rx="36" ry="16" fill="url(#glow-rad)"/>
-      <path d="M -20 0 Q -10 -12 15 -10 Q 25 -6 25 0 Q 25 6 15 10 Q -10 12 -20 0 Z"
-            fill="#FFFF00" stroke="#FFF1B5" stroke-width="1"/>
-      <path d="M -20 0 L -30 -7 L -30 7 Z" fill="#FFFF00"/>
-      <circle cx="18" cy="-3" r="1.5" fill="#222"/>
-    </symbol>
+    <!-- Yellow glow filter -->
+    <filter id="fx-glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3.5" result="blur1"/>
+      <feFlood flood-color="#FFFF00" flood-opacity="0.95"/>
+      <feComposite in2="blur1" operator="in" result="glow1"/>
 
-    <!-- grey fish · SVG (default) -->
-    <symbol id="fish-grey" viewBox="-40 -20 80 40">
-      <path d="M -20 0 Q -10 -12 15 -10 Q 25 -6 25 0 Q 25 6 15 10 Q -10 12 -20 0 Z"
-            fill="#555555" stroke="#777" stroke-width="1"/>
-      <path d="M -20 0 L -30 -7 L -30 7 Z" fill="#555555"/>
-      <circle cx="18" cy="-3" r="1.5" fill="#000"/>
-    </symbol>
+      <feGaussianBlur in="SourceAlpha" stdDeviation="7" result="blur2"/>
+      <feFlood flood-color="#FFD54F" flood-opacity="0.6"/>
+      <feComposite in2="blur2" operator="in" result="glow2"/>
 
-    <!-- ╭─────────────── PNG VARIANT · uncomment to enable ───────────────╮
+      <feMerge>
+        <feMergeNode in="glow2"/>
+        <feMergeNode in="glow1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Desaturate / dim filter (defective, non-glowing) -->
+    <filter id="fx-defect">
+      <feColorMatrix type="matrix" values="
+        0.33 0.33 0.33 0 -0.05
+        0.33 0.33 0.33 0 -0.05
+        0.33 0.33 0.33 0 -0.05
+        0    0    0    1  0"/>
+      <feComponentTransfer>
+        <feFuncR type="linear" slope="0.55"/>
+        <feFuncG type="linear" slope="0.55"/>
+        <feFuncB type="linear" slope="0.55"/>
+      </feComponentTransfer>
+    </filter>
+
     <symbol id="fish-glow" viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
-      <image href="fish-glow.png" x="0" y="0" width="80" height="40"
-             preserveAspectRatio="xMidYMid meet"/>
+      <image href="../assets/zebrafish.png" x="0" y="0" width="80" height="40"
+             preserveAspectRatio="xMidYMid meet" filter="url(#fx-glow)"/>
     </symbol>
+
     <symbol id="fish-grey" viewBox="0 0 80 40" preserveAspectRatio="xMidYMid meet">
-      <image href="fish-grey.png" x="0" y="0" width="80" height="40"
-             preserveAspectRatio="xMidYMid meet"/>
+      <image href="../assets/zebrafish.png" x="0" y="0" width="80" height="40"
+             preserveAspectRatio="xMidYMid meet" filter="url(#fx-defect)"/>
     </symbol>
-    ╰──────────────────────────────────────────────────────────────────╯ -->
 
     <!-- Gerald -->
     <symbol id="gerald" viewBox="0 0 120 180">
@@ -301,12 +300,12 @@
         <use href="#belt"/>
       </svg>
 
-      <!-- Fish on belt (mix) -->
+      <!-- Fish on belt: mostly glow, occasional defective -->
       <use href="#fish-glow" x="230" y="315" width="80" height="40"/>
-      <use href="#fish-grey" x="330" y="315" width="80" height="40"/>
+      <use href="#fish-glow" x="330" y="315" width="80" height="40"/>
       <use href="#fish-grey" x="430" y="315" width="80" height="40"/>
       <use href="#fish-glow" x="530" y="315" width="80" height="40"/>
-      <use href="#fish-grey" x="630" y="315" width="80" height="40"/>
+      <use href="#fish-glow" x="630" y="315" width="80" height="40"/>
       <use href="#fish-grey" x="730" y="315" width="80" height="40"/>
       <use href="#fish-glow" x="830" y="315" width="80" height="40"/>
 
@@ -315,84 +314,103 @@
     </svg>
     <div class="caption">
       Meet <em>Gerald</em>. Gerald runs GlowFish Inc.<br>
-      His fish come down a conveyor belt &mdash; some <span class="hi">glow</span>, most don't.
+      His zebrafish come down the belt &mdash; most <span class="hi">glow</span>, a few are defective.
     </div>
   </section>
 
   <!-- SCENE 2 -->
   <section class="scene" data-scene="2">
     <svg viewBox="0 0 1000 440">
-      <!-- close-up of 6 fish with question marks -->
-      <g transform="translate(90, 120)">
+      <!-- 5 fish close-ups: 4 glow, 1 defective -->
+      <g transform="translate(50, 140)">
         <use href="#fish-glow" x="0" y="0" width="160" height="80"/>
-        <text x="75" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">GLOW ?</text>
+        <text x="80" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">GLOW ✓</text>
       </g>
-      <g transform="translate(280, 120)">
-        <use href="#fish-grey" x="0" y="0" width="160" height="80"/>
-        <text x="75" y="110" fill="#888" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">GREY ?</text>
-      </g>
-      <g transform="translate(470, 120)">
-        <use href="#fish-grey" x="0" y="0" width="160" height="80"/>
-        <text x="75" y="110" fill="#888" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">GREY ?</text>
-      </g>
-      <g transform="translate(660, 120)">
+      <g transform="translate(240, 140)">
         <use href="#fish-glow" x="0" y="0" width="160" height="80"/>
-        <text x="75" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">GLOW ?</text>
+        <text x="80" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">GLOW ✓</text>
       </g>
-      <g transform="translate(850, 120)">
-        <use href="#fish-grey" x="0" y="0" width="120" height="60"/>
-        <text x="55" y="95" fill="#888" font-family="JetBrains Mono, monospace" font-size="14" text-anchor="middle">? ? ?</text>
+      <g transform="translate(430, 140)">
+        <use href="#fish-grey" x="0" y="0" width="160" height="80"/>
+        <text x="80" y="110" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">DEFECTIVE</text>
+      </g>
+      <g transform="translate(620, 140)">
+        <use href="#fish-glow" x="0" y="0" width="160" height="80"/>
+        <text x="80" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">GLOW ✓</text>
+      </g>
+      <g transform="translate(810, 140)">
+        <use href="#fish-glow" x="0" y="0" width="160" height="80"/>
+        <text x="80" y="110" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">GLOW ✓</text>
       </g>
 
       <!-- rate counter -->
-      <g transform="translate(500, 300)">
+      <g transform="translate(500, 320)">
         <text x="0" y="0" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="32" text-anchor="middle">10,000 fish / day</text>
-        <text x="0" y="34" fill="#888" font-family="Computer Modern Serif, Georgia, serif" font-size="16" text-anchor="middle" font-style="italic">hand-sorting is not an option</text>
+        <text x="0" y="34" fill="#888" font-family="Computer Modern Serif, Georgia, serif" font-size="16" text-anchor="middle" font-style="italic">hand-sorting the defectives is not an option</text>
       </g>
     </svg>
     <div class="caption">
-      Gerald's problem: <em>some fish glow, most don't</em>.<br>
-      He needs to sort them &mdash; and there are 10,000 per day.
+      A small fraction of fish are <em>defective</em> &mdash; they don't glow.<br>
+      Gerald needs to pull them off the line before they ship.
     </div>
   </section>
 
-  <!-- SCENE 3 -->
+  <!-- SCENE 3 · Gerald manually labels -->
   <section class="scene" data-scene="3">
     <svg viewBox="0 0 1000 440">
-      <!-- Camera -->
-      <use href="#camera" x="160" y="50" width="80" height="80"/>
-      <!-- dotted lines from camera to fish -->
-      <line x1="200" y1="130" x2="230" y2="280" stroke="#FC6255" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
-      <line x1="200" y1="130" x2="430" y2="280" stroke="#FC6255" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
-      <line x1="200" y1="130" x2="630" y2="280" stroke="#FC6255" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
-      <line x1="200" y1="130" x2="830" y2="280" stroke="#FC6255" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+      <!-- Gerald on left, reaching toward fish -->
+      <use href="#gerald" x="40" y="150" width="120" height="180"/>
 
-      <!-- conveyor with fish, labeled -->
-      <svg x="100" y="290" width="830" height="50" viewBox="0 0 900 50" preserveAspectRatio="none">
-        <use href="#belt"/>
-      </svg>
-      <use href="#fish-glow" x="190" y="285" width="80" height="40"/>
-      <text x="230" y="345" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      <!-- clipboard in Gerald's hand -->
+      <g transform="translate(150, 220)">
+        <rect x="0" y="0" width="42" height="52" rx="2" fill="#0a0a0a" stroke="#F0AC5F" stroke-width="1.4"/>
+        <rect x="14" y="-4" width="14" height="4" rx="1" fill="#F0AC5F"/>
+        <line x1="5"  y1="10" x2="37" y2="10" stroke="#888" stroke-width="0.8"/>
+        <line x1="5"  y1="18" x2="37" y2="18" stroke="#888" stroke-width="0.8"/>
+        <line x1="5"  y1="26" x2="37" y2="26" stroke="#888" stroke-width="0.8"/>
+        <line x1="5"  y1="34" x2="37" y2="34" stroke="#888" stroke-width="0.8"/>
+        <line x1="5"  y1="42" x2="37" y2="42" stroke="#888" stroke-width="0.8"/>
+      </g>
 
-      <use href="#fish-grey" x="390" y="285" width="80" height="40"/>
-      <text x="430" y="345" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GREY ✓</text>
+      <!-- Inspection table (a simple grey slab) -->
+      <rect x="240" y="260" width="700" height="12" fill="#222" stroke="#444"/>
+      <rect x="240" y="272" width="700" height="40" fill="#111" stroke="#333"/>
 
-      <use href="#fish-glow" x="590" y="285" width="80" height="40"/>
-      <text x="630" y="345" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      <!-- 5 fish on the table, with floating labels Gerald is writing -->
+      <g transform="translate(260, 240)">
+        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
+        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      </g>
+      <g transform="translate(400, 240)">
+        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
+        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      </g>
+      <g transform="translate(540, 240)">
+        <use href="#fish-grey" x="0" y="0" width="120" height="60"/>
+        <text x="60" y="-8" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">DEFECT ✗</text>
+      </g>
+      <g transform="translate(680, 240)">
+        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
+        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      </g>
+      <g transform="translate(820, 240)">
+        <use href="#fish-glow" x="0" y="0" width="120" height="60"/>
+        <text x="60" y="-8" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GLOW ✓</text>
+      </g>
 
-      <use href="#fish-grey" x="790" y="285" width="80" height="40"/>
-      <text x="830" y="345" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">GREY ✓</text>
+      <!-- arrow from Gerald to the first fish -->
+      <path d="M 200 240 Q 230 220 260 260" stroke="#F0AC5F" fill="none" stroke-width="1.5" stroke-dasharray="4,3"/>
 
       <!-- counter -->
-      <g transform="translate(720, 100)">
+      <g transform="translate(720, 80)">
         <rect x="0" y="0" width="230" height="60" rx="3" fill="#0a0a0a" stroke="#58C4DD"/>
-        <text x="115" y="22" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">LABELED EXAMPLES</text>
+        <text x="115" y="22" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">LABELED BY HAND</text>
         <text x="115" y="48" fill="#58C4DD" font-family="JetBrains Mono, monospace" font-size="22" text-anchor="middle">1,000</text>
       </g>
     </svg>
     <div class="caption">
-      <em>Collect &amp; label the data.</em><br>
-      Take photos. Say "GLOW" or "GREY" for each one. Do it 1,000 times.
+      Gerald labels every fish by hand. Slow, tedious, necessary.<br>
+      <span class="sub">Somebody has to decide what "GLOW" means in the first place.</span>
     </div>
   </section>
 
@@ -456,13 +474,13 @@
       </g>
       <g transform="translate(350, 290)">
         <use href="#fish-grey" x="0" y="0" width="80" height="40"/>
-        <text x="40" y="60" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">GREY ✓</text>
+        <text x="40" y="60" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">DEFECT ✓</text>
       </g>
       <g transform="translate(520, 290)">
-        <!-- grey fish on yellow background — fool it -->
-        <rect x="-8" y="-12" width="96" height="48" rx="2" fill="#FFF1B5" fill-opacity="0.3"/>
-        <use href="#fish-grey" x="0" y="0" width="80" height="40"/>
-        <text x="40" y="60" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">GLOW ✗</text>
+        <!-- healthy fish under bright overhead light — model miscalls as defective -->
+        <rect x="-8" y="-12" width="96" height="48" rx="2" fill="#F0AC5F" fill-opacity="0.25"/>
+        <use href="#fish-glow" x="0" y="0" width="80" height="40"/>
+        <text x="40" y="60" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">DEFECT ✗</text>
       </g>
       <g transform="translate(690, 290)">
         <use href="#fish-glow" x="0" y="0" width="80" height="40"/>
@@ -477,7 +495,7 @@
     </div>
 
     <div class="caption">
-      Better than random. But a grey fish on a yellow background fools it.
+      Better than random. But a healthy fish under weird lighting fools it.
       <span class="sub">This is called "underfitting" &mdash; the model is too simple for the task.</span>
     </div>
   </section>
@@ -564,8 +582,8 @@
           <circle cx="440" cy="100" r="10" fill="#FFFF00" stroke="#FFF1B5"/>
           <circle cx="440" cy="160" r="10" fill="#0a0a0a" stroke="#888"/>
         </g>
-        <text x="470" y="104" fill="#FFFF00" font-family="JetBrains Mono, monospace" font-size="12">GLOW 0.97</text>
-        <text x="470" y="164" fill="#888"  font-family="JetBrains Mono, monospace" font-size="12">GREY 0.03</text>
+        <text x="470" y="104" fill="#FFFF00" font-family="JetBrains Mono, monospace" font-size="12">GLOW   0.97</text>
+        <text x="470" y="164" fill="#888"  font-family="JetBrains Mono, monospace" font-size="12">DEFECT 0.03</text>
 
         <!-- connections (sparse, illustrative) -->
         <g stroke="#58C4DD" stroke-opacity="0.15">
@@ -619,28 +637,28 @@
         <rect x="0" y="0" width="260" height="150" rx="3" fill="#FFF1B5" fill-opacity="0.1" stroke="#FFF1B5" stroke-width="2"/>
         <text x="130" y="-12" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">TEST SET · 200 fish</text>
 
-        <!-- a grid of small fish icons -->
+        <!-- a grid of small fish icons — mostly glowing, a handful defective -->
         <g>
           <use href="#fish-glow" x="10"  y="20" width="35" height="17"/>
-          <use href="#fish-grey" x="50"  y="20" width="35" height="17"/>
+          <use href="#fish-glow" x="50"  y="20" width="35" height="17"/>
           <use href="#fish-glow" x="90"  y="20" width="35" height="17"/>
           <use href="#fish-grey" x="130" y="20" width="35" height="17"/>
           <use href="#fish-glow" x="170" y="20" width="35" height="17"/>
-          <use href="#fish-grey" x="210" y="20" width="35" height="17"/>
+          <use href="#fish-glow" x="210" y="20" width="35" height="17"/>
 
-          <use href="#fish-grey" x="10"  y="50" width="35" height="17"/>
+          <use href="#fish-glow" x="10"  y="50" width="35" height="17"/>
           <use href="#fish-glow" x="50"  y="50" width="35" height="17"/>
           <use href="#fish-grey" x="90"  y="50" width="35" height="17"/>
-          <use href="#fish-grey" x="130" y="50" width="35" height="17"/>
+          <use href="#fish-glow" x="130" y="50" width="35" height="17"/>
           <use href="#fish-glow" x="170" y="50" width="35" height="17"/>
-          <use href="#fish-grey" x="210" y="50" width="35" height="17"/>
+          <use href="#fish-glow" x="210" y="50" width="35" height="17"/>
 
           <use href="#fish-glow" x="10"  y="80" width="35" height="17"/>
-          <use href="#fish-grey" x="50"  y="80" width="35" height="17"/>
-          <use href="#fish-grey" x="90"  y="80" width="35" height="17"/>
+          <use href="#fish-glow" x="50"  y="80" width="35" height="17"/>
+          <use href="#fish-glow" x="90"  y="80" width="35" height="17"/>
           <use href="#fish-glow" x="130" y="80" width="35" height="17"/>
           <use href="#fish-grey" x="170" y="80" width="35" height="17"/>
-          <use href="#fish-grey" x="210" y="80" width="35" height="17"/>
+          <use href="#fish-glow" x="210" y="80" width="35" height="17"/>
         </g>
         <text x="130" y="130" fill="#888" font-family="Computer Modern Serif, Georgia, serif" font-size="12" font-style="italic" text-anchor="middle">the model has never seen these</text>
       </g>
@@ -653,24 +671,24 @@
 
         <!-- col headers -->
         <text x="100" y="18" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">pred GLOW</text>
-        <text x="190" y="18" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">pred GREY</text>
+        <text x="190" y="18" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">pred DEFECT</text>
 
         <!-- row headers -->
         <text x="35" y="55"  fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">GLOW</text>
-        <text x="35" y="95"  fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">GREY</text>
+        <text x="35" y="95"  fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">DEFECT</text>
 
-        <!-- cells -->
+        <!-- cells (realistic: 180 glow, 20 defective → heavy upper-left, small lower-right) -->
         <rect x="50" y="30" width="90" height="45" fill="#83C167" fill-opacity="0.2" stroke="#83C167"/>
-        <text x="95" y="58" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">74</text>
+        <text x="95" y="58" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">176</text>
 
         <rect x="140" y="30" width="90" height="45" fill="#FC6255" fill-opacity="0.15" stroke="#FC6255"/>
-        <text x="185" y="58" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">3</text>
+        <text x="185" y="58" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">4</text>
 
         <rect x="50" y="75" width="90" height="45" fill="#FC6255" fill-opacity="0.15" stroke="#FC6255"/>
-        <text x="95" y="103" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">4</text>
+        <text x="95" y="103" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">3</text>
 
         <rect x="140" y="75" width="90" height="45" fill="#83C167" fill-opacity="0.2" stroke="#83C167"/>
-        <text x="185" y="103" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">119</text>
+        <text x="185" y="103" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="16" text-anchor="middle">17</text>
 
         <text x="130" y="150" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">accuracy: 96.5%</text>
       </g>
@@ -696,7 +714,7 @@
       <g transform="translate(350, 130)">
         <rect x="0" y="0" width="300" height="70" rx="4" fill="#0a0a0a" stroke="#83C167" stroke-width="2"/>
         <text x="150" y="26" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">DEPLOYED MODEL</text>
-        <text x="150" y="50" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="16" text-anchor="middle">glow / grey → sorter</text>
+        <text x="150" y="50" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="16" text-anchor="middle">glow / defect → sorter</text>
       </g>
 
       <!-- belt -->
@@ -704,27 +722,27 @@
         <use href="#belt"/>
       </svg>
 
-      <!-- fish on belt with tiny labels floating above each -->
+      <!-- fish on belt, mostly glow, occasional defect -->
       <use href="#fish-glow" x="230" y="315" width="80" height="40"/>
       <text x="270" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
 
-      <use href="#fish-grey" x="330" y="315" width="80" height="40"/>
-      <text x="370" y="305" fill="#888" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GREY</text>
+      <use href="#fish-glow" x="330" y="315" width="80" height="40"/>
+      <text x="370" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
 
-      <use href="#fish-glow" x="430" y="315" width="80" height="40"/>
-      <text x="470" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
+      <use href="#fish-grey" x="430" y="315" width="80" height="40"/>
+      <text x="470" y="305" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">DEFECT</text>
 
-      <use href="#fish-grey" x="530" y="315" width="80" height="40"/>
-      <text x="570" y="305" fill="#888" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GREY</text>
+      <use href="#fish-glow" x="530" y="315" width="80" height="40"/>
+      <text x="570" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
 
-      <use href="#fish-grey" x="630" y="315" width="80" height="40"/>
-      <text x="670" y="305" fill="#888" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GREY</text>
+      <use href="#fish-glow" x="630" y="315" width="80" height="40"/>
+      <text x="670" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
 
-      <use href="#fish-glow" x="730" y="315" width="80" height="40"/>
-      <text x="770" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
+      <use href="#fish-grey" x="730" y="315" width="80" height="40"/>
+      <text x="770" y="305" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">DEFECT</text>
 
-      <use href="#fish-grey" x="830" y="315" width="80" height="40"/>
-      <text x="870" y="305" fill="#888" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GREY</text>
+      <use href="#fish-glow" x="830" y="315" width="80" height="40"/>
+      <text x="870" y="305" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">GLOW</text>
 
       <!-- accuracy meter -->
       <g transform="translate(720, 130)">
@@ -749,17 +767,6 @@
 
 <script>
   const N_SCENES = 9;
-  const TITLES = {
-    1: 'Meet Gerald',
-    2: 'The problem',
-    3: 'Collect &amp; label data',
-    4: 'Train / test split',
-    5: 'Model 1 — a simple rule',
-    6: 'Model 2 — a linear classifier',
-    7: 'Model 3 — a neural network',
-    8: 'Evaluate',
-    9: 'Deploy',
-  };
   let current = 1;
 
   const stage = document.getElementById('stage');
@@ -767,7 +774,6 @@
   const prevBtn = document.getElementById('prev');
   const nextBtn = document.getElementById('next');
   const counter = document.getElementById('scene-counter');
-  const title = document.getElementById('scene-title');
   const dots = document.getElementById('dots');
 
   // build dots
@@ -783,7 +789,6 @@
     current = n;
     scenes.forEach(s => s.classList.toggle('active', Number(s.dataset.scene) === n));
     counter.textContent = n + ' / ' + N_SCENES;
-    title.innerHTML = TITLES[n];
     prevBtn.disabled = (n === 1);
     nextBtn.disabled = (n === N_SCENES);
     nextBtn.textContent = (n === N_SCENES) ? 'fin' : 'next →';
