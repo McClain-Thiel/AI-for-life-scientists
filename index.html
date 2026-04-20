@@ -188,13 +188,13 @@
           </g>
         </svg>
 
-        <!-- Formal definition, dotted-line boxed, appears after all circles -->
-        <div class="fragment ml-def">
-          <p class="mono" style="font-size:1.05rem; text-align:center; color:var(--blue);">
-            Machine learning: algorithms that <em>learn patterns from data</em><br>
-            instead of being explicitly programmed.
-          </p>
-        </div>
+        <!-- Tom Mitchell's formal definition — appears after all circles -->
+        <p class="fragment" style="margin-top:1.2rem; max-width:900px; margin-left:auto; margin-right:auto;
+                                    text-align:center; font-size:1.0rem; line-height:1.65; color:var(--white);">
+          "A computer program is said to learn from experience <em>E</em> with respect to some
+          class of tasks <em>T</em> and performance measure <em>P</em>, if its performance at
+          tasks in <em>T</em>, as measured by <em>P</em>, improves with experience <em>E</em>."
+        </p>
 
         <aside class="notes">
           AI is the big ring — the word that goes in the pitch deck. A marketing umbrella.
@@ -391,21 +391,12 @@
         </p>
 
         <div class="af-flow" style="margin-top:1.2rem;">
-          <!-- INPUT: image thumbnail -->
+          <!-- INPUT: real cat photo -->
           <div class="af-col">
-            <svg viewBox="0 0 200 200" style="width:200px; height:200px; background:#050505; border:1px solid #222; border-radius:4px;">
-              <!-- simplified cat-photo placeholder -->
-              <rect x="0" y="0" width="200" height="200" fill="#0a0a0a"/>
-              <text x="100" y="50" fill="#444" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">224 × 224 px</text>
-              <!-- cat silhouette -->
-              <polygon points="70,85 85,55 100,80" fill="#58C4DD" opacity="0.5"/>
-              <polygon points="100,80 115,55 130,85" fill="#58C4DD" opacity="0.5"/>
-              <circle cx="100" cy="115" r="35" fill="#58C4DD" opacity="0.3"/>
-              <circle cx="88" cy="110" r="4" fill="#58C4DD"/>
-              <circle cx="112" cy="110" r="4" fill="#58C4DD"/>
-              <path d="M 90 125 Q 100 133 110 125" stroke="#58C4DD" fill="none" stroke-width="2"/>
-              <text x="100" y="175" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">input: raw pixels</text>
-            </svg>
+            <div style="width:200px; height:200px; border:1px solid #222; border-radius:4px; overflow:hidden; position:relative;">
+              <img src="assets/cat.jpg" alt="tabby cat" style="width:100%; height:100%; object-fit:cover;"/>
+              <span style="position:absolute; bottom:4px; right:6px; font-family:var(--mono); font-size:8px; color:#aaa; background:rgba(0,0,0,0.6); padding:1px 4px; border-radius:2px;">224 × 224 px</span>
+            </div>
             <div class="af-label"><span class="c-muted">INPUT</span><br>an image</div>
           </div>
 
@@ -908,7 +899,7 @@ LHLVLRLRGG</pre>
           <div class="layer-row fragment">
             <div><span class="layer-name">APPLICATION</span></div>
             <div class="layer-cos">
-              <span class="c-green">Paige AI</span> · <span class="c-green">PathAI</span> ·
+              <span class="c-green">Paige AI</span> ·
               <span class="c-green">Viz.ai</span> ·
               <span class="c-red">Babylon Health</span> <span class="dim">✗</span> ·
               <span class="c-red">Ada Health</span> <span class="dim">(struggling)</span>
@@ -957,7 +948,7 @@ LHLVLRLRGG</pre>
 
       <!-- SLIDE · Three archetypes: Data / Foundation / Application -->
       <section data-center="false" style="padding-top:1.5rem;">
-        <h2>Which layer are they <em>in</em>?</h2>
+        <h2>Which layer are they <span class="c-blue">in</span>?</h2>
         <hr style="border:none; border-top:1px solid #333; margin:0.5rem 0 1.2rem;"/>
         <div class="spectrum">
           <div class="spectrum-pos fragment">
@@ -976,13 +967,12 @@ LHLVLRLRGG</pre>
             <div class="spec-label">APPLICATION</div>
             <h3 class="c-blue">Build a product on top</h3>
             <div class="companies">
-              <span class="c-green">Paige AI</span> ·
-              <span class="c-green">Viz.ai</span> ��
-              <span class="c-green">Grammarly</span> ·
-              <span class="c-red">Babylon Health</span> ·
-              <span class="c-red">Jasper AI</span>
+              <span class="c-green">Paige AI</span> &middot;
+              <span class="c-green">Viz.ai</span> &middot;
+              <span class="c-green">Grammarly</span> &middot;
+              <span class="c-red">Babylon Health</span>
             </div>
-            <p>Some succeed (FDA-cleared product, real distribution). Some don't (no moat, easily cloned).</p>
+            <p>Some succeed (FDA-cleared product, real distribution). Some don't (no moat, no buyer budget).</p>
           </div>
         </div>
 
@@ -990,7 +980,7 @@ LHLVLRLRGG</pre>
           Three archetypes. Data: defensible if the dataset is hard to replicate. Foundation:
           expensive and commoditising fast. Application: this is NOT automatically bad — Paige
           has FDA clearance and hospital contracts, Viz.ai has real clinical workflow integration.
-          But Babylon went bankrupt and Jasper collapsed when ChatGPT launched. The question
+          But Babylon went bankrupt — NHS couldn't pay. The question
           isn't "which layer" — it's "what's the moat within that layer?"
         </aside>
       </section>
@@ -1073,66 +1063,68 @@ LHLVLRLRGG</pre>
           <text x="460" y="432" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">HOW HARD IS IT &nbsp;→</text>
           <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 215)">DO PEOPLE WANT IT &nbsp;→</text>
 
-          <!-- ─── SUCCESS (green circles) ─── -->
+          <!-- ─── TOP-LEFT: easy + wanted + big buyers (green) ─── -->
 
-          <!-- Tempus — hard (8), high demand (8), large buyers (pharma) -->
           <g class="fragment rr-point">
-            <circle cx="670" cy="100" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="645" y="96" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Tempus</text>
-            <text x="645" y="112" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">clinical genomics · pharma buyers</text>
+            <circle cx="340" cy="65" r="20" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="366" y="62" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Gong</text>
+            <text x="366" y="76" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">sales AI &middot; enterprise buyers</text>
           </g>
 
-          <!-- Scale AI — medium (6), high demand (9), large buyers (big tech + DoD) -->
           <g class="fragment rr-point">
-            <circle cx="500" cy="60" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="530" y="56" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Scale AI</text>
-            <text x="530" y="72" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">data labeling · big tech + DoD</text>
+            <circle cx="480" cy="80" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="508" y="76" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Scale AI</text>
+            <text x="508" y="90" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">data labeling &middot; big tech + DoD</text>
           </g>
 
-          <!-- Palantir — very hard (9), demand (7), large buyers (govt) -->
+          <!-- ─── TOP-RIGHT: hard + wanted + big buyers (green) ─── -->
+
           <g class="fragment rr-point">
-            <circle cx="755" cy="155" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="730" y="150" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Palantir</text>
-            <text x="730" y="166" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">data OS · government + enterprise</text>
+            <circle cx="670" cy="90" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="644" y="86" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Tempus</text>
+            <text x="644" y="100" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">clinical genomics &middot; pharma</text>
           </g>
 
-          <!-- Gong — medium (5), high demand (8), large buyers (enterprise) -->
           <g class="fragment rr-point">
-            <circle cx="415" cy="100" r="20" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="440" y="98" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Gong</text>
-            <text x="440" y="114" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">sales AI · enterprise budgets</text>
+            <circle cx="760" cy="150" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="734" y="146" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Palantir</text>
+            <text x="734" y="160" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">data OS &middot; government</text>
           </g>
 
-          <!-- ─── FAILURE (red circles, small bubbles = low buyer power) ─── -->
+          <!-- ─── MIDDLE: wanted but small buyers = failure (red, tiny bubbles) ─── -->
 
-          <!-- Olive AI — medium (6), demand (7), small buyers (hospitals) -->
           <g class="fragment rr-point">
-            <circle cx="500" cy="155" r="8" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="515" y="152" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Olive AI</text>
-            <text x="515" y="167" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">hospital RPA · burned $852M</text>
+            <circle cx="545" cy="120" r="7" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="560" y="117" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Babylon Health</text>
+            <text x="560" y="131" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">AI GP &middot; NHS = no budget</text>
           </g>
 
-          <!-- Babylon Health — hard (7), high demand (8), tiny buyers (NHS) -->
           <g class="fragment rr-point">
-            <circle cx="585" cy="100" r="7" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="600" y="98" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Babylon Health</text>
-            <text x="600" y="113" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">AI GP · NHS buyer = no budget</text>
+            <circle cx="480" cy="175" r="8" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="495" y="172" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Olive AI</text>
+            <text x="495" y="186" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">hospital RPA &middot; burned $852M</text>
           </g>
 
-          <!-- Enlitic — hard (7), moderate demand (6), small buyers (radiology depts) -->
+          <!-- ─── BOTTOM-RIGHT: hard + low demand (mixed) ─── -->
+
           <g class="fragment rr-point">
-            <circle cx="585" cy="200" r="7" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="600" y="198" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Enlitic</text>
-            <text x="600" y="213" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">radiology AI · hospitals won't buy</text>
+            <circle cx="760" cy="270" r="18" fill="#FFF1B5" fill-opacity="0.15" stroke="#FFF1B5" stroke-width="1.8"/>
+            <text x="734" y="267" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Recursion</text>
+            <text x="734" y="281" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">AI drug discovery &middot; no drug yet</text>
           </g>
 
-          <!-- ─── UNCERTAIN (amber, large buyer but unproven) ─── -->
-
-          <!-- Recursion — very hard (9), moderate demand (5), large buyers (pharma) -->
           <g class="fragment rr-point">
-            <circle cx="755" cy="240" r="18" fill="#FFF1B5" fill-opacity="0.15" stroke="#FFF1B5" stroke-width="1.8"/>
-            <text x="730" y="238" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Recursion</text>
-            <text x="730" y="254" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">AI drug discovery · no approved drug yet</text>
+            <circle cx="670" cy="310" r="14" fill="#FC6255" fill-opacity="0.2" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="644" y="307" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">IBM Watson Health</text>
+            <text x="644" y="321" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">hard &middot; couldn't deliver &middot; sold off</text>
+          </g>
+
+          <!-- ─── BOTTOM-LEFT: easy + low demand + no buyer power (red) ─── -->
+
+          <g class="fragment rr-point">
+            <circle cx="170" cy="340" r="6" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="184" y="337" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Lensa AI</text>
+            <text x="184" y="351" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">photo filters &middot; hype died in weeks</text>
           </g>
 
           <!-- legend -->
@@ -1148,18 +1140,15 @@ LHLVLRLRGG</pre>
         </svg>
 
         <aside class="notes">
-          All real companies, no generic categories. Green = success, red = failed, amber = TBD.
+          All real companies across all four quadrants.
 
-          Key patterns:
-          - Top-left (easy + wanted + big buyers): Gong, Scale AI — clear ROI, fast sales cycles.
-          - Top-right (hard + wanted + big buyers): Tempus, Palantir — the frontier. Slow to build
-            but once built, incredibly sticky. Big buyer budgets justify the capex.
-          - Same Y but small bubbles (red): Babylon Health and Olive AI both had high demand — hospitals
-            and patients genuinely needed them. But the buyers (NHS, hospital admin) couldn't pay.
-            Demand without buyer power = bankruptcy.
-          - Enlitic: radiologists loved the product, hospital procurement wouldn't sign the PO.
-          - Recursion: big pharma buyer power, but no approved drug. Still TBD whether the science
-            converts to revenue before the runway runs out.
+          Top-left: Gong and Scale AI. Easy-ish, very wanted, enterprise/DoD buyers with budget.
+          Top-right: Tempus and Palantir. Hard to build, very wanted, pharma/government checks.
+          Middle: Babylon Health and Olive AI — same demand as the successes, but tiny bubbles.
+          NHS and hospital admin can't write the checks. Demand without buyer power = death.
+          Bottom-right: Recursion (still unproven) and IBM Watson Health (sold off — hard problem,
+          couldn't deliver). Bottom-left: Lensa AI — trivial to build, brief viral hype, no
+          retention, no buyer power (consumer microtransactions).
 
           The bubble-size lesson: wanting something isn't enough. The person who wants it has to be
           able to write a check. That's why Gong (enterprise sales) works and Babylon (NHS) doesn't.
@@ -1206,9 +1195,6 @@ LHLVLRLRGG</pre>
           <line x1="87" y1="110" x2="89" y2="152" stroke="#333" stroke-width="7" stroke-linecap="round"/>
         </svg>
 
-        <p class="subtitle" style="margin-top:0.5rem;">
-          Or: try the three questions on the last AI pitch you saw.
-        </p>
         <p class="c-muted mono" style="margin-top:2.5rem; font-size:0.85rem;">
           McClain Thiel &nbsp;·&nbsp; UCL Barnes Lab
         </p>
