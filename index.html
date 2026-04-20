@@ -732,38 +732,59 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · When doesn't ML work? (the IID assumption) -->
-      <section data-center="false" style="padding-top:3rem;">
+      <!-- SLIDE · When doesn't ML work? (two-panel distribution viz) -->
+      <section data-center="false" style="padding-top:2rem;">
         <h2>When doesn't ML work?</h2>
 
-        <p style="margin-top:1.5rem; font-size:1.15rem; text-align:center; color:var(--white);">
-          Every ML method rests on one assumption.
-        </p>
+        <div class="two-col" style="margin-top:1rem; gap:2rem; align-items:start;">
+          <!-- LEFT: what we assume -->
+          <div style="text-align:center;">
+            <p class="mono c-muted" style="font-size:0.75rem; letter-spacing:0.14em; margin-bottom:0.8rem;">WHAT WE ASSUME</p>
+            <svg id="dist-assume" viewBox="0 0 440 220" style="width:100%; max-width:440px; display:block; margin:0 auto;">
+              <line x1="30" y1="190" x2="410" y2="190" stroke="#444"/>
+              <path id="da-train" fill="#58C4DD" fill-opacity="0.25" stroke="#58C4DD" stroke-width="2"/>
+              <path id="da-test"  fill="#83C167" fill-opacity="0.2"  stroke="#83C167" stroke-width="2" stroke-dasharray="5,4"/>
+              <text x="220" y="210" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">patient profile</text>
+            </svg>
+            <div style="display:flex; gap:1.2rem; justify-content:center; margin-top:0.5rem; font-family:var(--mono); font-size:0.75rem;">
+              <span><span style="color:var(--blue);">&#9644;</span> training data</span>
+              <span><span style="color:var(--green);">- -</span> held-out test</span>
+            </div>
+            <p class="c-muted" style="font-size:0.85rem; font-style:italic; margin-top:0.6rem;">
+              Trial patients &nbsp;&#8776;&nbsp; test patients<br>
+              <span class="c-green">test accuracy looks great</span>
+            </p>
+          </div>
 
-        <div class="iid-block fragment">
-          <div class="iid-row">
-            <span class="iid-k">training</span>
-            <span class="iid-eq">$(X,\,Y) \sim$</span>
-            <span class="iid-p c-yellow">$\;P$</span>
-          </div>
-          <div class="iid-row">
-            <span class="iid-k">test</span>
-            <span class="iid-eq">$(X,\,Y) \sim$</span>
-            <span class="iid-p c-yellow">$\;P$</span>
-          </div>
-          <div class="iid-caption">
-            the <em>same</em> P &nbsp;·&nbsp; independent and identically distributed
+          <!-- RIGHT: what actually happens -->
+          <div class="fragment" style="text-align:center;">
+            <p class="mono c-red" style="font-size:0.75rem; letter-spacing:0.14em; margin-bottom:0.8rem;">WHAT ACTUALLY HAPPENS</p>
+            <svg id="dist-real" viewBox="0 0 440 220" style="width:100%; max-width:440px; display:block; margin:0 auto;">
+              <line x1="30" y1="190" x2="410" y2="190" stroke="#444"/>
+              <path id="dr-train" fill="#58C4DD" fill-opacity="0.2" stroke="#58C4DD" stroke-width="2"/>
+              <path id="dr-real"  fill="#FC6255" fill-opacity="0.2" stroke="#FC6255" stroke-width="2"/>
+              <text x="220" y="210" fill="#888" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">patient profile</text>
+            </svg>
+            <div style="display:flex; gap:1.2rem; justify-content:center; margin-top:0.5rem; font-family:var(--mono); font-size:0.75rem;">
+              <span><span style="color:var(--blue);">&#9644;</span> training data</span>
+              <span><span style="color:var(--red);">&#9644;</span> real-world patients</span>
+            </div>
+            <p class="c-muted" style="font-size:0.85rem; font-style:italic; margin-top:0.6rem;">
+              Trial patients &nbsp;&#8800;&nbsp; real-world patients<br>
+              <span class="c-red">accuracy drops in deployment</span>
+            </p>
           </div>
         </div>
 
         <aside class="notes">
-          Core ML assumption: train and test are drawn iid from the same distribution P.
-          Everything — loss minimization, generalization bounds, benchmarks — rests on this.
-          The counterfactual is equally true: when the test distribution shifts away from P,
-          all bets are off. There's no theorem, no SLA, no confidence interval that survives.
-          That's when ML stops working.
-          Bridge into demo: let's watch what "learning a distribution" even looks like, then
-          what happens when we see a point that doesn't belong.
+          Clinical trial example — the audience lives with this exact problem.
+          Trial patients are screened: ages 35–65, no comorbidities, specific demographics.
+          The held-out test set comes from the same trial → same distribution → great accuracy.
+          Then the drug ships. Real patients include 80-year-olds, diabetics, patients on 12
+          other medications. That's a different distribution. The model has never seen it.
+
+          Technical note: this is the IID assumption. Training and test are assumed to be
+          drawn from the same distribution P. When that breaks, all bets are off.
         </aside>
       </section>
 
@@ -1300,38 +1321,49 @@ LHLVLRLRGG</pre>
     })();
   </script>
 
-  <!-- ─── Distribution bell curves (In vs Out of Distribution slide) ─── -->
+  <!-- ─── Distribution bell curves (all distribution slides) ─── -->
   <script>
     (function () {
-      function buildCurves() {
-        const train  = document.getElementById('dist-train');
-        const deploy = document.getElementById('dist-deploy');
-        if (!train || !deploy) return;
-        const X0 = 50, X1 = 850;            // x-range in SVG coords
-        const Y_BASE = 200;                  // baseline y
-        const PEAK = 140;                    // peak height in SVG units
-        // Domain [-4, 4] mapped to [X0, X1]
-        const mapX = u => X0 + ((u + 4) / 8) * (X1 - X0);
-        // PDF scaled so peak of σ=1 is 1
-        const pdf = (u, mu, sig) => Math.exp(-0.5 * ((u - mu) / sig) ** 2);
+      const pdf = (u, mu, sig) => Math.exp(-0.5 * ((u - mu) / sig) ** 2);
 
-        function path(mu, sig) {
-          const pts = [];
-          for (let i = 0; i <= 240; i++) {
-            const u = -4 + (i / 240) * 8;
-            const y = Y_BASE - PEAK * pdf(u, mu, sig);
-            pts.push(mapX(u).toFixed(2) + ',' + y.toFixed(2));
-          }
-          return 'M ' + X0 + ' ' + Y_BASE + ' L ' + pts.join(' L ') + ' L ' + X1 + ' ' + Y_BASE + ' Z';
+      // Generic: given an SVG viewBox width, build a bell-curve path string.
+      // domain [-4,4] mapped to [x0, x1], baseline at yBase, peak height PEAK.
+      function bellPath(mu, sig, x0, x1, yBase, peak) {
+        const mapX = u => x0 + ((u + 4) / 8) * (x1 - x0);
+        const pts = [];
+        for (let i = 0; i <= 200; i++) {
+          const u = -4 + (i / 200) * 8;
+          pts.push(mapX(u).toFixed(2) + ',' + (yBase - peak * pdf(u, mu, sig)).toFixed(2));
         }
-
-        train.setAttribute('d',  path(-0.55, 1.25));
-        deploy.setAttribute('d', path( 0.55, 1.25));
+        return 'M ' + x0 + ' ' + yBase + ' L ' + pts.join(' L ') + ' L ' + x1 + ' ' + yBase + ' Z';
       }
+
+      function buildAll() {
+        // ─── "When doesn't ML work?" slide · two panels ───
+
+        // Left panel 440×220: training ≈ test (both centered, tight)
+        const daTrain = document.getElementById('da-train');
+        const daTest  = document.getElementById('da-test');
+        if (daTrain) daTrain.setAttribute('d', bellPath(-0.05, 1.1, 30, 410, 190, 140));
+        if (daTest)  daTest .setAttribute('d', bellPath( 0.05, 1.15, 30, 410, 190, 135));
+
+        // Right panel 440×220: training narrow, real-world shifted + broader
+        const drTrain = document.getElementById('dr-train');
+        const drReal  = document.getElementById('dr-real');
+        if (drTrain) drTrain.setAttribute('d', bellPath(-0.5, 0.95, 30, 410, 190, 140));
+        if (drReal)  drReal .setAttribute('d', bellPath( 0.8, 1.45, 30, 410, 190, 110));
+
+        // ─── "In vs Out of Distribution" slide · 900-wide ───
+        const diTrain  = document.getElementById('dist-train');
+        const diDeploy = document.getElementById('dist-deploy');
+        if (diTrain)  diTrain .setAttribute('d', bellPath(-0.55, 1.2, 50, 850, 200, 140));
+        if (diDeploy) diDeploy.setAttribute('d', bellPath( 0.55, 1.2, 50, 850, 200, 140));
+      }
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', buildCurves);
+        document.addEventListener('DOMContentLoaded', buildAll);
       } else {
-        buildCurves();
+        buildAll();
       }
     })();
   </script>
