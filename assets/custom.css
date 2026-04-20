@@ -61,15 +61,16 @@ html, body { background-color: var(--background); }
 .reveal .subtitle { color: var(--muted); font-size: 1.15rem; font-style: italic; }
 
 /* ─── Color utilities ─── */
-.c-blue   { color: var(--blue); }
-.c-blue-b { color: var(--blue-b); }
-.c-yellow { color: var(--yellow); }
-.c-green  { color: var(--green); }
-.c-teal   { color: var(--teal); }
-.c-red    { color: var(--red); }
-.c-purple { color: var(--purple); }
-.c-muted  { color: var(--muted); }
-.c-white  { color: var(--white); }
+/* Scoped under .reveal so they beat `.reveal p/h3/li` specificity. */
+.reveal .c-blue,   .c-blue   { color: var(--blue); }
+.reveal .c-blue-b, .c-blue-b { color: var(--blue-b); }
+.reveal .c-yellow, .c-yellow { color: var(--yellow); }
+.reveal .c-green,  .c-green  { color: var(--green); }
+.reveal .c-teal,   .c-teal   { color: var(--teal); }
+.reveal .c-red,    .c-red    { color: var(--red); }
+.reveal .c-purple, .c-purple { color: var(--purple); }
+.reveal .c-muted,  .c-muted  { color: var(--muted); }
+.reveal .c-white,  .c-white  { color: var(--white); }
 
 .mono     { font-family: var(--mono); }
 
@@ -131,6 +132,14 @@ html, body { background-color: var(--background); }
 }
 .left-align { text-align: left; }
 
+/* reveal.js defaults list to display:inline-block which breaks left-aligned
+   layouts by horizontally centering the list. Force block-level here. */
+.reveal ul.left-align,
+.reveal ol.left-align {
+  display: block;
+  margin-left: 0;
+}
+
 /* ─── Cards (ML tasks, creative applications) ─── */
 .card {
   background: var(--surface);
@@ -151,10 +160,16 @@ html, body { background-color: var(--background); }
   font-family: var(--mono);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
-  color: var(--muted);
+  color: var(--muted);        /* default — overridden by c-blue/c-yellow/... */
   margin-bottom: 0.6rem;
   text-transform: uppercase;
 }
+/* Per-card label colors win via class utilities */
+.card .card-label.c-blue   { color: var(--blue); }
+.card .card-label.c-yellow { color: var(--yellow); }
+.card .card-label.c-green  { color: var(--green); }
+.card .card-label.c-red    { color: var(--red); }
+.card .card-label.c-purple { color: var(--purple); }
 .card h3 { margin-top: 0; margin-bottom: 0.6rem; font-size: 1.15rem; }
 .card p  { font-size: 0.9rem; margin: 0.4rem 0; line-height: 1.5; }
 .card .card-example {
@@ -346,7 +361,7 @@ html, body { background-color: var(--background); }
 .nested-circles .label-main {
   font-family: var(--serif);
   font-size: 22px;
-  fill: var(--white);
+  /* fill comes from inline attribute per-circle — do NOT override here */
 }
 .nested-circles .label-sub {
   font-family: var(--serif);
@@ -607,18 +622,40 @@ html, body { background-color: var(--background); }
   padding: 0;
 }
 
-/* ─── Section break ─── */
-.section-break h2 {
-  font-size: 2.4rem;
+/* ─── Section divider slides ─── */
+.reveal .section-divider {
+  text-align: center;
+}
+.reveal .section-divider .part-num {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.reveal .section-divider h1 {
+  font-size: 3.6rem;
+  line-height: 1.15;
   color: var(--white);
   font-style: italic;
+  margin: 0 auto;
+  max-width: 900px;
 }
-.section-break .divider {
-  width: 240px;
+.reveal .section-divider .rule {
+  width: 120px;
   height: 1px;
-  background: var(--muted);
-  margin: 1.5rem auto;
-  opacity: 0.4;
+  background: var(--blue);
+  opacity: 0.6;
+  margin: 2rem auto 1.2rem;
+}
+.reveal .section-divider .teaser {
+  color: var(--muted);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 /* ─── AlphaFold slide ─── */
@@ -761,8 +798,8 @@ html, body { background-color: var(--background); }
 }
 
 /* ─── Good-vs-struggles lists ─── */
-.struggle-list {
-  padding-left: 1.2rem;
+.reveal .struggle-list {
+  padding-left: 0;
   margin: 0.4rem 0 0.8rem;
   list-style: none;
 }
@@ -826,6 +863,121 @@ html, body { background-color: var(--background); }
   letter-spacing: 0.1em;
 }
 
+/* ─── Value stack (Who actually makes money?) ─── */
+.value-grid {
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  column-gap: 16px;
+  row-gap: 6px;
+  max-width: 1100px;
+  margin: 1rem auto 0;
+  align-items: stretch;
+}
+.value-grid .layer-row {
+  grid-column: 1;
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  align-items: center;
+  gap: 1.2rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: 3px;
+  padding: 0.7rem 1.1rem;
+  min-height: 52px;
+}
+.value-grid .layer-row .layer-name {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+}
+.value-grid .layer-row .layer-sub {
+  display: block;
+  color: var(--muted);
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-top: 0.2rem;
+}
+.value-grid .layer-row .layer-cos {
+  font-family: var(--mono);
+  font-size: 0.88rem;
+  color: var(--white);
+  line-height: 1.5;
+}
+.value-grid .layer-row .layer-cos .dim {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Highlighted layers that pharma absorbs */
+.value-grid .layer-row.pharma-layer {
+  border-left-color: var(--yellow);
+  background: rgba(255,241,181,0.03);
+}
+.value-grid .layer-row.pharma-layer .layer-name { color: var(--yellow); }
+
+/* Pharma bar — spans top 3 rows */
+.value-grid .pharma-col {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  background: rgba(255,241,181,0.06);
+  border: 1px dashed var(--yellow);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.9rem 0.7rem;
+  position: relative;
+}
+.value-grid .pharma-col::before {
+  content: "{";
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--yellow);
+  font-family: var(--serif);
+  font-size: 4rem;
+  line-height: 0.5;
+  opacity: 0.7;
+}
+.value-grid .pharma-col .pharma-head {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  color: var(--yellow);
+  margin-bottom: 0.4rem;
+}
+.value-grid .pharma-col .pharma-body {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--white);
+  line-height: 1.45;
+}
+.value-grid .pharma-col .pharma-eg {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.5rem;
+}
+
+.value-kicker {
+  text-align: center;
+  max-width: 900px;
+  margin: 1.3rem auto 0;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--muted);
+}
+.value-kicker em { color: var(--yellow); }
+
 /* ─── Moat grid (defensibility) · fixed overlap ─── */
 .moat-grid {
   display: grid;
@@ -842,6 +994,21 @@ html, body { background-color: var(--background); }
 }
 .moat-grid .card .card-label { margin-bottom: 0.35rem; font-size: 0.7rem; }
 .moat-grid .card p { font-size: 0.88rem; line-height: 1.5; margin: 0.2rem 0 0; }
+
+/* ─── Mental model axes note ─── */
+.mm-axes-note {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0.2rem 0 0;
+}
+.mm-axes-note .c-blue,
+.mm-axes-note .c-yellow,
+.mm-axes-note .c-green {
+  font-family: var(--mono);
+}
 
 /* ─── Mental model annotated ─── */
 .mental-annotations {
@@ -867,6 +1034,81 @@ html, body { background-color: var(--background); }
 .gerald-wave {
   filter: drop-shadow(0 0 30px rgba(88, 196, 221, 0.15));
 }
+
+/* ─── Inline speaker-notes toggle (N key or button) ─── */
+#notes-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10000;
+  background: rgba(10, 10, 10, 0.7);
+  color: var(--blue);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+#notes-toggle:hover { opacity: 1; }
+#notes-toggle[aria-pressed="true"] {
+  opacity: 1;
+  background: var(--blue);
+  color: #000;
+  border-color: var(--blue);
+}
+
+#notes-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 32vh;
+  overflow-y: auto;
+  background: rgba(10, 10, 10, 0.96);
+  border-top: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  padding: 0.85rem 1.4rem 1rem;
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+  z-index: 9999;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.6);
+}
+body.notes-open #notes-panel { transform: translateY(0); }
+body.notes-open .reveal .slides { /* nudge slide content up a touch */
+  transform-origin: center top;
+}
+
+#notes-panel .np-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 0.35rem;
+}
+#notes-panel .np-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+#notes-panel .np-slide {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--blue);
+}
+#notes-panel #np-body { color: #ddd; max-width: 1000px; margin: 0 auto; }
+#notes-panel #np-body em { color: var(--yellow); font-style: italic; }
+#notes-panel .np-empty { color: var(--muted); }
 
 /* ─── Scatter clusters (Slide 19) ─── */
 .embedding-svg { width: 100%; height: 360px; }

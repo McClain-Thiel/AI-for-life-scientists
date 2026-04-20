@@ -126,6 +126,19 @@
         </aside>
       </section>
 
+      <!-- SECTION DIVIDER · Part 1 -->
+      <section class="section-divider" data-background-color="#000000">
+        <div class="part-num">Part 1 &nbsp;of&nbsp; 3</div>
+        <h1>The basics of ML</h1>
+        <div class="rule"></div>
+        <p class="teaser">What is a machine-learning model, mechanically?</p>
+        <aside class="notes">
+          Chapter card. We spend the next block building one mental model: every ML system is
+          input → model → output, learned from examples. We'll see it in linear regression,
+          protein structure (AlphaFold), and language (LLMs) — same pattern, different framing.
+        </aside>
+      </section>
+
       <!-- SLIDE 4 · Nested circles (all bottoms tangent, labels stacked in caps) -->
       <section data-center="false" style="padding-top:1rem;">
         <h2 style="margin-bottom:0.5rem;">Clearing the Fog</h2>
@@ -289,42 +302,17 @@
         </aside>
       </section>
 
-      <!-- SLIDE 8 · DEMO 1 — Regression playground -->
+      <!-- SLIDE 8 · DEMO 1 — Linear regression playground -->
       <section class="demo-slide"
                data-background-iframe="demos/regression-playground.html"
                data-background-interactive>
         <aside class="notes">
-          Walk through live. Degree 1 — the line doesn't fit. Underfitting. Degree 3 — curve tracks
-          data, test error is low. Generalization. Degree 8 — wild oscillation, train error near
-          zero, test error explodes. Overfitting.
-          Now crank training size up while staying at high degree — watch test error come down. More
-          data gives a complex model enough examples to generalize.
+          Walk through live. Start with N=1 — the fit line is arbitrary. With N=5 and high noise,
+          resample a few times — fit jumps all over the place. That's variance. Crank N up to 50
+          or 100 — watch the fit lock onto the true line and the convergence panel drop.
+          Punchline: more data doesn't just "help" — it's what turns noise into signal. The same
+          algorithm that looks unreliable at N=5 is rock-solid at N=100.
           First red flag in a pitch: "we trained on 500 examples." Five hundred examples of what?
-        </aside>
-      </section>
-
-      <!-- SLIDE 9 · Lesson from the demo -->
-      <section data-center="false" style="padding-top:3rem;">
-        <h2>What the demo shows</h2>
-        <div class="left-align" style="margin-top:2rem;">
-          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
-            A model that fits training data perfectly is not a good model.
-            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ <em>overfitting</em></span>
-          </p>
-          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
-            More data almost always helps.
-            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ this is the business insight</span>
-          </p>
-          <p class="fragment" style="font-size:1.6rem; margin:2rem 0;">
-            Model complexity must match the task.
-            <span class="c-muted" style="display:block; font-size:0.9rem; margin-top:0.3rem;">→ this is what ML engineers actually do</span>
-          </p>
-        </div>
-        <aside class="notes">
-          The regression demo isn't just about math — it's about the business of AI. When a startup
-          says "our model is 99% accurate on our test set," first question: what did you train on,
-          and is your test set from the same distribution as the real world? Overfitting to a
-          curated dataset is one of the most common ways AI products fail in deployment.
         </aside>
       </section>
 
@@ -369,7 +357,64 @@
         </aside>
       </section>
 
-      <!-- SLIDE 11 · How an LLM actually works -->
+      <!-- AlphaFold (input → model → 3D viewer) -->
+      <section data-center="false" style="padding-top:2rem;">
+        <h2>AlphaFold</h2>
+        <p class="c-muted" style="text-align:center; margin-top:-0.4rem; font-style:italic; font-size:0.95rem;">
+          2024 Nobel Prize in Chemistry &middot; Hassabis, Jumper, Baker
+        </p>
+
+        <div class="af-flow" style="margin-top:0.6rem;">
+          <!-- INPUT -->
+          <div class="af-col">
+            <pre class="aa-seq">MQIFVKTLTGKTITLEVEPSDT
+IENVKAKIQDKEGIPPDQQRLI
+FAGKQLEDGRTLSDYNIQKEST
+LHLVLRLRGG</pre>
+            <div class="af-label">
+              <span class="c-muted">INPUT</span><br>
+              amino acid sequence<br>
+              <span class="c-muted" style="font-size:0.65rem;">ubiquitin · 76 aa</span>
+            </div>
+          </div>
+
+          <div class="af-arrow">→</div>
+
+          <!-- MODEL -->
+          <div class="af-modelbox">
+            <div class="mono" style="font-size:0.7rem; letter-spacing:0.15em; color:var(--muted);">ALPHAFOLD</div>
+            <div style="margin-top:0.4rem; font-size:1.2rem;">MODEL</div>
+          </div>
+
+          <div class="af-arrow">→</div>
+
+          <!-- OUTPUT -->
+          <div class="af-col">
+            <div id="af-viewer"
+                 data-pdb="1UBQ"
+                 style="width:340px; height:340px; margin:0 auto;
+                        position:relative; background:#000;
+                        border:1px solid #222; border-radius:4px;"></div>
+            <div class="af-label">
+              <span class="c-muted">OUTPUT</span><br>
+              3D atomic coordinates<br>
+              <span class="c-muted" style="font-size:0.65rem;">PDB 1UBQ</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="notes">
+          AlphaFold is the clearest proof that the input→output framing is not trivial. Biologists
+          spent 50 years on the protein folding problem. DeepMind solved it — not with a
+          revolutionary new algorithm — but by framing it as supervised learning, gathering every
+          known structure in the PDB, and training a very large model. The output is just
+          coordinates. The insight was realizing you could frame it this way.
+          Nobel Prize in Chemistry, 2024 (Hassabis, Jumper, Baker).
+          To swap the protein, change the data-pdb attribute on #af-viewer to any RCSB 4-letter code.
+        </aside>
+      </section>
+
+      <!-- How an LLM actually works -->
       <section data-center="false" style="padding-top:2rem;">
         <h2 style="margin-bottom:1.5rem;">How an LLM actually works</h2>
 
@@ -439,61 +484,21 @@
         </aside>
       </section>
 
-      <!-- SLIDE 13 · AlphaFold (input → model → 3D viewer) -->
-      <section data-center="false" style="padding-top:2rem;">
-        <h2>AlphaFold</h2>
-
-        <div class="af-flow">
-          <!-- INPUT -->
-          <div class="af-col">
-            <pre class="aa-seq">MQIFVKTLTGKTITLEVEPSDT
-IENVKAKIQDKEGIPPDQQRLI
-FAGKQLEDGRTLSDYNIQKEST
-LHLVLRLRGG</pre>
-            <div class="af-label">
-              <span class="c-muted">INPUT</span><br>
-              amino acid sequence<br>
-              <span class="c-muted" style="font-size:0.65rem;">ubiquitin · 76 aa</span>
-            </div>
-          </div>
-
-          <div class="af-arrow">→</div>
-
-          <!-- MODEL -->
-          <div class="af-modelbox">
-            <div class="mono" style="font-size:0.7rem; letter-spacing:0.15em; color:var(--muted);">ALPHAFOLD</div>
-            <div style="margin-top:0.4rem; font-size:1.2rem;">MODEL</div>
-          </div>
-
-          <div class="af-arrow">→</div>
-
-          <!-- OUTPUT -->
-          <div class="af-col">
-            <div id="af-viewer"
-                 data-pdb="1UBQ"
-                 style="width:340px; height:340px; margin:0 auto;
-                        position:relative; background:#000;
-                        border:1px solid #222; border-radius:4px;"></div>
-            <div class="af-label">
-              <span class="c-muted">OUTPUT</span><br>
-              3D atomic coordinates<br>
-              <span class="c-muted" style="font-size:0.65rem;">PDB 1UBQ</span>
-            </div>
-          </div>
-        </div>
-
-        <aside class="notes">
-          AlphaFold is the clearest proof that the input→output framing is not trivial. Biologists
-          spent 50 years on the protein folding problem. DeepMind solved it — not with a
-          revolutionary new algorithm — but by framing it as supervised learning, gathering every
-          known structure in the PDB, and training a very large model. The output is just
-          coordinates. The insight was realizing you could frame it this way.
-          Nobel Prize in Chemistry, 2024 (Hassabis, Jumper, Baker).
-          To swap the protein, change the data-pdb attribute on #af-viewer to any RCSB 4-letter code.
-        </aside>
-      </section>
 
       <!-- ═════════ ACT 3 — HOW DOES IT WORK ═════════ -->
+
+      <!-- SECTION DIVIDER · Part 2 -->
+      <section class="section-divider" data-background-color="#000000">
+        <div class="part-num">Part 2 &nbsp;of&nbsp; 3</div>
+        <h1>What ML can &mdash; and can't &mdash; do</h1>
+        <div class="rule"></div>
+        <p class="teaser">Where it works, where it breaks, and why that's not a bug in the algorithm.</p>
+        <aside class="notes">
+          Chapter card. Now that we know the mechanism, we ask when it works. The answer turns
+          on one assumption (IID) and one reality (data quality). Understand those two and you
+          understand most of why AI products succeed or fail in deployment.
+        </aside>
+      </section>
 
       <!-- SLIDE · Three ingredients -->
       <section data-center="false" style="padding-top:2rem;">
@@ -710,80 +715,124 @@ LHLVLRLRGG</pre>
 
       <!-- ═════════ ACT 4 — THE BUSINESS OF AI ═════════ -->
 
-      <!-- SLIDE · Who actually makes money (pyramid, NVIDIA at bottom) -->
-      <section data-center="false" style="padding-top:1.5rem;">
+      <!-- SECTION DIVIDER · Part 3 -->
+      <section class="section-divider" data-background-color="#000000">
+        <div class="part-num">Part 3 &nbsp;of&nbsp; 3</div>
+        <h1>The value chain</h1>
+        <div class="rule"></div>
+        <p class="teaser">Where the money goes, where the moats live, and how to tell them apart.</p>
+        <aside class="notes">
+          Chapter card. Mechanism, then mechanics, now the business. Five layers from NVIDIA
+          hardware to application-layer startups — and four types of real data moat. This is the
+          lens you'll use when you read an AI biotech deck next week.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Who actually makes money (layered stack, pharma integration) -->
+      <section data-center="false" style="padding-top:1.2rem;">
         <h2>Who actually makes money?</h2>
 
-        <div class="pyramid">
-          <div class="py-row w1 fragment">
-            <span class="py-layer">HARDWARE</span>
-            <span class="py-company c-green">NVIDIA</span>
-            <span class="py-def">★★★★★</span>
+        <div class="value-grid">
+          <!-- Top-down order: Application at top, Hardware at bottom -->
+          <div class="layer-row pharma-layer fragment">
+            <div>
+              <span class="layer-name">APPLICATION</span>
+              <span class="layer-sub">the product users touch</span>
+            </div>
+            <div class="layer-cos">"AI-powered X" startups <span class="dim">· internal pharma tools</span></div>
           </div>
-          <div class="py-row w2 fragment">
-            <span class="py-layer">COMPUTE</span>
-            <span class="py-company c-blue">AWS · GCP · Azure</span>
-            <span class="py-def">★★★★</span>
+
+          <div class="layer-row pharma-layer fragment">
+            <div>
+              <span class="layer-name">DATA SUPPLIER</span>
+              <span class="layer-sub">proprietary, labeled data</span>
+            </div>
+            <div class="layer-cos">Tempus · Flatiron · 23andMe <span class="dim">· clinical trial sponsors</span></div>
           </div>
-          <div class="py-row w3 fragment">
-            <span class="py-layer">FOUNDATION</span>
-            <span class="py-company c-blue">OpenAI · Anthropic</span>
-            <span class="py-def">★★★</span>
+
+          <div class="layer-row pharma-layer fragment">
+            <div>
+              <span class="layer-name">FOUNDATION</span>
+              <span class="layer-sub">general-purpose model</span>
+            </div>
+            <div class="layer-cos">Llama · Mistral · Gemma <span class="dim">(+ OpenAI, Anthropic — closed)</span></div>
           </div>
-          <div class="py-row w4 fragment">
-            <span class="py-layer">DOMAIN BUILDER</span>
-            <span class="py-company c-yellow">Tempus · Recursion</span>
-            <span class="py-def">★★★★</span>
+
+          <div class="layer-row fragment">
+            <div>
+              <span class="layer-name">COMPUTE</span>
+              <span class="layer-sub">GPUs by the hour</span>
+            </div>
+            <div class="layer-cos">AWS · GCP · Azure · Anyscale</div>
           </div>
-          <div class="py-row w5 fragment">
-            <span class="py-layer">WRAPPER</span>
-            <span class="py-company c-muted">"AI-powered X"</span>
-            <span class="py-def">★</span>
+
+          <div class="layer-row fragment">
+            <div>
+              <span class="layer-name">HARDWARE</span>
+              <span class="layer-sub">near-monopoly</span>
+            </div>
+            <div class="layer-cos c-green">NVIDIA</div>
+          </div>
+
+          <!-- Pharma column spans top 3 rows (Application, Data, Foundation) -->
+          <div class="pharma-col fragment">
+            <div class="pharma-head">BIG PHARMA</div>
+            <div class="pharma-body">eats the top layers</div>
+            <div class="pharma-eg">Roche &middot; Pfizer &middot; Novartis &middot; Recursion &middot; Insitro</div>
           </div>
         </div>
 
         <aside class="notes">
-          The AI value chain. Left to right: hardware (near-monopoly), compute (oligopoly),
-          foundation models (funded), domain builders (real moats possible), wrappers (commodity).
-          Value accretes where scarcity is. NVIDIA's moat is hardware — nobody else makes H100s.
-          Domain builders' moat is data. Algorithms commoditise. Wrappers are SaaS with AI marketing.
-          Callback to the outer ring of the AI circle — "marketing umbrella"? That's mostly wrappers.
+          Five layers, bottom up. Hardware — NVIDIA, a near-monopoly. Compute — rented by
+          anyone with a credit card. Foundation — a commoditising layer; state-of-the-art
+          open weights are 6–12 months behind the frontier. Data supplier — proprietary data
+          at scale is hard to replicate. Application — the surface users touch.
+
+          The key insight for a biotech audience: Big Pharma doesn't sit at one layer.
+          They own clinical data (data supplier), they fine-tune or train their own models
+          (foundation), and they build internal apps (application). Rented compute, owned
+          stack above it. That's the moat structure you're competing against.
+
+          So when a pitch says "we're an AI-first biotech", the question is: which layer?
+          And does that layer survive pharma doing it themselves?
         </aside>
       </section>
 
-      <!-- SLIDE · Builder / User / Foundation spectrum -->
+      <!-- SLIDE · Three archetypes: Foundation / Data Supplier / Application -->
       <section data-center="false" style="padding-top:1.5rem;">
-        <h2>Which ring are they <em>in</em>?</h2>
+        <h2>Which layer are they <em>in</em>?</h2>
         <div class="spectrum-bar"></div>
         <div class="spectrum">
           <div class="spectrum-pos fragment">
             <div class="spec-label">FOUNDATION</div>
-            <h3 class="c-blue">Train from scratch</h3>
-            <div class="companies">OpenAI · Anthropic · DeepMind</div>
+            <h3 class="c-blue">Train a general model from scratch</h3>
+            <div class="companies">Llama · Mistral · OpenAI · Anthropic</div>
             <p>Internet-scale pre-training. Capex at nation-state scale.</p>
             <div class="money">$10B+ to compete.</div>
           </div>
           <div class="spectrum-pos highlight fragment">
-            <div class="spec-label">DOMAIN BUILDER</div>
-            <h3 class="c-yellow">Fine-tune + proprietary data</h3>
-            <div class="companies">Tempus · Recursion · Isomorphic</div>
-            <p>Model on top of private, labeled domain data. Thesis turns on the data.</p>
-            <div class="money">Defensible <em>if</em> the data is real.</div>
+            <div class="spec-label">DATA SUPPLIER</div>
+            <h3 class="c-yellow">Own the data, fine-tune on top</h3>
+            <div class="companies">Tempus · Flatiron · 23andMe · most pharma</div>
+            <p>Proprietary, labeled domain data. The thesis turns on the data, not the algorithm.</p>
+            <div class="money">Defensible <em>if</em> the data is real and exclusive.</div>
           </div>
           <div class="spectrum-pos fragment">
-            <div class="spec-label">WRAPPER / AGENT</div>
-            <h3 class="c-muted">Prompt engineering + API</h3>
-            <div class="companies">"AI-powered X"</div>
-            <p>No training. No proprietary data. A product on someone else's model.</p>
+            <div class="spec-label">APPLICATION</div>
+            <h3 class="c-muted">Product on someone else's model</h3>
+            <div class="companies">"AI-powered X" · most startups</div>
+            <p>Prompt engineering + API. No training, no proprietary data.</p>
             <div class="money">SaaS economics, not AI economics.</div>
           </div>
         </div>
 
         <aside class="notes">
-          Before you evaluate anything else, figure out where they sit. Foundation is mostly out
-          of scope for early stage. Wrappers are fine businesses but they're SaaS — no data moat,
-          the model doesn't get better as they grow, anyone can replicate them in a weekend.
-          The middle is where you want to spend your time.
+          Three archetypes. Foundation is mostly out of scope for early-stage biotech —
+          too expensive, wrong timezone. Application-layer companies are fine businesses but
+          they're SaaS with AI branding — no data moat, anyone can clone them in a weekend.
+          The middle — data supplier — is where biotech investments can actually have a moat.
+          Pharma sits across all three (see previous slide), so ask: how does this company's
+          position survive pharma doing the same thing in-house?
         </aside>
       </section>
 
@@ -819,89 +868,127 @@ LHLVLRLRGG</pre>
 
       <!-- ═════════ ACT 5 — THE LENS ═════════ -->
 
-      <!-- SLIDE · Two questions -->
+      <!-- SLIDE · Three questions -->
       <section data-background-color="#000000">
         <div style="text-align:left; max-width:1000px; margin:0 auto;">
-          <p class="c-blue fragment" style="font-size:2.2rem; line-height:1.4; margin-bottom:1rem;">
+          <p class="c-blue fragment" style="font-size:1.9rem; line-height:1.4; margin-bottom:0.6rem;">
             1. Are you <em>building</em> a model, or <em>calling</em> an API?
           </p>
-          <hr style="border:none; border-top:1px solid #222; margin:2rem 0;"/>
-          <p class="c-yellow fragment" style="font-size:2.2rem; line-height:1.4;">
-            2. What does your training data look like?
+          <hr style="border:none; border-top:1px solid #222; margin:1.4rem 0;"/>
+          <p class="c-yellow fragment" style="font-size:1.9rem; line-height:1.4; margin-bottom:0.6rem;">
+            2. What does your <em>training data</em> look like?
+          </p>
+          <hr style="border:none; border-top:1px solid #222; margin:1.4rem 0;"/>
+          <p class="c-green fragment" style="font-size:1.9rem; line-height:1.4;">
+            3. How will you know it's <em>still working</em> in deployment?
           </p>
         </div>
         <aside class="notes">
-          These two questions short-circuit hours of confused conversation. "Building a model"
-          means training infrastructure, labeled data, evaluation framework, ML engineer on the
-          team. "Calling an API" means they have a product, maybe a good one, but no AI moat.
-          Neither is bad — but they're priced differently and they scale differently.
+          These three questions short-circuit hours of confused conversation.
+          (1) "Building a model" means training infrastructure, labeled data, evaluation framework,
+          ML engineer on the team. "Calling an API" means they have a product, maybe a good one,
+          but no AI moat. (2) Training data tells you whether the moat is real or rented.
+          (3) Distribution shift is how deployed ML fails — if they can't tell you how they
+          monitor it, they don't know whether their model is still right.
         </aside>
       </section>
 
-      <!-- SLIDE · The mental model (risk / reward scatter) -->
-      <section data-center="false" style="padding-top:1.5rem;">
+      <!-- SLIDE · The mental model (3D bubble: difficulty × defensibility × reward) -->
+      <section data-center="false" style="padding-top:1.2rem;">
         <h2>The mental model</h2>
+        <p class="mm-axes-note">
+          x: <span class="c-blue">difficulty</span> &nbsp;·&nbsp;
+          y: <span class="c-yellow">defensibility</span> &nbsp;·&nbsp;
+          bubble size: <span class="c-green">reward</span>
+        </p>
 
-        <svg class="risk-reward" viewBox="0 0 900 480" style="width:100%; max-width:900px; display:block; margin:1rem auto 0;">
+        <svg class="risk-reward" viewBox="0 0 900 470" style="width:100%; max-width:980px; display:block; margin:0.4rem auto 0;">
           <!-- plot frame -->
-          <rect x="80" y="40" width="760" height="380" fill="none" stroke="#222"/>
+          <rect x="80" y="30" width="760" height="370" fill="none" stroke="#222"/>
 
           <!-- quadrant dividers -->
-          <line x1="460" y1="40"  x2="460" y2="420" stroke="#1a1a1a" stroke-dasharray="3,4"/>
-          <line x1="80"  y1="230" x2="840" y2="230" stroke="#1a1a1a" stroke-dasharray="3,4"/>
+          <line x1="460" y1="30"  x2="460" y2="400" stroke="#1a1a1a" stroke-dasharray="3,4"/>
+          <line x1="80"  y1="215" x2="840" y2="215" stroke="#1a1a1a" stroke-dasharray="3,4"/>
 
           <!-- subtle quadrant labels -->
-          <text x="100" y="60"  fill="#333" font-family="JetBrains Mono, monospace" font-size="10">LOW RISK · HIGH REWARD</text>
-          <text x="820" y="60"  fill="#333" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HIGH RISK · HIGH REWARD</text>
-          <text x="100" y="410" fill="#333" font-family="JetBrains Mono, monospace" font-size="10">LOW RISK · LOW REWARD</text>
-          <text x="820" y="410" fill="#333" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HIGH RISK · LOW REWARD</text>
+          <text x="100" y="48"  fill="#444" font-family="JetBrains Mono, monospace" font-size="10">EASY · DEFENSIBLE &nbsp;(rare sweet spot)</text>
+          <text x="820" y="48"  fill="#444" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HARD · DEFENSIBLE &nbsp;(the frontier)</text>
+          <text x="100" y="392" fill="#444" font-family="JetBrains Mono, monospace" font-size="10">EASY · UNDEFENDABLE &nbsp;(noise)</text>
+          <text x="820" y="392" fill="#444" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HARD · UNDEFENDABLE &nbsp;(the trap)</text>
 
           <!-- axes -->
-          <line x1="80" y1="420" x2="840" y2="420" stroke="#555" stroke-width="1.5"/>
-          <line x1="80" y1="420" x2="80"  y2="40"  stroke="#555" stroke-width="1.5"/>
+          <line x1="80" y1="400" x2="840" y2="400" stroke="#555" stroke-width="1.5"/>
+          <line x1="80" y1="400" x2="80"  y2="30"  stroke="#555" stroke-width="1.5"/>
 
           <!-- axis labels -->
-          <text x="460" y="455" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">RISK &nbsp;→</text>
-          <text x="40"  y="230" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 230)">REWARD &nbsp;→</text>
+          <text x="460" y="432" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">DIFFICULTY &nbsp;→</text>
+          <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 215)">DEFENSIBILITY &nbsp;→</text>
 
-          <!-- Placeholder points (revealed as fragments) -->
+          <!-- Examples · bubble radius encodes reward -->
+
+          <!-- Clinical data platforms — hard, VERY HIGH defensibility, high reward -->
           <g class="fragment rr-point">
-            <circle cx="200" cy="140" r="8" fill="#83C167"/>
-            <text x="215" y="144" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example A</text>
-            <text x="215" y="160" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">low risk · high reward · the sweet spot</text>
+            <circle cx="640" cy="95" r="22" fill="#58C4DD" fill-opacity="0.22" stroke="#58C4DD" stroke-width="1.8"/>
+            <text x="612" y="98" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Clinical data platforms</text>
+            <text x="612" y="114" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">Tempus · Flatiron · pharma trial data</text>
           </g>
 
+          <!-- De novo generative biology — very hard, HIGH defensibility, biggest reward -->
           <g class="fragment rr-point">
-            <circle cx="680" cy="120" r="8" fill="#58C4DD"/>
-            <text x="695" y="124" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Example B</text>
-            <text x="695" y="140" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">high risk · high reward</text>
+            <circle cx="770" cy="155" r="26" fill="#58C4DD" fill-opacity="0.22" stroke="#58C4DD" stroke-width="1.8"/>
+            <text x="740" y="158" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">De novo generative biology</text>
+            <text x="740" y="174" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">wet-lab validation loop is the moat</text>
           </g>
 
+          <!-- Pathology imaging AI — easy-medium, medium defensibility, high reward -->
           <g class="fragment rr-point">
-            <circle cx="680" cy="340" r="8" fill="#FC6255"/>
-            <text x="695" y="344" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Example C</text>
-            <text x="695" y="360" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">high risk · low reward · the trap</text>
+            <circle cx="220" cy="155" r="18" fill="#83C167" fill-opacity="0.25" stroke="#83C167" stroke-width="1.8"/>
+            <text x="245" y="152" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Pathology imaging AI</text>
+            <text x="245" y="168" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">well-framed · regulated buyer</text>
           </g>
 
+          <!-- Rare-disease diagnostics — hard, medium defensibility, medium-high reward -->
           <g class="fragment rr-point">
-            <circle cx="230" cy="360" r="8" fill="#9A72AC"/>
-            <text x="245" y="364" fill="#9A72AC" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example D</text>
-            <text x="245" y="380" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">low risk · low reward</text>
+            <circle cx="570" cy="240" r="13" fill="#FFF1B5" fill-opacity="0.22" stroke="#FFF1B5" stroke-width="1.8"/>
+            <text x="552" y="243" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Rare-disease diagnostics</text>
+            <text x="552" y="259" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">tiny datasets · OOD by definition</text>
           </g>
 
+          <!-- AlphaFold-derived tools — easy NOW, low defensibility, medium reward -->
           <g class="fragment rr-point">
-            <circle cx="440" cy="240" r="8" fill="#FFF1B5"/>
-            <text x="455" y="244" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Example E</text>
-            <text x="455" y="260" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">middle of the road</text>
+            <circle cx="210" cy="300" r="11" fill="#83C167" fill-opacity="0.25" stroke="#83C167" stroke-width="1.8"/>
+            <text x="230" y="298" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">AlphaFold-derived tools</text>
+            <text x="230" y="314" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">model is free · anyone can run it</text>
+          </g>
+
+          <!-- "AI-powered X" applications — easy, near-zero defensibility, small reward -->
+          <g class="fragment rr-point">
+            <circle cx="170" cy="355" r="5" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="184" y="353" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">"AI-powered X" applications</text>
+            <text x="184" y="369" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">no data · no model · clone in a weekend</text>
           </g>
         </svg>
 
         <aside class="notes">
-          Risk-reward canvas for evaluating AI/biotech investments. Placeholders for now — will
-          add specific examples (companies, technologies, approaches) that illustrate each
-          quadrant. The top-left is the holy grail: low risk, high reward. The bottom-right is
-          the trap — high risk, low reward. Most AI "wrappers" live there. Real domain builders
-          with proprietary data tend to live top-left.
+          Same canvas, three dimensions. X is how hard to build and validate. Y is how
+          defensible once built. Bubble size is the prize.
+
+          Top-right is the frontier: clinical data platforms (Tempus, Flatiron) — very
+          defensible because the data takes a decade to accumulate. De novo generative
+          biology is the biggest bubble — largest potential prize — but it's on the right
+          edge because the wet-lab validation loop is slow and capital-intensive. That slow
+          loop *is* the moat.
+
+          Top-left is the rare sweet spot: pathology imaging AI. Reasonably well-framed
+          problem, real regulated buyer, medium defensibility because your label pipeline
+          and clinical partnerships are hard (not impossible) to replicate.
+
+          Middle-right: rare-disease diagnostics. High value, hard, OOD by definition —
+          tempting but fragile.
+
+          Bottom row is where most pitches live and where most pitches die. AlphaFold-derived
+          tools are easy to build but undefendable (the model is free). "AI-powered X" is the
+          smallest bubble — no data, no model, commoditises in a weekend.
         </aside>
       </section>
 
@@ -954,12 +1041,22 @@ LHLVLRLRGG</pre>
 
         <aside class="notes">
           Gerald says thanks. Optional workshop: give the audience 2–3 anonymized pitch
-          descriptions. Pairs. Identify builder vs wrapper. Ask the three questions.
+          descriptions. Pairs. Identify data supplier vs application. Ask the three questions.
           5 minutes, high engagement.
         </aside>
       </section>
 
     </div>
+  </div>
+
+  <!-- ─── Inline speaker-notes toggle (press Shift+N or click button) ─── -->
+  <button id="notes-toggle" type="button" title="Toggle speaker notes (Shift+N)">notes</button>
+  <div id="notes-panel" aria-hidden="true">
+    <div class="np-head">
+      <span class="np-label">speaker notes &middot; shift+n to toggle</span>
+      <span class="np-slide" id="np-slide"></span>
+    </div>
+    <div id="np-body"></div>
   </div>
 
   <!-- reveal.js core + plugins -->
@@ -996,47 +1093,57 @@ LHLVLRLRGG</pre>
     });
   </script>
 
-  <!-- ─── Neural-network layer generator (Slide 17) ─── -->
+  <!-- ─── Inline speaker-notes panel ─── -->
   <script>
     (function () {
-      const layers = [
-        { x: 80,  n: 6,  yTop: 80, yBot: 320 },
-        { x: 300, n: 8,  yTop: 60, yBot: 340 },
-        { x: 500, n: 8,  yTop: 60, yBot: 340 },
-        { x: 700, n: 6,  yTop: 80, yBot: 320 },
-        { x: 920, n: 3,  yTop: 140, yBot: 260 },
-      ];
-      const nodeGroup = document.getElementById('nn-nodes');
-      const lineGroup = document.getElementById('nn-lines');
-      if (!nodeGroup || !lineGroup) return;
+      const panel  = document.getElementById('notes-panel');
+      const body   = document.getElementById('np-body');
+      const slideN = document.getElementById('np-slide');
+      const btn    = document.getElementById('notes-toggle');
+      if (!panel || !body || !btn) return;
 
-      const coords = layers.map(L => {
-        const ys = [];
-        for (let i = 0; i < L.n; i++) {
-          const t = L.n === 1 ? 0.5 : i / (L.n - 1);
-          ys.push(L.yTop + t * (L.yBot - L.yTop));
-        }
-        return ys.map(y => ({ x: L.x, y }));
-      });
+      const STORAGE_KEY = 'show-speaker-notes';
+      let open = localStorage.getItem(STORAGE_KEY) === '1';
 
-      // Lines first (so nodes draw on top)
-      for (let l = 0; l < coords.length - 1; l++) {
-        for (const a of coords[l]) {
-          for (const b of coords[l+1]) {
-            const ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            ln.setAttribute('x1', a.x); ln.setAttribute('y1', a.y);
-            ln.setAttribute('x2', b.x); ln.setAttribute('y2', b.y);
-            lineGroup.appendChild(ln);
-          }
-        }
+      function setOpen(v) {
+        open = v;
+        document.body.classList.toggle('notes-open', open);
+        panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+        localStorage.setItem(STORAGE_KEY, open ? '1' : '0');
+        if (open) refresh();
       }
-      // Nodes
-      for (const layer of coords) {
-        for (const p of layer) {
-          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          c.setAttribute('cx', p.x); c.setAttribute('cy', p.y); c.setAttribute('r', 7);
-          nodeGroup.appendChild(c);
+
+      function refresh() {
+        if (!open) return;
+        const cur = Reveal.getCurrentSlide && Reveal.getCurrentSlide();
+        if (!cur) { body.textContent = ''; return; }
+        const aside = cur.querySelector(':scope > aside.notes, aside.notes');
+        body.innerHTML = aside ? aside.innerHTML : '<em class="np-empty">(no notes on this slide)</em>';
+        const idxs = Reveal.getIndices();
+        const total = Reveal.getTotalSlides();
+        slideN.textContent = (idxs.h + 1) + ' / ' + total;
+      }
+
+      btn.addEventListener('click', () => setOpen(!open));
+      // Use capture phase so we beat Reveal's own keydown handler.
+      // Shift+N toggles (plain N is reserved by Reveal for "next slide").
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        const tag = (e.target && e.target.tagName) || '';
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.shiftKey && (e.key === 'N' || e.key === 'n')) {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen(!open);
         }
+      }, true);
+
+      if (window.Reveal) {
+        Reveal.on('ready', () => { setOpen(open); refresh(); });
+        Reveal.on('slidechanged', refresh);
+        Reveal.on('fragmentshown', refresh);
+        Reveal.on('fragmenthidden', refresh);
       }
     })();
   </script>
