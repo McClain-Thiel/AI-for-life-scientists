@@ -893,7 +893,6 @@ LHLVLRLRGG</pre>
         <div class="part-num">Part 3 &nbsp;of&nbsp; 3</div>
         <h1>The value chain</h1>
         <div class="rule"></div>
-        <p class="teaser">Where the money goes, where the moats live, and how to tell them apart.</p>
         <aside class="notes">
           Chapter card. Mechanism, then mechanics, now the business. Five layers from NVIDIA
           hardware to application-layer startups — and four types of real data moat. This is the
@@ -901,53 +900,41 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · Who actually makes money (layered stack, pharma integration) -->
+      <!-- SLIDE · Who actually makes money (layered stack) -->
       <section data-center="false" style="padding-top:1.2rem;">
         <h2>Who actually makes money?</h2>
 
         <div class="value-grid">
-          <!-- Top-down order: Application at top, Hardware at bottom -->
-          <div class="layer-row pharma-layer fragment">
-            <div>
-              <span class="layer-name">APPLICATION</span>
-              <span class="layer-sub">the product users touch</span>
+          <div class="layer-row fragment">
+            <div><span class="layer-name">APPLICATION</span></div>
+            <div class="layer-cos">
+              <span class="c-green">Paige AI</span> · <span class="c-green">PathAI</span> ·
+              <span class="c-green">Viz.ai</span> ·
+              <span class="c-red">Babylon Health</span> <span class="dim">✗</span> ·
+              <span class="c-red">Ada Health</span> <span class="dim">(struggling)</span>
             </div>
-            <div class="layer-cos">"AI-powered X" startups <span class="dim">· internal pharma tools</span></div>
-          </div>
-
-          <div class="layer-row pharma-layer fragment">
-            <div>
-              <span class="layer-name">DATA SUPPLIER</span>
-              <span class="layer-sub">proprietary, labeled data</span>
-            </div>
-            <div class="layer-cos">Tempus · Flatiron · 23andMe <span class="dim">· clinical trial sponsors</span></div>
-          </div>
-
-          <div class="layer-row pharma-layer fragment">
-            <div>
-              <span class="layer-name">FOUNDATION</span>
-              <span class="layer-sub">general-purpose model</span>
-            </div>
-            <div class="layer-cos">Llama · Mistral · Gemma <span class="dim">(+ OpenAI, Anthropic — closed)</span></div>
           </div>
 
           <div class="layer-row fragment">
-            <div>
-              <span class="layer-name">COMPUTE</span>
-              <span class="layer-sub">GPUs by the hour</span>
-            </div>
+            <div><span class="layer-name">DATA</span></div>
+            <div class="layer-cos">Tempus · Flatiron · Scale AI · Veracyte</div>
+          </div>
+
+          <div class="layer-row fragment">
+            <div><span class="layer-name">FOUNDATION</span></div>
+            <div class="layer-cos">DeepMind · Anthropic · Boltz · EvolutionaryScale</div>
+          </div>
+
+          <div class="layer-row fragment">
+            <div><span class="layer-name">COMPUTE</span></div>
             <div class="layer-cos">AWS · GCP · Azure · Anyscale</div>
           </div>
 
           <div class="layer-row fragment">
-            <div>
-              <span class="layer-name">HARDWARE</span>
-              <span class="layer-sub">near-monopoly</span>
-            </div>
+            <div><span class="layer-name">HARDWARE</span></div>
             <div class="layer-cos c-green">NVIDIA</div>
           </div>
 
-          <!-- Pharma column spans top 3 rows (Application, Data, Foundation) -->
           <div class="pharma-col fragment">
             <div class="pharma-head">BIG PHARMA</div>
             <div class="pharma-body">eats the top layers</div>
@@ -956,56 +943,55 @@ LHLVLRLRGG</pre>
         </div>
 
         <aside class="notes">
-          Five layers, bottom up. Hardware — NVIDIA, a near-monopoly. Compute — rented by
-          anyone with a credit card. Foundation — a commoditising layer; state-of-the-art
-          open weights are 6–12 months behind the frontier. Data supplier — proprietary data
-          at scale is hard to replicate. Application — the surface users touch.
+          Five layers, bottom up. Application: the surface users touch — some succeed (Paige,
+          PathAI — FDA cleared, real revenue), some fail (Babylon Health — went bankrupt,
+          Ada — struggling to monetise). Data: proprietary data at scale. Foundation:
+          commoditising; Boltz is open protein structure, EvolutionaryScale trains ESM-3.
+          Compute: rented by the hour. Hardware: NVIDIA near-monopoly.
 
-          The key insight for a biotech audience: Big Pharma doesn't sit at one layer.
-          They own clinical data (data supplier), they fine-tune or train their own models
-          (foundation), and they build internal apps (application). Rented compute, owned
-          stack above it. That's the moat structure you're competing against.
-
-          So when a pitch says "we're an AI-first biotech", the question is: which layer?
-          And does that layer survive pharma doing it themselves?
+          Big Pharma doesn't sit at one layer. They own clinical data, train their own
+          models, and build internal apps. When a pitch says "AI-first biotech", ask:
+          which layer? Does that layer survive pharma doing it themselves?
         </aside>
       </section>
 
-      <!-- SLIDE · Three archetypes: Foundation / Data Supplier / Application -->
+      <!-- SLIDE · Three archetypes: Data / Foundation / Application -->
       <section data-center="false" style="padding-top:1.5rem;">
         <h2>Which layer are they <em>in</em>?</h2>
-        <div class="spectrum-bar"></div>
+        <hr style="border:none; border-top:1px solid #333; margin:0.5rem 0 1.2rem;"/>
         <div class="spectrum">
           <div class="spectrum-pos fragment">
-            <div class="spec-label">FOUNDATION</div>
-            <h3 class="c-blue">Train a general model from scratch</h3>
-            <div class="companies">Llama · Mistral · OpenAI · Anthropic</div>
-            <p>Internet-scale pre-training. Capex at nation-state scale.</p>
-            <div class="money">$10B+ to compete.</div>
+            <div class="spec-label">DATA</div>
+            <h3 class="c-blue">Own the data, fine-tune on top</h3>
+            <div class="companies">Tempus · Flatiron · Scale AI · Veracyte</div>
+            <p>Proprietary, labeled domain data. The thesis turns on what data you have.</p>
           </div>
-          <div class="spectrum-pos highlight fragment">
-            <div class="spec-label">DATA SUPPLIER</div>
-            <h3 class="c-yellow">Own the data, fine-tune on top</h3>
-            <div class="companies">Tempus · Flatiron · 23andMe · most pharma</div>
-            <p>Proprietary, labeled domain data. The thesis turns on the data, not the algorithm.</p>
-            <div class="money">Defensible <em>if</em> the data is real and exclusive.</div>
+          <div class="spectrum-pos fragment">
+            <div class="spec-label">FOUNDATION</div>
+            <h3 class="c-blue">Train a model from scratch</h3>
+            <div class="companies">DeepMind · Anthropic · Boltz · EvolutionaryScale</div>
+            <p>Pre-training at scale. In bio: ESM, AlphaFold, Boltz are open and commoditising.</p>
           </div>
           <div class="spectrum-pos fragment">
             <div class="spec-label">APPLICATION</div>
-            <h3 class="c-muted">Product on someone else's model</h3>
-            <div class="companies">"AI-powered X" · most startups</div>
-            <p>Prompt engineering + API. No training, no proprietary data.</p>
-            <div class="money">SaaS economics, not AI economics.</div>
+            <h3 class="c-blue">Build a product on top</h3>
+            <div class="companies">
+              <span class="c-green">Paige AI</span> ·
+              <span class="c-green">Viz.ai</span> ��
+              <span class="c-green">Grammarly</span> ·
+              <span class="c-red">Babylon Health</span> ·
+              <span class="c-red">Jasper AI</span>
+            </div>
+            <p>Some succeed (FDA-cleared product, real distribution). Some don't (no moat, easily cloned).</p>
           </div>
         </div>
 
         <aside class="notes">
-          Three archetypes. Foundation is mostly out of scope for early-stage biotech —
-          too expensive, wrong timezone. Application-layer companies are fine businesses but
-          they're SaaS with AI branding — no data moat, anyone can clone them in a weekend.
-          The middle — data supplier — is where biotech investments can actually have a moat.
-          Pharma sits across all three (see previous slide), so ask: how does this company's
-          position survive pharma doing the same thing in-house?
+          Three archetypes. Data: defensible if the dataset is hard to replicate. Foundation:
+          expensive and commoditising fast. Application: this is NOT automatically bad — Paige
+          has FDA clearance and hospital contracts, Viz.ai has real clinical workflow integration.
+          But Babylon went bankrupt and Jasper collapsed when ChatGPT launched. The question
+          isn't "which layer" — it's "what's the moat within that layer?"
         </aside>
       </section>
 
@@ -1066,102 +1052,117 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · The mental model (3D bubble: difficulty × defensibility × reward) -->
+      <!-- SLIDE · The mental model (bubble chart: hardness × demand × buyer power) -->
       <section data-center="false" style="padding-top:1.2rem;">
         <h2>The mental model</h2>
         <p class="mm-axes-note">
-          x: <span class="c-blue">difficulty</span> &nbsp;·&nbsp;
-          y: <span class="c-yellow">defensibility</span> &nbsp;·&nbsp;
-          bubble size: <span class="c-green">reward</span>
+          x: <span class="c-blue">how hard is it</span> &nbsp;&middot;&nbsp;
+          y: <span class="c-yellow">do people want it</span> &nbsp;&middot;&nbsp;
+          bubble size: <span class="c-green">buyer power</span>
         </p>
 
         <svg class="risk-reward" viewBox="0 0 900 470" style="width:100%; max-width:980px; display:block; margin:0.4rem auto 0;">
           <!-- plot frame -->
           <rect x="80" y="30" width="760" height="370" fill="none" stroke="#222"/>
 
-          <!-- quadrant dividers -->
-          <line x1="460" y1="30"  x2="460" y2="400" stroke="#1a1a1a" stroke-dasharray="3,4"/>
-          <line x1="80"  y1="215" x2="840" y2="215" stroke="#1a1a1a" stroke-dasharray="3,4"/>
-
-          <!-- subtle quadrant labels -->
-          <text x="100" y="48"  fill="#444" font-family="JetBrains Mono, monospace" font-size="10">EASY · DEFENSIBLE &nbsp;(rare sweet spot)</text>
-          <text x="820" y="48"  fill="#444" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HARD · DEFENSIBLE &nbsp;(the frontier)</text>
-          <text x="100" y="392" fill="#444" font-family="JetBrains Mono, monospace" font-size="10">EASY · UNDEFENDABLE &nbsp;(noise)</text>
-          <text x="820" y="392" fill="#444" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">HARD · UNDEFENDABLE &nbsp;(the trap)</text>
-
           <!-- axes -->
           <line x1="80" y1="400" x2="840" y2="400" stroke="#555" stroke-width="1.5"/>
           <line x1="80" y1="400" x2="80"  y2="30"  stroke="#555" stroke-width="1.5"/>
 
           <!-- axis labels -->
-          <text x="460" y="432" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">DIFFICULTY &nbsp;→</text>
-          <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 215)">DEFENSIBILITY &nbsp;→</text>
+          <text x="460" y="432" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">HOW HARD IS IT &nbsp;→</text>
+          <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 215)">DO PEOPLE WANT IT &nbsp;→</text>
 
-          <!-- Examples · bubble radius encodes reward -->
+          <!-- ─── SUCCESS (green circles) ─── -->
 
-          <!-- Clinical data platforms — hard, VERY HIGH defensibility, high reward -->
+          <!-- Tempus — hard (8), high demand (8), large buyers (pharma) -->
           <g class="fragment rr-point">
-            <circle cx="640" cy="95" r="22" fill="#58C4DD" fill-opacity="0.22" stroke="#58C4DD" stroke-width="1.8"/>
-            <text x="612" y="98" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Clinical data platforms</text>
-            <text x="612" y="114" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">Tempus · Flatiron · pharma trial data</text>
+            <circle cx="670" cy="100" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="645" y="96" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Tempus</text>
+            <text x="645" y="112" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">clinical genomics · pharma buyers</text>
           </g>
 
-          <!-- De novo generative biology — very hard, HIGH defensibility, biggest reward -->
+          <!-- Scale AI — medium (6), high demand (9), large buyers (big tech + DoD) -->
           <g class="fragment rr-point">
-            <circle cx="770" cy="155" r="26" fill="#58C4DD" fill-opacity="0.22" stroke="#58C4DD" stroke-width="1.8"/>
-            <text x="740" y="158" fill="#58C4DD" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">De novo generative biology</text>
-            <text x="740" y="174" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">wet-lab validation loop is the moat</text>
+            <circle cx="500" cy="60" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="530" y="56" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Scale AI</text>
+            <text x="530" y="72" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">data labeling · big tech + DoD</text>
           </g>
 
-          <!-- Pathology imaging AI — easy-medium, medium defensibility, high reward -->
+          <!-- Palantir — very hard (9), demand (7), large buyers (govt) -->
           <g class="fragment rr-point">
-            <circle cx="220" cy="155" r="18" fill="#83C167" fill-opacity="0.25" stroke="#83C167" stroke-width="1.8"/>
-            <text x="245" y="152" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Pathology imaging AI</text>
-            <text x="245" y="168" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">well-framed · regulated buyer</text>
+            <circle cx="755" cy="155" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="730" y="150" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Palantir</text>
+            <text x="730" y="166" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">data OS · government + enterprise</text>
           </g>
 
-          <!-- Rare-disease diagnostics — hard, medium defensibility, medium-high reward -->
+          <!-- Gong — medium (5), high demand (8), large buyers (enterprise) -->
           <g class="fragment rr-point">
-            <circle cx="570" cy="240" r="13" fill="#FFF1B5" fill-opacity="0.22" stroke="#FFF1B5" stroke-width="1.8"/>
-            <text x="552" y="243" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Rare-disease diagnostics</text>
-            <text x="552" y="259" fill="#666" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="end">tiny datasets · OOD by definition</text>
+            <circle cx="415" cy="100" r="20" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="440" y="98" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Gong</text>
+            <text x="440" y="114" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">sales AI · enterprise budgets</text>
           </g>
 
-          <!-- AlphaFold-derived tools — easy NOW, low defensibility, medium reward -->
+          <!-- ─── FAILURE (red circles, small bubbles = low buyer power) ─── -->
+
+          <!-- Olive AI — medium (6), demand (7), small buyers (hospitals) -->
           <g class="fragment rr-point">
-            <circle cx="210" cy="300" r="11" fill="#83C167" fill-opacity="0.25" stroke="#83C167" stroke-width="1.8"/>
-            <text x="230" y="298" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="14">AlphaFold-derived tools</text>
-            <text x="230" y="314" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">model is free · anyone can run it</text>
+            <circle cx="500" cy="155" r="8" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="515" y="152" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Olive AI</text>
+            <text x="515" y="167" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">hospital RPA · burned $852M</text>
           </g>
 
-          <!-- "AI-powered X" applications — easy, near-zero defensibility, small reward -->
+          <!-- Babylon Health — hard (7), high demand (8), tiny buyers (NHS) -->
           <g class="fragment rr-point">
-            <circle cx="170" cy="355" r="5" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="184" y="353" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">"AI-powered X" applications</text>
-            <text x="184" y="369" fill="#666" font-family="JetBrains Mono, monospace" font-size="10">no data · no model · clone in a weekend</text>
+            <circle cx="585" cy="100" r="7" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="600" y="98" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Babylon Health</text>
+            <text x="600" y="113" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">AI GP · NHS buyer = no budget</text>
+          </g>
+
+          <!-- Enlitic — hard (7), moderate demand (6), small buyers (radiology depts) -->
+          <g class="fragment rr-point">
+            <circle cx="585" cy="200" r="7" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="600" y="198" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="14">Enlitic</text>
+            <text x="600" y="213" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">radiology AI · hospitals won't buy</text>
+          </g>
+
+          <!-- ─── UNCERTAIN (amber, large buyer but unproven) ─── -->
+
+          <!-- Recursion — very hard (9), moderate demand (5), large buyers (pharma) -->
+          <g class="fragment rr-point">
+            <circle cx="755" cy="240" r="18" fill="#FFF1B5" fill-opacity="0.15" stroke="#FFF1B5" stroke-width="1.8"/>
+            <text x="730" y="238" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="14" text-anchor="end">Recursion</text>
+            <text x="730" y="254" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">AI drug discovery · no approved drug yet</text>
+          </g>
+
+          <!-- legend -->
+          <g transform="translate(100, 420)">
+            <circle cx="0"   cy="0" r="5" fill="#83C167" fill-opacity="0.3" stroke="#83C167" stroke-width="1"/>
+            <text   x="12"  y="4" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="9">success</text>
+            <circle cx="80"  cy="0" r="5" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1"/>
+            <text   x="92"  y="4" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="9">failed</text>
+            <circle cx="140" cy="0" r="5" fill="#FFF1B5" fill-opacity="0.3" stroke="#FFF1B5" stroke-width="1"/>
+            <text   x="152" y="4" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9">unproven</text>
+            <text   x="260" y="4" fill="#888" font-family="JetBrains Mono, monospace" font-size="9">bubble = buyer power ($$)</text>
           </g>
         </svg>
 
         <aside class="notes">
-          Same canvas, three dimensions. X is how hard to build and validate. Y is how
-          defensible once built. Bubble size is the prize.
+          All real companies, no generic categories. Green = success, red = failed, amber = TBD.
 
-          Top-right is the frontier: clinical data platforms (Tempus, Flatiron) — very
-          defensible because the data takes a decade to accumulate. De novo generative
-          biology is the biggest bubble — largest potential prize — but it's on the right
-          edge because the wet-lab validation loop is slow and capital-intensive. That slow
-          loop *is* the moat.
+          Key patterns:
+          - Top-left (easy + wanted + big buyers): Gong, Scale AI — clear ROI, fast sales cycles.
+          - Top-right (hard + wanted + big buyers): Tempus, Palantir — the frontier. Slow to build
+            but once built, incredibly sticky. Big buyer budgets justify the capex.
+          - Same Y but small bubbles (red): Babylon Health and Olive AI both had high demand — hospitals
+            and patients genuinely needed them. But the buyers (NHS, hospital admin) couldn't pay.
+            Demand without buyer power = bankruptcy.
+          - Enlitic: radiologists loved the product, hospital procurement wouldn't sign the PO.
+          - Recursion: big pharma buyer power, but no approved drug. Still TBD whether the science
+            converts to revenue before the runway runs out.
 
-          Top-left is the rare sweet spot: pathology imaging AI. Reasonably well-framed
-          problem, real regulated buyer, medium defensibility because your label pipeline
-          and clinical partnerships are hard (not impossible) to replicate.
-
-          Middle-right: rare-disease diagnostics. High value, hard, OOD by definition —
-          tempting but fragile.
-
-          Bottom row is where most pitches live and where most pitches die. AlphaFold-derived
-          tools are easy to build but undefendable (the model is free). "AI-powered X" is the
-          smallest bubble — no data, no model, commoditises in a weekend.
+          The bubble-size lesson: wanting something isn't enough. The person who wants it has to be
+          able to write a check. That's why Gong (enterprise sales) works and Babylon (NHS) doesn't.
         </aside>
       </section>
 
