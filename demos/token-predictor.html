@@ -110,6 +110,22 @@
   .corpus-line .nextw   { color: var(--yellow); background: rgba(255,241,181,0.12); padding: 0.1rem 0.3rem; border-radius: 2px; }
   .corpus-line .rest    { color: #555; }
   .corpus-line.nomatch  { opacity: 0.25; }
+  .corpus-line.learned {
+    color: var(--white);
+    border-left: 3px solid var(--green);
+    padding-left: 0.5rem;
+    animation: flash-in 0.6s ease;
+  }
+  @keyframes flash-in {
+    0%   { background: rgba(131,193,103,0.2); }
+    100% { background: transparent; }
+  }
+
+  .btn.learn {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .btn.learn:hover { background: var(--green); color: #000; }
 
   .predict-box {
     margin-top: 1rem;
@@ -311,6 +327,7 @@
 <footer>
   <div class="footer-left">
     <button class="btn primary" id="act-primary">Predict →</button>
+    <button class="btn learn" id="act-learn" style="display:none;">Add correct examples to training data →</button>
     <button class="btn advance" id="act-next" disabled>Next word →</button>
     <button class="btn" id="act-reset">Reset</button>
   </div>
@@ -330,9 +347,11 @@
 // The model "learns" by counting next-word frequencies given a prefix.
 // ─────────────────────────────────────────────────────────────
 
-const CORPUS = [
-  "the quick brown fox jumps over the lazy dog",
-  "the quick brown fox ran through the forest",
+// Initial corpus — note: bear outnumbers fox in "the quick brown ___"
+// so the model will predict bear (wrong). This sets up the learning moment.
+const INITIAL_CORPUS = [
+  "the quick brown bear ran through the forest",
+  "the quick brown fox ran across the field",
   "the quick brown bear caught a fish",
   "the quick brown dog chased its tail",
   "the quick red fox hid behind the tree",
@@ -340,22 +359,34 @@ const CORPUS = [
   "the quick lazy cat slept all day",
   "a quick brown bird flew over the lake",
   "the slow brown fox sat in the sun",
-  "the quick brown fox jumps over fences easily",
+  "the quick brown bear jumped over a log",
   "the happy brown fox played in the meadow",
-  "the quick young fox explored the riverbank",
+  "the quick young deer explored the riverbank",
+];
+
+// Sentences added when the model gets step 2 wrong — "learning from the mistake"
+const LEARN_SENTENCES = [
+  "the quick brown fox jumps over the lazy dog",
+  "the quick brown fox jumps over fences easily",
+  "the quick brown fox hunted near the stream",
 ];
 
 // The target sentence we're predicting through:
 const TARGET = "the quick brown fox jumps over the lazy dog";
 const TARGET_WORDS = TARGET.split(' ');
 
-// Prediction steps: we predict words at positions 2, 3, 4 (0-indexed)
-// giving context lengths of 2, 3, 4 words respectively.
+// Steps: predict at positions 2, 3, 4 (context = 2, 3, 4 words).
+// Step 1 (pos 3) is the "wrong" step where learning happens.
 const STEPS = [
-  { pos: 2, ctxLen: 2 },   // context: "the quick" → predict "brown"
-  { pos: 3, ctxLen: 3 },   // context: "the quick brown" → predict "fox"
-  { pos: 4, ctxLen: 4 },   // context: "the quick brown fox" → predict "jumps"
+  { pos: 2 },   // "the quick ___"       → brown (correct)
+  { pos: 3 },   // "the quick brown ___"  → bear (WRONG) → learn → fox
+  { pos: 4 },   // "the quick brown fox ___" → jumps (correct)
 ];
+const LEARN_STEP = 1;  // which step triggers the learning flow
+
+// Working corpus — starts as a copy of INITIAL, grows when learning happens
+let workingCorpus = [...INITIAL_CORPUS];
+let learnedIndices = new Set();  // indices in workingCorpus that were added via learning
 
 function getPrefix(step) {
   return TARGET_WORDS.slice(0, STEPS[step].pos);
@@ -365,30 +396,28 @@ function getTarget(step) {
   return TARGET_WORDS[STEPS[step].pos];
 }
 
-// Find corpus sentences matching a prefix; return {matching, counts, total}
 function matchCorpus(prefix) {
   const pStr = prefix.join(' ');
-  const matching = [];
+  const results = [];
   const counts = {};
   let total = 0;
 
-  for (const sent of CORPUS) {
+  workingCorpus.forEach((sent, idx) => {
     const words = sent.split(' ');
     const sentPrefix = words.slice(0, prefix.length).join(' ');
     if (sentPrefix === pStr && words.length > prefix.length) {
       const nextWord = words[prefix.length];
-      matching.push({ words, nextWord });
+      results.push({ words, nextWord, idx, isLearned: learnedIndices.has(idx) });
       counts[nextWord] = (counts[nextWord] || 0) + 1;
       total++;
     }
-  }
+  });
 
-  // Sort by count descending
   const ranked = Object.entries(counts)
     .map(([word, count]) => ({ word, count, p: count / total }))
     .sort((a, b) => b.count - a.count);
 
-  return { matching, ranked, total };
+  return { results, ranked, total };
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -466,6 +495,7 @@ const INFER_STEPS = [
 let mode = 'train';
 let tStep = 0;               // which prediction step (0..2)
 let tRevealed = false;       // has the user clicked "Predict" for this step?
+let tLearned = false;        // has learning correction been applied (step 1 only)?
 let inferStep = 0;
 let inferTokens = [];
 let speed = 'manual';
@@ -520,7 +550,6 @@ function renderTrainBars(ranked, total) {
 
 function renderTrain() {
   if (tStep >= STEPS.length) {
-    // Done — all 3 steps predicted
     corpusLines.innerHTML = '';
     corpusHeader.textContent = '';
     predictBox.innerHTML = `<span class="ctx">${esc(TARGET)}</span>`;
@@ -529,70 +558,96 @@ function renderTrain() {
     barsTitle.textContent = '';
     btnPrimary.disabled = true;
     btnNext.disabled = true;
+    // hide learn button if present
+    const lb = document.getElementById('act-learn');
+    if (lb) lb.style.display = 'none';
     return;
   }
 
   const prefix = getPrefix(tStep);
   const target = getTarget(tStep);
-  const { matching, ranked, total } = matchCorpus(prefix);
-
-  // Corpus lines
+  const { results, ranked, total } = matchCorpus(prefix);
   const prefixStr = prefix.join(' ');
-  corpusHeader.textContent = `training corpus &mdash; ${total} sentence${total === 1 ? '' : 's'} match "${prefixStr}"`;
-  corpusHeader.innerHTML = corpusHeader.textContent; // allow entities
 
-  corpusLines.innerHTML = CORPUS.map(sent => {
+  const isLearnStep = (tStep === LEARN_STEP);
+  const topWord = ranked.length ? ranked[0].word : '?';
+  const topCorrect = topWord === target;
+
+  // ── Corpus lines ──
+  corpusHeader.innerHTML = `training corpus &mdash; ${total} sentence${total === 1 ? '' : 's'} matching "<span class="c-blue">${esc(prefixStr)}</span>"`;
+
+  corpusLines.innerHTML = workingCorpus.map((sent, idx) => {
     const words = sent.split(' ');
     const sentPrefix = words.slice(0, prefix.length).join(' ');
     const isMatch = sentPrefix === prefixStr && words.length > prefix.length;
+    const isNew = learnedIndices.has(idx);
 
     if (!isMatch) {
       return `<div class="corpus-line nomatch">${esc(sent)}</div>`;
     }
 
-    const prefixPart = words.slice(0, prefix.length).join(' ');
     const nextWord = words[prefix.length];
     const rest = words.slice(prefix.length + 1).join(' ');
 
-    return `<div class="corpus-line match">`
-      + `<span class="prefix">${esc(prefixPart)}</span> `
+    return `<div class="corpus-line match${isNew ? ' learned' : ''}">`
+      + `<span class="prefix">${esc(words.slice(0, prefix.length).join(' '))}</span> `
       + `<span class="nextw">${esc(nextWord)}</span>`
       + (rest ? ` <span class="rest">${esc(rest)}</span>` : '')
       + `</div>`;
   }).join('');
 
-  // Predict box
+  // ── Predict box ──
   if (!tRevealed) {
     predictBox.innerHTML = `<span class="ctx">${esc(prefixStr)}</span> <span class="blank">___</span>`;
   } else {
-    const topWord = ranked[0].word;
-    const correct = topWord === target;
+    const showWord = (isLearnStep && tLearned) ? target : topWord;
+    const showCorrect = (isLearnStep && tLearned) ? true : topCorrect;
     predictBox.innerHTML = `<span class="ctx">${esc(prefixStr)}</span> `
-      + `<span style="color:${correct ? 'var(--green)' : 'var(--red)'};">${esc(topWord)}</span>`;
+      + `<span style="color:${showCorrect ? 'var(--green)' : 'var(--red)'};">${esc(showWord)}</span>`;
   }
 
-  // Result line
+  // ── Result line ──
   if (!tRevealed) {
     resultLine.innerHTML = '';
+  } else if (isLearnStep && !tLearned && !topCorrect) {
+    // Wrong prediction, learning not yet applied
+    resultLine.innerHTML = `<span style="color:var(--red);">✗</span> predicted "${esc(topWord)}" (${ranked[0].count}/${total}) &mdash; actual word is "${esc(target)}".`
+      + `<br><span class="c-muted" style="font-size:0.82rem;">The model has seen more bears than foxes in this context.</span>`;
+  } else if (isLearnStep && tLearned) {
+    // After learning
+    const foxEntry = ranked.find(r => r.word === target);
+    const foxCount = foxEntry ? foxEntry.count : 0;
+    resultLine.innerHTML = `<span style="color:var(--green);">✓</span> After adding ${LEARN_SENTENCES.length} new examples, "${esc(target)}" is now ${foxCount}/${total} &mdash; the top prediction.`;
+  } else if (topCorrect) {
+    resultLine.innerHTML = `<span style="color:var(--green);">✓</span> "${esc(topWord)}" is correct &mdash; ${ranked[0].count} of ${total} matching sentences.`;
   } else {
-    const topWord = ranked[0].word;
-    const correct = topWord === target;
-    if (correct) {
-      resultLine.innerHTML = `<span style="color:var(--green);">✓</span> "${esc(topWord)}" is correct &mdash; it appeared in ${ranked[0].count} of ${total} matching sentences.`;
-    } else {
-      resultLine.innerHTML = `<span style="color:var(--red);">✗</span> predicted "${esc(topWord)}" but the actual word is "${esc(target)}".`;
-    }
+    resultLine.innerHTML = `<span style="color:var(--red);">✗</span> predicted "${esc(topWord)}" but the actual word is "${esc(target)}".`;
   }
 
-  // Bars
+  // ── Bars ──
   renderTrainBars(ranked, total);
 
-  // Buttons
-  btnPrimary.disabled = tRevealed;
-  btnPrimary.textContent = 'Predict →';
-  btnPrimary.classList.toggle('primary', !tRevealed);
-  btnNext.disabled = !tRevealed;
-  btnNext.classList.toggle('primary', tRevealed);
+  // ── Buttons ──
+  const learnBtn = document.getElementById('act-learn');
+
+  if (isLearnStep && tRevealed && !tLearned && !topCorrect) {
+    // Show Learn button, hide Predict and Next
+    btnPrimary.style.display = 'none';
+    btnNext.disabled = true;
+    if (learnBtn) learnBtn.style.display = '';
+  } else {
+    btnPrimary.style.display = '';
+    if (learnBtn) learnBtn.style.display = 'none';
+
+    const canPredict = !tRevealed;
+    const canNext = tRevealed && (topCorrect || tLearned);
+
+    btnPrimary.disabled = !canPredict;
+    btnPrimary.textContent = 'Predict →';
+    btnPrimary.classList.toggle('primary', canPredict);
+    btnNext.disabled = !canNext;
+    btnNext.classList.toggle('primary', canNext);
+  }
 }
 
 function renderInferBars(cands) {
@@ -662,12 +717,26 @@ function doNext() {
   renderTrain();
 }
 
+function doLearn() {
+  if (tLearned) return;
+  // Add the learning sentences to the working corpus
+  for (const sent of LEARN_SENTENCES) {
+    learnedIndices.add(workingCorpus.length);
+    workingCorpus.push(sent);
+  }
+  tLearned = true;
+  renderTrain();
+}
+
 function doReset() {
   stopAuto();
   setSpeed('manual');
   if (mode === 'train') {
     tStep = 0;
     tRevealed = false;
+    tLearned = false;
+    workingCorpus = [...INITIAL_CORPUS];
+    learnedIndices = new Set();
     btnNext.style.display = '';
     renderTrain();
   } else {
@@ -688,7 +757,9 @@ function switchMode(m) {
     trainUI.style.display = '';
     inferUI.style.display = 'none';
     btnNext.style.display = '';
-    tStep = 0; tRevealed = false;
+    tStep = 0; tRevealed = false; tLearned = false;
+    workingCorpus = [...INITIAL_CORPUS];
+    learnedIndices = new Set();
     renderTrain();
   } else {
     tabInfer.classList.add('active'); tabTrain.classList.remove('active');
@@ -711,6 +782,7 @@ function setSpeed(s) {
     if (mode === 'train') {
       if (tStep >= STEPS.length) { stopAuto(); setSpeed('manual'); return; }
       if (!tRevealed) { doPrimary(); }
+      else if (tStep === LEARN_STEP && !tLearned) { doLearn(); }
       else { doNext(); }
     } else {
       if (inferStep >= INFER_STEPS.length) { stopAuto(); setSpeed('manual'); return; }
@@ -724,6 +796,7 @@ function stopAuto() { if (autoTimer) { clearInterval(autoTimer); autoTimer = nul
 tabTrain.addEventListener('click', () => switchMode('train'));
 tabInfer.addEventListener('click', () => switchMode('infer'));
 btnPrimary.addEventListener('click', doPrimary);
+document.getElementById('act-learn').addEventListener('click', doLearn);
 btnNext.addEventListener('click', doNext);
 btnReset.addEventListener('click', doReset);
 showSys.addEventListener('change', (e) => {
@@ -737,7 +810,8 @@ spdBtns.fast.addEventListener('click',   () => setSpeed('fast'));
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
-    if (mode === 'train' && tRevealed) doNext();
+    if (mode === 'train' && tRevealed && tStep === LEARN_STEP && !tLearned) doLearn();
+    else if (mode === 'train' && tRevealed) doNext();
     else doPrimary();
   }
 });
