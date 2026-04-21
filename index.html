@@ -207,86 +207,6 @@
 
       <!-- ═════════ ACT 2 — THE MECHANISM ═════════ -->
 
-      <!-- SLIDE 7 · Input → Output with concrete examples -->
-      <section data-center="false" style="padding-top:2rem;">
-        <div class="io-flow">
-          <!-- INPUT column -->
-          <div class="io-side">
-            <div class="io-example">
-              <svg class="io-thumb" viewBox="0 0 60 60">
-                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
-                <!-- cat silhouette -->
-                <polygon points="18,22 22,12 26,20" fill="#58C4DD" opacity="0.7"/>
-                <polygon points="34,20 38,12 42,22" fill="#58C4DD" opacity="0.7"/>
-                <circle cx="30" cy="34" r="11" fill="#58C4DD" opacity="0.3"/>
-                <circle cx="26" cy="32" r="1.5" fill="#58C4DD"/>
-                <circle cx="34" cy="32" r="1.5" fill="#58C4DD"/>
-                <path d="M 27 38 Q 30 41 33 38" stroke="#58C4DD" fill="none" stroke-width="1.2"/>
-              </svg>
-              <span>image of a cat</span>
-            </div>
-            <div class="io-example">
-              <svg class="io-thumb" viewBox="0 0 60 60">
-                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
-                <line x1="10" y1="18" x2="50" y2="18" stroke="#58C4DD" stroke-width="1.2"/>
-                <line x1="10" y1="26" x2="42" y2="26" stroke="#58C4DD" stroke-width="1.2"/>
-                <line x1="10" y1="34" x2="48" y2="34" stroke="#58C4DD" stroke-width="1.2"/>
-                <line x1="10" y1="42" x2="38" y2="42" stroke="#58C4DD" stroke-width="1.2"/>
-              </svg>
-              <span>"This movie was great"</span>
-            </div>
-            <div class="io-example">
-              <svg class="io-thumb" viewBox="0 0 60 60">
-                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
-                <text x="30" y="22" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">size=1200</text>
-                <text x="30" y="34" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">beds=3</text>
-                <text x="30" y="46" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">yr=1995</text>
-              </svg>
-              <span>house features</span>
-            </div>
-            <div class="io-colabel">INPUT</div>
-          </div>
-
-          <div class="io-arrow">→</div>
-
-          <!-- MODEL -->
-          <div class="io-modelbox">
-            <div class="mono" style="font-size:0.7rem; letter-spacing:0.12em; color:var(--muted);">LEARNED</div>
-            <div style="margin-top:0.3rem;">MODEL</div>
-          </div>
-
-          <div class="io-arrow">→</div>
-
-          <!-- OUTPUT column -->
-          <div class="io-side">
-            <div class="io-example output">
-              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
-              <span class="c-green">"cat" &nbsp;<span class="c-muted">(92%)</span></span>
-            </div>
-            <div class="io-example output">
-              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
-              <span class="c-green">positive sentiment</span>
-            </div>
-            <div class="io-example output yellow">
-              <span class="mono c-muted" style="font-size:0.65rem;">regression</span>
-              <span class="c-yellow">$420,000</span>
-            </div>
-            <div class="io-colabel">OUTPUT</div>
-          </div>
-        </div>
-
-        <p class="fragment c-yellow" style="font-size:1.8rem; margin-top:2.2rem; line-height:1.4;">
-          That's it. Everything else is a creative application of this.
-        </p>
-        <aside class="notes">
-          I want this to stick. Every ML model you will ever encounter is doing one thing: mapping
-          an input to an output. The training process is how it learns that mapping from examples.
-          The architecture is just the function that does the mapping. Classification and regression
-          are the two main output types — predicting a category vs. predicting a number.
-          Hold this mental model. We'll keep coming back to it.
-        </aside>
-      </section>
-
       <!-- SLIDE 8 · DEMO 1 — Linear regression playground -->
       <section class="demo-slide"
                data-background-iframe="demos/regression-playground.html"
@@ -350,6 +270,79 @@
           spend most of our time on supervised because it's where the majority of valuable AI
           products live. Reinforcement learning exists too — AlphaGo, robotics — but it's less
           common in biotech applications and out of scope today.
+        </aside>
+      </section>
+
+      <!-- SLIDE · Input → Output with concrete examples -->
+      <section data-center="false" style="padding-top:2rem;">
+        <div class="io-flow">
+          <div class="io-side">
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <polygon points="18,22 22,12 26,20" fill="#58C4DD" opacity="0.7"/>
+                <polygon points="34,20 38,12 42,22" fill="#58C4DD" opacity="0.7"/>
+                <circle cx="30" cy="34" r="11" fill="#58C4DD" opacity="0.3"/>
+                <circle cx="26" cy="32" r="1.5" fill="#58C4DD"/>
+                <circle cx="34" cy="32" r="1.5" fill="#58C4DD"/>
+                <path d="M 27 38 Q 30 41 33 38" stroke="#58C4DD" fill="none" stroke-width="1.2"/>
+              </svg>
+              <span>image of a cat</span>
+            </div>
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="18" x2="50" y2="18" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="26" x2="42" y2="26" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="34" x2="48" y2="34" stroke="#58C4DD" stroke-width="1.2"/>
+                <line x1="10" y1="42" x2="38" y2="42" stroke="#58C4DD" stroke-width="1.2"/>
+              </svg>
+              <span>"This movie was great"</span>
+            </div>
+            <div class="io-example">
+              <svg class="io-thumb" viewBox="0 0 60 60">
+                <rect x="2" y="2" width="56" height="56" rx="3" fill="none" stroke="#58C4DD" stroke-width="1.2"/>
+                <text x="30" y="22" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">size=1200</text>
+                <text x="30" y="34" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">beds=3</text>
+                <text x="30" y="46" fill="#58C4DD" font-family="monospace" font-size="7" text-anchor="middle">yr=1995</text>
+              </svg>
+              <span>house features</span>
+            </div>
+            <div class="io-colabel">INPUT</div>
+          </div>
+
+          <div class="io-arrow">→</div>
+
+          <div class="io-modelbox">
+            <div class="mono" style="font-size:0.7rem; letter-spacing:0.12em; color:var(--muted);">LEARNED</div>
+            <div style="margin-top:0.3rem;">MODEL</div>
+          </div>
+
+          <div class="io-arrow">→</div>
+
+          <div class="io-side">
+            <div class="io-example output">
+              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
+              <span class="c-green">"cat" &nbsp;<span class="c-muted">(92%)</span></span>
+            </div>
+            <div class="io-example output">
+              <span class="mono c-muted" style="font-size:0.65rem;">classification</span>
+              <span class="c-green">positive sentiment</span>
+            </div>
+            <div class="io-example output yellow">
+              <span class="mono c-muted" style="font-size:0.65rem;">regression</span>
+              <span class="c-yellow">$420,000</span>
+            </div>
+            <div class="io-colabel">OUTPUT</div>
+          </div>
+        </div>
+
+        <p class="fragment c-yellow" style="font-size:1.8rem; margin-top:2.2rem; line-height:1.4;">
+          That's it. Everything else is a creative application of this.
+        </p>
+        <aside class="notes">
+          Every ML model: input → output. Classification = predict a category.
+          Regression = predict a number. Hold this mental model.
         </aside>
       </section>
 
