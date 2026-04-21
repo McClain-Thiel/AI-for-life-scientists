@@ -642,20 +642,23 @@ function renderTrain() {
 
   signalEl.style.borderLeftColor = '';
 
+  const topPct = (top.p * 100).toFixed(0);
+  const tgtPct = (tgt.p * 100).toFixed(0);
+
   if (tEpoch === 0) {
     signalEl.className = 'training-signal';
     signalEl.textContent = '';
   } else if (top.isTarget && tgt.p >= LEARNED_THRESHOLD) {
     signalEl.className = 'training-signal right show';
-    signalEl.innerHTML = `<b>✓ learned</b> &mdash; target "${escapeHTML(SENTENCE[tPos])}" is now the top prediction (p = ${(tgt.p*100).toFixed(0)}%).`;
+    signalEl.innerHTML = `<b>✓ learned</b> &mdash; "${escapeHTML(SENTENCE[tPos])}" is now top (p&nbsp;=&nbsp;${tgtPct}%).`;
     tLearnedFlags[tPos] = true;
   } else if (top.isTarget) {
     signalEl.className = 'training-signal show';
     signalEl.style.borderLeftColor = 'var(--gold)';
-    signalEl.innerHTML = `<span style="color:var(--gold);">⬤ on track</span> &mdash; target "${escapeHTML(SENTENCE[tPos])}" is top &mdash; but p&nbsp;=&nbsp;${(tgt.p*100).toFixed(0)}%. Keep training.`;
+    signalEl.innerHTML = `<span style="color:var(--gold);">⬤ on track</span> &mdash; "${escapeHTML(SENTENCE[tPos])}" is top (p&nbsp;=&nbsp;${tgtPct}%) &mdash; keep training.`;
   } else {
     signalEl.className = 'training-signal wrong show';
-    signalEl.innerHTML = `<b>✗ wrong</b> &mdash; predicted "${escapeHTML(top.word)}", expected "${escapeHTML(SENTENCE[tPos])}". <span style="color:var(--muted)">backprop: push weights toward target.</span>`;
+    signalEl.innerHTML = `<b>✗ wrong</b> &mdash; top: "${escapeHTML(top.word)}" (${topPct}%) &mdash; target: "${escapeHTML(SENTENCE[tPos])}" (${tgtPct}%). <span style="color:var(--muted)">adjusting weights.</span>`;
   }
 
   // Button states
