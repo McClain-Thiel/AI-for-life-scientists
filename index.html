@@ -207,47 +207,6 @@
 
       <!-- ═════════ ACT 2 — THE MECHANISM ═════════ -->
 
-      <!-- SLIDE 6 · ML tasks overview -->
-      <section data-center="false" style="padding-top:1.5rem;">
-        <h2>What can ML actually do?</h2>
-        <div class="three-col tasks-row" id="ml-tasks-row" style="margin-top:1.5rem;">
-          <div class="card fragment" data-card="sup">
-            <div class="card-label c-blue">SUPERVISED</div>
-            <h3 class="c-blue">Labeled examples</h3>
-            <p>Learn a mapping from input to known output.</p>
-            <div class="card-example">
-              tumor image &nbsp;→&nbsp; malignant / benign
-            </div>
-          </div>
-          <div class="card purple fragment" data-card="unsup">
-            <div class="card-label c-purple">UNSUPERVISED</div>
-            <h3 class="c-purple">Structure without labels</h3>
-            <p>Find patterns, clusters, or low-dimensional structure.</p>
-            <div class="card-example">
-              patient records &nbsp;→&nbsp; patient clusters
-            </div>
-          </div>
-          <div class="card muted fragment" data-card="semi">
-            <div class="card-label c-muted">SEMI-SUPERVISED</div>
-            <h3 class="c-muted">A bit of both</h3>
-            <p>Label some examples, infer the rest.</p>
-            <div class="card-example">
-              useful when labeling is expensive
-            </div>
-          </div>
-        </div>
-        <!-- invisible fragment that triggers the "focus supervised" state -->
-        <div class="fragment" data-action="focus-sup" style="display:none;"></div>
-        <aside class="notes">
-          Three flavors. Supervised is what you'll see in most commercial AI — examples of inputs
-          and right answers; the model learns the mapping. Unsupervised is useful for exploration —
-          finding patterns you didn't know to look for. Semi-supervised bridges the two. We'll
-          spend most of our time on supervised because it's where the majority of valuable AI
-          products live. Reinforcement learning exists too — AlphaGo, robotics — but it's less
-          common in biotech applications and out of scope today.
-        </aside>
-      </section>
-
       <!-- SLIDE 7 · Input → Output with concrete examples -->
       <section data-center="false" style="padding-top:2rem;">
         <div class="io-flow">
@@ -339,6 +298,47 @@
           Punchline: more data doesn't just "help" — it's what turns noise into signal. The same
           algorithm that looks unreliable at N=5 is rock-solid at N=100.
           First red flag in a pitch: "we trained on 500 examples." Five hundred examples of what?
+        </aside>
+      </section>
+
+      <!-- SLIDE · ML tasks overview (after LR demo) -->
+      <section data-center="false" style="padding-top:1.5rem;">
+        <h2>What can ML actually do?</h2>
+        <div class="three-col tasks-row" id="ml-tasks-row" style="margin-top:1.5rem;">
+          <div class="card fragment" data-card="sup">
+            <div class="card-label c-blue">SUPERVISED</div>
+            <h3 class="c-blue">Labeled examples</h3>
+            <p>Learn a mapping from input to known output.</p>
+            <div class="card-example">
+              tumor image &nbsp;→&nbsp; malignant / benign
+            </div>
+          </div>
+          <div class="card purple fragment" data-card="unsup">
+            <div class="card-label c-purple">UNSUPERVISED</div>
+            <h3 class="c-purple">Structure without labels</h3>
+            <p>Find patterns, clusters, or low-dimensional structure.</p>
+            <div class="card-example">
+              patient records &nbsp;→&nbsp; patient clusters
+            </div>
+          </div>
+          <div class="card muted fragment" data-card="semi">
+            <div class="card-label c-muted">SEMI-SUPERVISED</div>
+            <h3 class="c-muted">A bit of both</h3>
+            <p>Label some examples, infer the rest.</p>
+            <div class="card-example">
+              useful when labeling is expensive
+            </div>
+          </div>
+        </div>
+        <!-- invisible fragment that triggers the "focus supervised" state -->
+        <div class="fragment" data-action="focus-sup" style="display:none;"></div>
+        <aside class="notes">
+          Three flavors. Supervised is what you'll see in most commercial AI — examples of inputs
+          and right answers; the model learns the mapping. Unsupervised is useful for exploration —
+          finding patterns you didn't know to look for. Semi-supervised bridges the two. We'll
+          spend most of our time on supervised because it's where the majority of valuable AI
+          products live. Reinforcement learning exists too — AlphaGo, robotics — but it's less
+          common in biotech applications and out of scope today.
         </aside>
       </section>
 
