@@ -1022,15 +1022,15 @@ LHLVLRLRGG</pre>
       <section data-background-color="#000000">
         <div style="text-align:left; max-width:1000px; margin:0 auto;">
           <p class="c-blue fragment" style="font-size:1.9rem; line-height:1.4; margin-bottom:0.6rem;">
-            1. Are you <em>building</em> a model, or <em>calling</em> an API?
+            1. Are you <em>building</em> a model, or using someone else's?
           </p>
           <hr style="border:none; border-top:1px solid #222; margin:1.4rem 0;"/>
           <p class="c-yellow fragment" style="font-size:1.9rem; line-height:1.4; margin-bottom:0.6rem;">
-            2. What does your <em>training data</em> look like?
+            2. What <em>data</em> do you have?
           </p>
           <hr style="border:none; border-top:1px solid #222; margin:1.4rem 0;"/>
           <p class="c-green fragment" style="font-size:1.9rem; line-height:1.4;">
-            3. How will you know it's <em>still working</em> in deployment?
+            3. What does <em>"good"</em> look like for this task?
           </p>
         </div>
         <aside class="notes">
@@ -1043,115 +1043,133 @@ LHLVLRLRGG</pre>
         </aside>
       </section>
 
-      <!-- SLIDE · The mental model (bubble chart: hardness × demand × buyer power) -->
+      <!-- SLIDE · The mental model (Hard Task × People Want It) -->
       <section data-center="false" style="padding-top:1.2rem;">
         <h2>The mental model</h2>
-        <p class="mm-axes-note">
-          x: <span class="c-blue">how hard is it</span> &nbsp;&middot;&nbsp;
-          y: <span class="c-yellow">do people want it</span> &nbsp;&middot;&nbsp;
-          bubble size: <span class="c-green">buyer power</span>
-        </p>
 
         <svg class="risk-reward" viewBox="0 0 900 470" style="width:100%; max-width:980px; display:block; margin:0.4rem auto 0;">
           <!-- plot frame -->
           <rect x="80" y="30" width="760" height="370" fill="none" stroke="#222"/>
+
+          <!-- quadrant dividers -->
+          <line x1="460" y1="30"  x2="460" y2="400" stroke="#1a1a1a" stroke-dasharray="3,4"/>
+          <line x1="80"  y1="215" x2="840" y2="215" stroke="#1a1a1a" stroke-dasharray="3,4"/>
 
           <!-- axes -->
           <line x1="80" y1="400" x2="840" y2="400" stroke="#555" stroke-width="1.5"/>
           <line x1="80" y1="400" x2="80"  y2="30"  stroke="#555" stroke-width="1.5"/>
 
           <!-- axis labels -->
-          <text x="460" y="432" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle">HOW HARD IS IT &nbsp;→</text>
-          <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="13" text-anchor="middle" transform="rotate(-90, 40, 215)">DO PEOPLE WANT IT &nbsp;→</text>
+          <text x="460" y="440" fill="#888" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">HARD TASK &nbsp;→</text>
+          <text x="40"  y="215" fill="#888" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle" transform="rotate(-90, 40, 215)">PEOPLE WANT IT &nbsp;→</text>
 
-          <!-- ─── TOP-LEFT: easy + wanted + big buyers (green) ─── -->
+          <!-- quadrant labels -->
+          <text x="270" y="48"  fill="#333" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">EASY &middot; WANTED</text>
+          <text x="660" y="48"  fill="#333" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">HARD &middot; WANTED</text>
+          <text x="270" y="392" fill="#333" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">EASY &middot; NOBODY ASKED</text>
+          <text x="660" y="392" fill="#333" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">HARD &middot; NOBODY ASKED</text>
+
+          <!-- ═══ HARD TASK × PEOPLE WANT IT (top-right) ═══ -->
 
           <g class="fragment rr-point">
-            <circle cx="300" cy="75" r="20" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="278" y="72" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Gong</text>
-            <text x="278" y="86" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">sales AI &middot; enterprise</text>
+            <circle cx="750" cy="65" r="14" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="730" y="60" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Waymo</text>
+            <text x="730" y="74" fill="#666" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="end">robotaxis in SF, Phoenix, LA</text>
           </g>
 
           <g class="fragment rr-point">
-            <circle cx="460" cy="55" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="488" y="50" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Scale AI</text>
-            <text x="488" y="64" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">data labeling &middot; big tech</text>
-          </g>
-
-          <!-- ─── TOP-RIGHT: hard + wanted + big buyers (green) ─── -->
-
-          <g class="fragment rr-point">
-            <circle cx="680" cy="80" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="680" y="50" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="middle">Tempus</text>
-            <text x="680" y="64" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">clinical genomics</text>
+            <circle cx="700" cy="120" r="14" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="720" y="116" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13">DeepMind</text>
+            <text x="720" y="130" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">AlphaFold, Gemini &middot; inside Google</text>
           </g>
 
           <g class="fragment rr-point">
-            <circle cx="770" cy="160" r="22" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
-            <text x="748" y="156" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Palantir</text>
-            <text x="748" y="170" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">data OS &middot; government</text>
+            <circle cx="620" cy="170" r="12" fill="#FFF1B5" fill-opacity="0.18" stroke="#FFF1B5" stroke-width="1.8"/>
+            <text x="598" y="166" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Recursion</text>
+            <text x="598" y="180" fill="#666" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="end">AI drug discovery &middot; acquired Exscientia</text>
           </g>
 
-          <!-- ─── MIDDLE: wanted but small buyers = failure (red, tiny bubbles) ─── -->
+          <!-- ═══ HARD TASK × NOBODY ASKED FOR THIS (bottom-right) ═══ -->
 
           <g class="fragment rr-point">
-            <circle cx="560" cy="120" r="7" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="560" y="105" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="middle">Babylon Health</text>
-            <text x="560" y="145" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="middle">NHS = no budget</text>
-          </g>
-
-          <g class="fragment rr-point">
-            <circle cx="440" cy="185" r="8" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="455" y="182" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Olive AI</text>
-            <text x="455" y="196" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">burned $852M</text>
-          </g>
-
-          <!-- ─── BOTTOM-RIGHT: hard + low demand (mixed) ─── -->
-
-          <g class="fragment rr-point">
-            <circle cx="760" cy="270" r="18" fill="#FFF1B5" fill-opacity="0.15" stroke="#FFF1B5" stroke-width="1.8"/>
-            <text x="734" y="267" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Recursion</text>
-            <text x="734" y="281" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">AI drug discovery &middot; no drug yet</text>
+            <circle cx="660" cy="310" r="8" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="675" y="307" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Cogitai</text>
+            <text x="675" y="321" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">predictive learning &middot; acqui-hired by Sony</text>
           </g>
 
           <g class="fragment rr-point">
-            <circle cx="670" cy="310" r="14" fill="#FC6255" fill-opacity="0.2" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="644" y="307" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">IBM Watson Health</text>
-            <text x="644" y="321" fill="#666" font-family="JetBrains Mono, monospace" font-size="9" text-anchor="end">hard &middot; couldn't deliver &middot; sold off</text>
+            <circle cx="580" cy="350" r="8" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="558" y="347" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Numenta</text>
+            <text x="558" y="361" fill="#666" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="end">cortical learning &middot; 20 yrs, no product</text>
           </g>
 
-          <!-- ─── BOTTOM-LEFT: easy + low demand + no buyer power (red) ─── -->
+          <!-- ═══ EASY TASK × PEOPLE WANT IT (top-left) ═══ -->
 
           <g class="fragment rr-point">
-            <circle cx="170" cy="340" r="6" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1.8"/>
-            <text x="184" y="337" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Lensa AI</text>
-            <text x="184" y="351" fill="#666" font-family="JetBrains Mono, monospace" font-size="9">photo filters &middot; hype died in weeks</text>
+            <circle cx="200" cy="70" r="16" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="222" y="66" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Grammarly</text>
+            <text x="222" y="80" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">writing assist &middot; 30M daily users</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="320" cy="115" r="10" fill="#FFF1B5" fill-opacity="0.18" stroke="#FFF1B5" stroke-width="1.8"/>
+            <text x="336" y="112" fill="#FFF1B5" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Copy.ai</text>
+            <text x="336" y="126" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">pivoted as wrapper moat evaporated</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="250" cy="160" r="10" fill="#83C167" fill-opacity="0.2" stroke="#83C167" stroke-width="1.8"/>
+            <text x="228" y="156" fill="#83C167" font-family="Computer Modern Serif, Georgia, serif" font-size="13" text-anchor="end">Notion AI</text>
+            <text x="228" y="170" fill="#666" font-family="JetBrains Mono, monospace" font-size="8" text-anchor="end">feature add-on &middot; rides existing love</text>
+          </g>
+
+          <!-- ═══ EASY TASK × NOBODY ASKED FOR THIS (bottom-left) ═══ -->
+
+          <g class="fragment rr-point">
+            <circle cx="170" cy="310" r="7" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="184" y="307" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Lensa AI</text>
+            <text x="184" y="321" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">viral selfie filters &middot; forgotten in weeks</text>
+          </g>
+
+          <g class="fragment rr-point">
+            <circle cx="300" cy="280" r="9" fill="#FC6255" fill-opacity="0.25" stroke="#FC6255" stroke-width="1.8"/>
+            <text x="315" y="277" fill="#FC6255" font-family="Computer Modern Serif, Georgia, serif" font-size="13">Character.ai</text>
+            <text x="315" y="291" fill="#666" font-family="JetBrains Mono, monospace" font-size="8">huge usage &middot; weak monetisation</text>
           </g>
 
           <!-- legend -->
           <g transform="translate(100, 420)">
             <circle cx="0"   cy="0" r="5" fill="#83C167" fill-opacity="0.3" stroke="#83C167" stroke-width="1"/>
-            <text   x="12"  y="4" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="9">success</text>
-            <circle cx="80"  cy="0" r="5" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1"/>
-            <text   x="92"  y="4" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="9">failed</text>
-            <circle cx="140" cy="0" r="5" fill="#FFF1B5" fill-opacity="0.3" stroke="#FFF1B5" stroke-width="1"/>
-            <text   x="152" y="4" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9">unproven</text>
+            <text   x="12"  y="4" fill="#83C167" font-family="JetBrains Mono, monospace" font-size="9">working</text>
+            <circle cx="75"  cy="0" r="5" fill="#FC6255" fill-opacity="0.3" stroke="#FC6255" stroke-width="1"/>
+            <text   x="87"  y="4" fill="#FC6255" font-family="JetBrains Mono, monospace" font-size="9">failed / fading</text>
+            <circle cx="180" cy="0" r="5" fill="#FFF1B5" fill-opacity="0.3" stroke="#FFF1B5" stroke-width="1"/>
+            <text   x="192" y="4" fill="#FFF1B5" font-family="JetBrains Mono, monospace" font-size="9">proving it</text>
           </g>
         </svg>
 
         <aside class="notes">
-          All real companies across all four quadrants.
+          All real companies, one per data point.
 
-          Top-left: Gong and Scale AI. Easy-ish, very wanted, enterprise/DoD buyers with budget.
-          Top-right: Tempus and Palantir. Hard to build, very wanted, pharma/government checks.
-          Middle: Babylon Health and Olive AI — same demand as the successes, but tiny bubbles.
-          NHS and hospital admin can't write the checks. Demand without buyer power = death.
-          Bottom-right: Recursion (still unproven) and IBM Watson Health (sold off — hard problem,
-          couldn't deliver). Bottom-left: Lensa AI — trivial to build, brief viral hype, no
-          retention, no buyer power (consumer microtransactions).
+          Top-right (hard + wanted): Waymo — commercial robotaxis, still burning cash but
+          scaling. DeepMind — fundamental AI, now inside Google powering core products.
+          Recursion — AI drug discovery, acquired Exscientia 2024, still proving the thesis.
 
-          The bubble-size lesson: wanting something isn't enough. The person who wants it has to be
-          able to write a check. That's why Gong (enterprise sales) works and Babylon (NHS) doesn't.
+          Bottom-right (hard + nobody asked): Cogitai — predictive learning research,
+          acqui-hired by Sony, no product. Numenta — 20 years of Jeff Hawkins' cortical
+          theory, commercially irrelevant.
+
+          Top-left (easy + wanted): Grammarly — profitable, 30M daily. Copy.ai — pivoted
+          as the wrapper moat evaporated when ChatGPT launched. Notion AI — feature add-on,
+          not a standalone company, rides existing product love.
+
+          Bottom-left (easy + nobody asked): Lensa AI — mega-viral selfie filters late 2022,
+          forgotten by 2023. Character.ai — huge teen usage, founders returned to Google,
+          monetisation basically zero.
+
+          The quadrant tells you the risk profile. Top-right is the frontier bet. Top-left
+          is the quick win. Bottom-left is noise. Bottom-right is a research project
+          masquerading as a company.
         </aside>
       </section>
 
